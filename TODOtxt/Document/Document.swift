@@ -42,10 +42,13 @@ class Document: NSDocument {
         let windowController = storyboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("Document Window Controller")) as! NSWindowController
         self.addWindowController(windowController)
         if let contentView = contentViewController, let sidebarView = sidebarViewController {
+            Swift.print("testskjhdsjh")
             contentView.backingStore = storage
             contentView.reload()
             sidebarView.delegate = contentView
             sidebarView.selectFirstIfPossible()
+        } else {
+            fatalError("contentView and sidebarView == nil")
         }
         
     }
@@ -64,10 +67,9 @@ class Document: NSDocument {
         // Alternatively, you could remove this method and override read(from:ofType:) instead.
         // If you do, you should also override isEntireFileLoaded to return false if the contents are lazily loaded.
         //throw NSError(domain: NSOSStatusErrorDomain, code: unimpErr, userInfo: nil)
-        try self.storage = TodoStorage(data)
-        if let controller = contentViewController {
-            controller.reload()
-        }
+        storage = try! TodoStorage(data)
+        contentViewController?.reload()
+        
     }
     
 }

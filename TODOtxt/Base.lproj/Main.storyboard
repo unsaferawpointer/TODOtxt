@@ -599,6 +599,61 @@
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="Todo" id="nbK-yf-axf">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Todo" id="y3o-Es-EwG">
+                                    <items>
+                                        <menuItem title="Toggle completion" id="Ne3-N1-8WO">
+                                            <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                                            <connections>
+                                                <action selector="toggleCompletion:" target="Ady-hI-5gd" id="zYq-FL-DYP"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="bW5-5h-TPG"/>
+                                        <menuItem title="Decrease | Set &quot;A&quot; priority " keyEquivalent="" id="Kht-Od-eqw">
+                                            <connections>
+                                                <action selector="decreasePriority:" target="Ady-hI-5gd" id="Znc-bQ-VMM"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Encrease | Set &quot;Z&quot; priority" keyEquivalent="" id="5fU-GI-SxD">
+                                            <connections>
+                                                <action selector="encreasePriority:" target="Ady-hI-5gd" id="PLp-Ze-q6x"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Remove priority" keyEquivalent="" id="ovd-rh-FZX">
+                                            <connections>
+                                                <action selector="removePriority:" target="Ady-hI-5gd" id="bci-eu-f3n"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="1yY-JS-Q47"/>
+                                        <menuItem title="Set due date" keyEquivalent="d" id="xWY-lU-Ykg">
+                                            <connections>
+                                                <action selector="setDueDate:" target="Ady-hI-5gd" id="bWC-od-5Ii"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Encrease due date" keyEquivalent="" id="hFF-vt-APt">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="encreaseDueDate:" target="Ady-hI-5gd" id="gMH-Qu-xeX"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Decrease due date" keyEquivalent="" id="ZlH-QV-VJu">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="decreaseDueDate:" target="Ady-hI-5gd" id="ULF-57-Ojh"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Remove due date" keyEquivalent="" id="qya-NL-ibj">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="removeDate:" target="Ady-hI-5gd" id="Wpb-TZ-FC5"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="View" id="H8h-7b-M4v">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="View" id="HyV-fh-RgO">
@@ -726,14 +781,95 @@
             </objects>
             <point key="canvasLocation" x="75" y="712"/>
         </scene>
-        <!--View Controller-->
+        <!--Sidebar View Controller-->
         <scene sceneID="OV3-5l-9WI">
             <objects>
-                <viewController id="rMe-kI-7tf" sceneMemberID="viewController">
+                <viewController id="rMe-kI-7tf" customClass="SidebarViewController" customModule="TODOtxt" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="gKt-Ti-W2b">
                         <rect key="frame" x="0.0" y="0.0" width="167" height="576"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J0L-GP-Y9c">
+                                <rect key="frame" x="0.0" y="0.0" width="167" height="576"/>
+                                <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="E55-Ho-dzf">
+                                    <rect key="frame" x="1" y="0.0" width="165" height="575"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="y72-df-LLA" viewBased="YES" id="wLv-cV-Dzg">
+                                            <rect key="frame" x="0.0" y="0.0" width="165" height="550"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <size key="intercellSpacing" width="3" height="2"/>
+                                            <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                            <tableColumns>
+                                                <tableColumn width="64" minWidth="10" maxWidth="3.4028234663852886e+38" id="fta-O9-IqU">
+                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
+                                                        <font key="font" metaFont="smallSystem"/>
+                                                        <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </tableHeaderCell>
+                                                    <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="8go-lO-uFz">
+                                                        <font key="font" metaFont="system"/>
+                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                    <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                    <prototypeCellViews>
+                                                        <tableCellView id="Mab-Yo-wxV">
+                                                            <rect key="frame" x="1" y="1" width="64" height="17"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                            <subviews>
+                                                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="p0x-xV-vbG">
+                                                                    <rect key="frame" x="3" y="0.0" width="17" height="17"/>
+                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSActionTemplate" id="ZCK-4h-oke"/>
+                                                                </imageView>
+                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9BU-gC-9SF">
+                                                                    <rect key="frame" x="25" y="0.0" width="39" height="17"/>
+                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="Uth-QT-FUa">
+                                                                        <font key="font" metaFont="system"/>
+                                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                    </textFieldCell>
+                                                                </textField>
+                                                            </subviews>
+                                                            <connections>
+                                                                <outlet property="imageView" destination="p0x-xV-vbG" id="7Qb-rF-iSS"/>
+                                                                <outlet property="textField" destination="9BU-gC-9SF" id="wqh-3K-G9P"/>
+                                                            </connections>
+                                                        </tableCellView>
+                                                    </prototypeCellViews>
+                                                </tableColumn>
+                                            </tableColumns>
+                                        </tableView>
+                                    </subviews>
+                                    <nil key="backgroundColor"/>
+                                </clipView>
+                                <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="Vk8-Sv-tnp">
+                                    <rect key="frame" x="1" y="559" width="165" height="16"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                                <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="Mxd-6v-LvN">
+                                    <rect key="frame" x="224" y="17" width="15" height="102"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                                <tableHeaderView key="headerView" id="y72-df-LLA">
+                                    <rect key="frame" x="0.0" y="0.0" width="165" height="25"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableHeaderView>
+                            </scrollView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="J0L-GP-Y9c" secondAttribute="bottom" id="YmC-O3-3t0"/>
+                            <constraint firstAttribute="trailing" secondItem="J0L-GP-Y9c" secondAttribute="trailing" id="gSX-aQ-uEE"/>
+                            <constraint firstItem="J0L-GP-Y9c" firstAttribute="leading" secondItem="gKt-Ti-W2b" secondAttribute="leading" id="mit-ab-Xyk"/>
+                            <constraint firstItem="J0L-GP-Y9c" firstAttribute="top" secondItem="gKt-Ti-W2b" secondAttribute="top" id="rxd-rf-zrI"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="tableView" destination="wLv-cV-Dzg" id="7At-C8-cyE"/>
+                    </connections>
                 </viewController>
                 <customObject id="a4L-tM-UFx" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -806,4 +942,7 @@
             <point key="canvasLocation" x="443.5" y="1374"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="NSActionTemplate" width="14" height="14"/>
+    </resources>
 </document>

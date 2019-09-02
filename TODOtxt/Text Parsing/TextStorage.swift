@@ -23,8 +23,6 @@ class TextStorage: NSTextStorage {
     var removed = [ToDo]()
     var observeChanging = true
     
-    var timer: Timer!
-    
     override var string: String {
         return backingStore.string
     }
@@ -32,7 +30,6 @@ class TextStorage: NSTextStorage {
     var theme: Theme {
         return Preferences.shared.theme
     }
-    
     
     override func attributes(at location: Int, effectiveRange range: NSRangePointer?) -> [NSAttributedString.Key : Any] {
         return backingStore.attributes(at: location, effectiveRange: range)
@@ -60,7 +57,7 @@ class TextStorage: NSTextStorage {
     
     override func processEditing() {
         
-        highlight()
+        highlight(in: editedRange)
         
         if !removed.isEmpty || !inserted.isEmpty {
             dataDelegate?.dataDidChanged(toInsert: inserted, toDelete: removed)
@@ -73,9 +70,7 @@ class TextStorage: NSTextStorage {
     
 }
 
-// ===================
-// PARSING DATA
-// ===================
+// ********** Parsing data **********
 extension TextStorage {
     
     private func toRemove(editedRange: NSRange, with delta: Int) {
@@ -86,7 +81,6 @@ extension TextStorage {
         let fullRange = NSUnionRange(firstLineRange, lastLineRange)
         
         self.removed = parser.parse(backingStore.mutableString, in: fullRange)
-        
     }
     
     private func toInsert(editedRange: NSRange, with delta: Int) {
@@ -98,29 +92,22 @@ extension TextStorage {
         let fullRange = NSUnionRange(firstLineRange, lastLineRange)
         
         self.inserted = parser.parse(backingStore.mutableString, in: fullRange)
-        
     }
     
 }
 
-// ===================
-// HIGHLIGHTING
-// ===================
+// ********** Hightlighting **********
 extension TextStorage {
     
-    func highlight() {
+    func highlight(in range: NSRange) {
         
-        let firstLineRange = backingStore.mutableString.lineRange(for: editedRange)
-        let extendedRange = NSRange(location: editedRange.location + editedRange.length, length: 0)
+        let firstLineRange = backingStore.mutableString.lineRange(for: range)
+        let extendedRange = NSRange(location: range.location + range.length, length: 0)
         let lastLineRange = backingStore.mutableString.lineRange(for: extendedRange)
         let fullRange = NSUnionRange(firstLineRange, lastLineRange)
         
         parser.highlight(theme: theme, backingStorage: self, in: fullRange)
-        
     }
-    
-    
-    
     
 }
 

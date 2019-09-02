@@ -119,7 +119,7 @@ extension ContentViewController: NSTextViewDelegate {
 
 extension ContentViewController: TextStorageDataDelegate {
     func dataDidChanged(toInsert: [ToDo], toDelete: [ToDo]) {
-        backingStore?.performOperation(inserted: toInsert, removed: toDelete)
+        backingStore!.performOperation(inserted: toInsert, removed: toDelete)
     }
    
 }

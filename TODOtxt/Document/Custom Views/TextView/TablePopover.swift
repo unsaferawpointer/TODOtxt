@@ -151,7 +151,7 @@ extension TablePopover : NSTableViewDelegate {
             cellView = NSTableCellView(frame: NSZeroRect)
             let textfield = NSTextField(frame: NSZeroRect)
             let imageView = NSImageView(frame: NSZeroRect)
-            imageView.image = NSImage(imageLiteralResourceName: "tag")
+            //imageView.image = NSImage(imageLiteralResourceName: "tag")
             textfield.isBezeled = false
             textfield.drawsBackground = false
             textfield.isEditable = false

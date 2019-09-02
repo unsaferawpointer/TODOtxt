@@ -27,17 +27,6 @@ class MentionStorage {
         return storage[element]?.backingStorage._elements ?? [String]()
     }
     
-    /// FIX ME inout
-    func reload(with todos: [ToDo]) {
-        for element in autocompletions {
-            let array = todos.compactMap { (todo) -> String? in
-                return todo.key(by: element)
-            }
-            var bag = Bag<String>()
-            bag.insert(array)
-            storage[element] = bag
-        }
-    }
     
     /// FIX ME inout
     func insert(from todos: [ToDo]) {
@@ -72,10 +61,10 @@ class TodoStorage {
     
     init (_ data: Data) throws {
         guard let str = String(data: data, encoding: .utf8) else { throw DataError.invalidFormat}
-        guard str.count > CHARACTERS_LIMIT else { throw DataError.overflow }
+        guard str.count <= CHARACTERS_LIMIT else { throw DataError.overflow }
         
         let parser = Parser()
-        self.storage = parser.parse(str)
+        performOperation(inserted: parser.parse(str), removed: [])
     }
     
     func performOperation(inserted: [ToDo], removed: [ToDo]) {
