@@ -35,7 +35,12 @@ class SidebarViewController: NSViewController {
         menu.addItem(withTitle: "Delete", action: nil, keyEquivalent: String.backspace)
         menu.addItem(withTitle: "Rename", action: #selector(rename(_:)), keyEquivalent: "i")
         tableView.menu = menu
-        
+    }
+    
+    func selectFirstIfPossible() {
+        if let first = dataAdapter.storage.first {
+            delegate?.selectedItemDidChange(newItem: first)
+        }
     }
     
     // ******** Selectors **********

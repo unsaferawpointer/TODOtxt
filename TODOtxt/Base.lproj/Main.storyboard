@@ -706,8 +706,8 @@
             <objects>
                 <splitViewController id="txc-f3-E8J" sceneMemberID="viewController">
                     <splitViewItems>
-                        <splitViewItem id="aHd-qm-a8a"/>
-                        <splitViewItem id="5iz-Zx-8NF"/>
+                        <splitViewItem canCollapse="YES" holdingPriority="260" behavior="sidebar" id="aHd-qm-a8a"/>
+                        <splitViewItem holdingPriority="255" behavior="contentList" id="5iz-Zx-8NF"/>
                     </splitViewItems>
                     <splitView key="splitView" dividerStyle="thin" vertical="YES" id="olO-2G-zMt">
                         <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
@@ -731,55 +731,79 @@
             <objects>
                 <viewController id="rMe-kI-7tf" sceneMemberID="viewController">
                     <view key="view" id="gKt-Ti-W2b">
-                        <rect key="frame" x="0.0" y="0.0" width="167" height="453"/>
+                        <rect key="frame" x="0.0" y="0.0" width="167" height="576"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </view>
                 </viewController>
                 <customObject id="a4L-tM-UFx" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-82" y="1313"/>
+            <point key="canvasLocation" x="10.5" y="1374"/>
         </scene>
-        <!--View Controller-->
+        <!--Content View Controller-->
         <scene sceneID="NYC-lv-vcA">
             <objects>
-                <viewController id="fQN-R5-u1D" sceneMemberID="viewController">
-                    <view key="view" id="NHC-5Y-1fX">
-                        <rect key="frame" x="0.0" y="0.0" width="428" height="453"/>
+                <viewController id="fQN-R5-u1D" customClass="ContentViewController" customModule="TODOtxt" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="NHC-5Y-1fX" customClass="BackgroundView" customModule="TODOtxt" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="621" height="576"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <scrollView fixedFrame="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qSW-jJ-co3">
-                                <rect key="frame" x="20" y="20" width="388" height="413"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="DiO-XQ-qzp">
-                                    <rect key="frame" x="0.0" y="0.0" width="388" height="413"/>
+                            <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qSW-jJ-co3">
+                                <rect key="frame" x="101" y="20" width="420" height="499"/>
+                                <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="DiO-XQ-qzp">
+                                    <rect key="frame" x="0.0" y="0.0" width="420" height="499"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <textView ambiguous="YES" importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="v5v-nC-YQh">
-                                            <rect key="frame" x="0.0" y="0.0" width="388" height="413"/>
+                                        <textView drawsBackground="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" findStyle="panel" incrementalSearchingEnabled="YES" spellingCorrection="YES" smartInsertDelete="YES" id="v5v-nC-YQh" customClass="TextView" customModule="TODOtxt" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="0.0" width="420" height="499"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            <size key="minSize" width="388" height="413"/>
-                                            <size key="maxSize" width="388" height="10000000"/>
+                                            <size key="minSize" width="420" height="499"/>
+                                            <size key="maxSize" width="560" height="10000000"/>
                                             <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                         </textView>
                                     </subviews>
                                 </clipView>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="420" id="0iz-K3-ULg"/>
+                                </constraints>
                                 <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="cMX-Du-hoF">
                                     <rect key="frame" x="-100" y="-100" width="240" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="pCj-hJ-gj3">
-                                    <rect key="frame" x="372" y="0.0" width="16" height="413"/>
+                                    <rect key="frame" x="404" y="0.0" width="16" height="499"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="09U-fJ-LCs">
+                                <rect key="frame" x="272" y="539" width="78" height="17"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Filter Name" id="kwN-al-LGw">
+                                    <font key="font" usesAppearanceFont="YES"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
+                        <constraints>
+                            <constraint firstItem="qSW-jJ-co3" firstAttribute="centerX" secondItem="NHC-5Y-1fX" secondAttribute="centerX" id="4ma-As-GNk"/>
+                            <constraint firstItem="09U-fJ-LCs" firstAttribute="centerX" secondItem="NHC-5Y-1fX" secondAttribute="centerX" id="A7F-Hg-gnC"/>
+                            <constraint firstItem="09U-fJ-LCs" firstAttribute="top" secondItem="NHC-5Y-1fX" secondAttribute="top" constant="20" id="ARH-mI-pIO"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="qSW-jJ-co3" secondAttribute="trailing" constant="52" id="BL0-5r-10i"/>
+                            <constraint firstAttribute="bottom" secondItem="qSW-jJ-co3" secondAttribute="bottom" constant="20" id="F1B-Ic-G1k"/>
+                            <constraint firstItem="qSW-jJ-co3" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="NHC-5Y-1fX" secondAttribute="leading" constant="52" id="H44-12-n8n"/>
+                            <constraint firstItem="qSW-jJ-co3" firstAttribute="top" secondItem="09U-fJ-LCs" secondAttribute="bottom" constant="20" id="f0j-aV-bb5"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="contentView" destination="NHC-5Y-1fX" id="InC-7K-JMd"/>
+                        <outlet property="textview" destination="v5v-nC-YQh" id="9gZ-Uw-5H3"/>
+                        <outlet property="titleTextfield" destination="09U-fJ-LCs" id="mM8-yK-A72"/>
+                    </connections>
                 </viewController>
                 <customObject id="uqY-pm-DCq" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="244" y="1312.5"/>
+            <point key="canvasLocation" x="443.5" y="1374"/>
         </scene>
     </scenes>
 </document>

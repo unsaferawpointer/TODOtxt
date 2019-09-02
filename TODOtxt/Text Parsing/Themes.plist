@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>light</key>
+		<dict>
+			<key>foreground</key>
+			<string>#45373c</string>
+			<key>line</key>
+			<string>#b0a69a</string>
+			<key>selection</key>
+			<string>#b0a69a</string>
+			<key>context</key>
+			<string>#7ca89e</string>
+			<key>project</key>
+			<string>#426a79</string>
+			<key>background</key>
+			<string>#d5ccba</string>
+			<key>priority</key>
+			<string>#97522c</string>
+			<key>date_day</key>
+			<string>#45373c</string>
+			<key>completed</key>
+			<string>#7a6e6a</string>
+		</dict>
+		<key>name</key>
+		<string>Zissou: Belafonte (Day)</string>
+		<key>dark</key>
+		<dict>
+			<key>background</key>
+			<string>#20111b</string>
+			<key>foreground</key>
+			<string>#968c83</string>
+			<key>selection</key>
+			<string>#45373c</string>
+			<key>context</key>
+			<string>#eaa549</string>
+			<key>project</key>
+			<string>#426a79</string>
+			<key>line</key>
+			<string>#302129</string>
+			<key>priority</key>
+			<string>#97522c</string>
+			<key>completed</key>
+			<string>#5e5252</string>
+			<key>date_day</key>
+			<string>#968c83</string>
+		</dict>
+	</dict>
+</array>
+</plist>

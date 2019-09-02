@@ -67,10 +67,10 @@ public struct Bag<Element: Hashable & Comparable > {
         self.contents = [:]
     }
     
-    /*
+    
     public mutating func insert(_ objects: [Element]) {
         for object in objects {
-            add(object)
+            insert(object)
         }
     }
     
@@ -79,7 +79,7 @@ public struct Bag<Element: Hashable & Comparable > {
             remove(object)
         }
     }
-    */
+    
     
     
     ///If anObject is present in the bag, increments the count associated with it and return nil. Otherwise, insert anObject to the bag  and return anObject.

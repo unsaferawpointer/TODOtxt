@@ -14,7 +14,7 @@ protocol TextStorageDataDelegate: class {
 
 class TextStorage: NSTextStorage {
     
-    weak var textStorageDataDelegate: TextStorageDataDelegate?
+    weak var dataDelegate: TextStorageDataDelegate?
     
     let backingStore = NSTextStorage()
     var parser: Parser = Parser()
@@ -63,7 +63,7 @@ class TextStorage: NSTextStorage {
         highlight()
         
         if !removed.isEmpty || !inserted.isEmpty {
-            textStorageDataDelegate?.dataDidChanged(toInsert: inserted, toDelete: removed)
+            dataDelegate?.dataDidChanged(toInsert: inserted, toDelete: removed)
             removed.removeAll()
             inserted.removeAll()
         }

@@ -20,17 +20,9 @@ class ContentViewController: NSViewController {
         return Preferences.shared.theme
     }
     
-    var presentedData: Data {
-        get {
-            let str = backingStore.string
-            return str.data(using: .utf8)!
-        }
-        set {
-            backingStore.load(newValue)
-        }
-    }
+    var currentItem: Item?
+    var backingStore: TodoStorage?
     
-    var backingStore: TodoStorage = TodoStorage(mentions: [.context,.project])
     // VIEWS
     @IBOutlet weak var contentView: BackgroundView!
     @IBOutlet weak var titleTextfield: NSTextField!
@@ -62,7 +54,6 @@ class ContentViewController: NSViewController {
         paragraphStyle.paragraphSpacing = 6.0
         //textview.defaultParagraphStyle = paragraphStyle
         textview.typingAttributes = [.font : font as Any, .paragraphStyle: paragraphStyle]
-        textview.reload(with: backingStore.string)
         
         // ---------- other views configuration ----------
         contentView.backgroundColor = theme.background
@@ -76,11 +67,23 @@ class ContentViewController: NSViewController {
         
     }
     
+    func reload() {
+        
+        guard let store = backingStore, let item = currentItem else { return }
+        
+        let newStr = store.string(by: item.filter)
+        textview.reload(with: newStr)
+        titleTextfield.stringValue = item.name
+    }
+    
     private func invalidateTheme() {
         contentView.backgroundColor = theme.background
         titleTextfield.textColor = theme.foreground
         textview.invalidateColorScheme()
-        textview.reload(with: backingStore.string)
+        
+        guard let store = backingStore, let item = currentItem else { return }
+        let filter = item.filter
+        textview.reload(with: store.string(by: filter))
     }
     
     @objc func themeDidChange(_ notification: Notification) {
@@ -102,30 +105,28 @@ class ContentViewController: NSViewController {
 
 extension ContentViewController: SidebarDelegate {
     func selectedItemDidChange(newItem item: Item) {
-        let newStr = backingStore.filtered(by: item.filter)
-        textview.reload(with: newStr)
-        titleTextfield.stringValue = item.name
+        self.currentItem = item
+        reload()
     }
 }
 
 extension ContentViewController: NSTextViewDelegate {
     func textView(_ textView: NSTextView, shouldChangeTextIn affectedCharRange: NSRange, replacementString: String?) -> Bool {
-        return true
+        let delta = (replacementString?.count ?? 0) - affectedCharRange.length
+        return backingStore?.shouldChange(with: delta) ?? true
     }
 }
 
 extension ContentViewController: TextStorageDataDelegate {
-    
     func dataDidChanged(toInsert: [ToDo], toDelete: [ToDo]) {
-        backingStore.insert(todos: toInsert)
-        backingStore.remove(todos: toDelete)
+        backingStore?.performOperation(inserted: toInsert, removed: toDelete)
     }
-    
+   
 }
 
 extension ContentViewController: AutoCompletionDelegate {
     func complete(element: Element) -> [String] {
-        return backingStore.mentionStore.mentionKeys(for: element)
+        return backingStore?.mentions(for: element) ?? []
     }
     
 }
