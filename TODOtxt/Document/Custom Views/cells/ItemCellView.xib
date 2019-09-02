@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="ItemCellView" customModule="TODO_txt" customModuleProvider="target">
+            <connections>
+                <outlet property="badgeView" destination="J9a-Gc-e1N" id="Rvw-0E-fOf"/>
+                <outlet property="imageView" destination="jsJ-Ed-Z5h" id="bdj-EB-kbG"/>
+                <outlet property="textField" destination="htY-4N-K9l" id="HfD-2g-g8t"/>
+                <outlet property="view" destination="DM7-an-ZMt" id="6N3-Dw-ryr"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="DM7-an-ZMt">
+            <rect key="frame" x="0.0" y="0.0" width="475" height="94"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jsJ-Ed-Z5h">
+                    <rect key="frame" x="16" y="40" width="14" height="14"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="14" id="41w-6i-TC6"/>
+                        <constraint firstAttribute="height" constant="14" id="a90-1n-eVu"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="filter" id="4Qv-Tk-Fza"/>
+                </imageView>
+                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="htY-4N-K9l">
+                    <rect key="frame" x="36" y="39" width="37" height="17"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="R8q-E4-5TM">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <customView horizontalHuggingPriority="750" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="J9a-Gc-e1N" customClass="BadgeView" customModule="TODO_txt" customModuleProvider="target">
+                    <rect key="frame" x="79" y="30" width="388" height="34"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="count">
+                            <integer key="value" value="2"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="fontSize">
+                            <real key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </customView>
+            </subviews>
+            <constraints>
+                <constraint firstItem="J9a-Gc-e1N" firstAttribute="centerY" secondItem="DM7-an-ZMt" secondAttribute="centerY" id="0Y6-XW-zjG"/>
+                <constraint firstAttribute="trailing" secondItem="J9a-Gc-e1N" secondAttribute="trailing" constant="8" id="8UF-X2-C1U"/>
+                <constraint firstItem="J9a-Gc-e1N" firstAttribute="leading" secondItem="htY-4N-K9l" secondAttribute="trailing" constant="8" id="HD9-I9-cdh"/>
+                <constraint firstItem="jsJ-Ed-Z5h" firstAttribute="centerY" secondItem="DM7-an-ZMt" secondAttribute="centerY" id="o2K-1E-ifx"/>
+                <constraint firstItem="htY-4N-K9l" firstAttribute="centerY" secondItem="DM7-an-ZMt" secondAttribute="centerY" id="qd3-ZL-N5K"/>
+                <constraint firstItem="htY-4N-K9l" firstAttribute="leading" secondItem="jsJ-Ed-Z5h" secondAttribute="trailing" constant="8" id="uKn-rg-geT"/>
+                <constraint firstItem="jsJ-Ed-Z5h" firstAttribute="leading" secondItem="DM7-an-ZMt" secondAttribute="leading" constant="16" id="z50-jD-CL0"/>
+            </constraints>
+            <point key="canvasLocation" x="38.5" y="76"/>
+        </customView>
+    </objects>
+    <resources>
+        <image name="filter" width="16" height="16"/>
+    </resources>
+</document>
