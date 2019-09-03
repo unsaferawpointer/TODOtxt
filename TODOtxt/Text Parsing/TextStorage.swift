@@ -106,7 +106,7 @@ extension TextStorage {
         let lastLineRange = backingStore.mutableString.lineRange(for: extendedRange)
         let fullRange = NSUnionRange(firstLineRange, lastLineRange)
         
-        parser.highlight(theme: theme, backingStorage: self, in: fullRange)
+        parser.highlight(theme: theme, backingStorage: backingStore, in: fullRange)
     }
     
 }
