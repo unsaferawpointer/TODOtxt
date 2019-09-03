@@ -10,7 +10,7 @@ import Cocoa
 
 class Document: NSDocument {
     
-    var storage: TodoStorage?
+    var storage: TodoStorage = TodoStorage()
     
     // Document has only one NSWindowController
     var splitViewController: NSSplitViewController? {
@@ -42,13 +42,10 @@ class Document: NSDocument {
         let windowController = storyboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("Document Window Controller")) as! NSWindowController
         self.addWindowController(windowController)
         if let contentView = contentViewController, let sidebarView = sidebarViewController {
-            Swift.print("testskjhdsjh")
             contentView.backingStore = storage
             contentView.reload()
             sidebarView.delegate = contentView
             sidebarView.selectFirstIfPossible()
-        } else {
-            fatalError("contentView and sidebarView == nil")
         }
         
     }
@@ -58,7 +55,7 @@ class Document: NSDocument {
         // Alternatively, you could remove this method and override fileWrapper(ofType:), write(to:ofType:), or write(to:ofType:for:originalContentsURL:) instead.
         //throw NSError(domain: NSOSStatusErrorDomain, code: unimpErr, userInfo: nil)
         
-        return contentViewController?.backingStore?.data ?? Data()
+        return storage.data
     }
     
     override func read(from data: Data, ofType typeName: String) throws {
@@ -67,7 +64,7 @@ class Document: NSDocument {
         // Alternatively, you could remove this method and override read(from:ofType:) instead.
         // If you do, you should also override isEntireFileLoaded to return false if the contents are lazily loaded.
         //throw NSError(domain: NSOSStatusErrorDomain, code: unimpErr, userInfo: nil)
-        storage = try! TodoStorage(data)
+        try storage.reload(data)
         contentViewController?.reload()
         
     }

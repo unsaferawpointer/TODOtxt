@@ -14,10 +14,10 @@
 			<key>CFBundleTypeIconFile</key>
 			<string></string>
 			<key>CFBundleTypeName</key>
-			<string>DocumentType</string>
+			<string>TODOtxt</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
-				<string>????</string>
+				<string>public.utf8-plain-text </string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>

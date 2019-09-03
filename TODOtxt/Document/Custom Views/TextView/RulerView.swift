@@ -99,7 +99,8 @@ class RulerView: NSRulerView {
         if let textView = self.clientView as? NSTextView {
             if let layoutManager = textView.layoutManager {
                 
-                let baselineOffset = layoutManager.defaultBaselineOffset(for: textView.font!)
+                let baselineOffset = layoutManager.defaultLineHeight(for: textView.font!)
+                
                 let relativePoint = self.convert(NSZeroPoint, from: textView)
                 let markAttributes = [NSAttributedString.Key.font: textView.font!, NSAttributedString.Key.foregroundColor: foregroundColor] as [NSAttributedString.Key : Any]
                 

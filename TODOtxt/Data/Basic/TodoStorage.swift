@@ -59,7 +59,11 @@ class TodoStorage {
     private var storage: [ToDo] = []
     private var mentionStorage: MentionStorage = MentionStorage()
     
-    init (_ data: Data) throws {
+    init() {
+        
+    }
+    
+    func reload(_ data: Data) throws {
         guard let str = String(data: data, encoding: .utf8) else { throw DataError.invalidFormat}
         guard str.count <= CHARACTERS_LIMIT else { throw DataError.overflow }
         
