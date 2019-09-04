@@ -19,6 +19,7 @@ struct ElementComparator {
 }
 
 struct Comparator {
+    
     var order: [Element] = [.priority, .project, .date(granulity: .day), .context]
     
     func compare(_ lhs: ToDo, _ rhs: ToDo) -> Bool {

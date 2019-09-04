@@ -8,15 +8,78 @@
 
 import Foundation
 
+enum Operator {
+    
+}
+
 struct Filter { 
+    
+    enum FilterOperator {
+        case equals(value: String?)
+        case notEquals(value: String?)
+        case moreOrEquals(value: String)
+        case lessOrEquals(value: String)
+        case contains(value: String)
+        case containedIn(array: [String])
+        
+        func condition(with aggregator: Aggregator) -> Condition {
+           
+            switch self {
+            case .equals(let value):
+                let condition = {(_ todo: ToDo) -> Bool in
+                    let key = aggregator.groupKey(for: todo)
+                    return key == value
+                }
+                return condition
+            case .notEquals(let value):
+                let condition = {(_ todo: ToDo) -> Bool in
+                    let key = aggregator.groupKey(for: todo)
+                    return key != value
+                }
+                return condition
+            case .moreOrEquals(let value):
+                let condition = {(_ todo: ToDo) -> Bool in
+                    let key = aggregator.groupKey(for: todo)
+                    return key ?? "" > value || key == value
+                }
+                return condition
+            case .lessOrEquals(let value):
+                let condition = {(_ todo: ToDo) -> Bool in
+                    let key = aggregator.groupKey(for: todo)
+                    return key ?? "" < value || key == value
+                }
+                return condition
+            case .contains(let value):
+                let condition = {(_ todo: ToDo) -> Bool in
+                    let key = aggregator.groupKey(for: todo)
+                    return (key ?? "").contains(value)
+                }
+                return condition
+            case .containedIn(let array):
+                let condition = {(_ todo: ToDo) -> Bool in
+                    let key = aggregator.groupKey(for: todo) ?? ""
+                    return array.contains(key)
+                }
+                return condition
+            }
+        }
+    }
+    
+    
     
     typealias Condition = ((_ todo: ToDo) -> Bool)
     
     var name: String 
     private var condition: Condition
     
+    init(_ name: String = "", filterOperator: FilterOperator, aggregator: Aggregator) {
+        self.name = name
+        self.condition = filterOperator.condition(with: aggregator)
+    }
+    
     init(_ name: String = "", alwaysReturn result: Bool) {
         self.name = name
+        
         self.condition = { (_ todo: ToDo) -> Bool in
             return result
         }
@@ -27,39 +90,7 @@ struct Filter {
         self.condition = condition
     }
     
-    
-    init(_ name: String = "", element: Element, notEquals  value: String?) {
-        self.name = name
-        let condition = {(_ todo: ToDo) -> Bool in
-            return todo.key(by: element) != value
-        }
-        self.condition = condition
-    }
-    
-    init(_ name: String = "", element: Element, equals  value: String?) {
-        self.name = name
-        let condition = {(_ todo: ToDo) -> Bool in
-            return todo.key(by: element) == value
-        }
-        self.condition = condition
-    }
-    
-    init(_ name: String = "", notNil element: Element) {
-        self.name = name
-        let condition = {(_ todo: ToDo) -> Bool in
-            return todo.key(by: element) != nil
-        }
-        self.condition = condition
-    }
-    
-    init(_ name: String = "", aggregator: Aggregator, equals value: String?) {
-        self.name = aggregator.name
-        let condition = {(_ todo: ToDo) -> Bool in 
-            return aggregator.groupKey(for: todo) == value
-        }
-        self.condition = condition
-    }
-    
+    /// Body contains value
     init(_ name: String = "", contains value: String) {
         self.name = name
         let condition = {(_ todo: ToDo) -> Bool in 

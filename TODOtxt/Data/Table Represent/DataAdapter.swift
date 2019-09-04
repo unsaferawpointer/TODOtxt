@@ -37,34 +37,31 @@ class DataAdapter {
         let all = Item("All", filter: allFilter)
         storage.append(all)
         
-        let uncompletedFilter = Filter(element: .status, equals: nil)
+        let uncompletedAggregator = ElementAggregator(element: .status)
+        let uncompletedOperator = Filter.FilterOperator.equals(value: nil)
+        let uncompletedFilter = Filter(filterOperator: uncompletedOperator, aggregator: uncompletedAggregator)
         let uncomplete = Item("Uncompleted", filter: uncompletedFilter)
         storage.append(uncomplete)
         
-        let archiveFilter = Filter(element: .status, notEquals: nil)
+        let archiveAggregator = ElementAggregator(element: .status)
+        let archiveOperator = Filter.FilterOperator.notEquals(value: nil)
+        let archiveFilter = Filter(filterOperator: archiveOperator, aggregator: archiveAggregator)
         let archive = Item("Archive", filter: archiveFilter)
         storage.append(archive)
         
-        let hasContextFilter = Filter(element: .context, notEquals: nil) && uncompletedFilter
-        let hasContext = Item("Has context", filter: hasContextFilter)
-        storage.append(hasContext)
+        let customAggregator = ElementAggregator(element: .project)
+        let customOperator = Filter.FilterOperator.containedIn(array: ["home","travel"])
+        let customFilter = Filter(filterOperator: customOperator, aggregator: customAggregator) && uncompletedFilter
+        let custom = Item("Home and Travel project", filter: customFilter)
+        storage.append(custom)
         
-        let todayFilter = DateAggregator(style: .common).filter(groupKeyEquals: "b_today") && uncompletedFilter
+        let todayAggregator = DateAggregator(style: .common)
+        let todayOperator = Filter.FilterOperator.equals(value: "b_today")
+        let todayFilter = Filter(filterOperator: todayOperator, aggregator: todayAggregator) && uncompletedFilter
         let today = Item("Today", filter: todayFilter)
-        today.hasBadge = true
         storage.append(today)
         
-        let hasDateFilter = Filter(element: .date(granulity: .day), notEquals: nil) && uncompletedFilter
-        let hasDate = Item("Has date", filter: hasDateFilter)
-        storage.append(hasDate)
         
-        let overdueFilter = DateAggregator(style: .common).filter(groupKeyEquals: "a_overdue") && uncompletedFilter
-        let overdue = Item("Overdue", filter: overdueFilter)
-        storage.append(overdue)
-        
-        let containsFilter = Filter(contains: "important") && uncompletedFilter
-        let contains = Item("Important", filter: containsFilter)
-        storage.append(contains)
     }
     
     

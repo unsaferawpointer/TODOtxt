@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F93E5947231F526700266D92 /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93E5946231F526700266D92 /* FilterViewController.swift */; };
 		F9755A65231DB87900A2FCBA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A64231DB87900A2FCBA /* AppDelegate.swift */; };
 		F9755A67231DB87900A2FCBA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A66231DB87900A2FCBA /* ViewController.swift */; };
 		F9755A69231DB87900A2FCBA /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A68231DB87900A2FCBA /* Document.swift */; };
@@ -41,6 +42,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F93E5946231F526700266D92 /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
 		F9755A61231DB87900A2FCBA /* TODOtxt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TODOtxt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9755A64231DB87900A2FCBA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F9755A66231DB87900A2FCBA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 			children = (
 				F9755A7C231DBBE300A2FCBA /* SidebarViewController.swift */,
 				F9755A7A231DBBD300A2FCBA /* ContentViewController.swift */,
+				F93E5946231F526700266D92 /* FilterViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -331,6 +334,7 @@
 				F9755A83231DBC5D00A2FCBA /* BackgroundView.swift in Sources */,
 				F9755A80231DBC2600A2FCBA /* Theme.swift in Sources */,
 				F9755A97231DBCD500A2FCBA /* BadgeView.swift in Sources */,
+				F93E5947231F526700266D92 /* FilterViewController.swift in Sources */,
 				F9755A94231DBCC100A2FCBA /* DatePopover.swift in Sources */,
 				F9755A8A231DBC9500A2FCBA /* String Extention.swift in Sources */,
 				F9755AA7231DBD2D00A2FCBA /* Aggregator.swift in Sources */,

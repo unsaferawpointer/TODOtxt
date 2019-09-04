@@ -56,7 +56,9 @@ class TodoStorage {
     let CHARACTERS_LIMIT = 4_000
     let TODOS_LIMIT = 150
     
+    private var comparator: Comparator = Comparator()
     private var storage: [ToDo] = []
+    
     private var mentionStorage: MentionStorage = MentionStorage()
     
     init() {
@@ -88,7 +90,8 @@ extension TodoStorage {
     
     var string: String {
         let empty = NSMutableString()
-        let mutStr = storage.reduce(into: empty) { (result, todo) in
+        let sorted = storage.sorted(by: comparator.compare(_:_:))
+        let mutStr = sorted.reduce(into: empty) { (result, todo) in
             return result.append("\(todo.string)\n")
         }
         return mutStr.string
@@ -96,9 +99,9 @@ extension TodoStorage {
     
     func string(by filter: Filter) -> String {
         let filtered = storage.filter(filter.contains(_:))
-        
+        let sorted = filtered.sorted(by: comparator.compare(_:_:))
         let empty = NSMutableString()
-        let mutStr = filtered.reduce(into: empty) { (result, todo) in
+        let mutStr = sorted.reduce(into: empty) { (result, todo) in
             return result.append("\(todo.string)\n")
         }
         return mutStr.string
