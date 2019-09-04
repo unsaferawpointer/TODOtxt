@@ -883,10 +883,10 @@ DQ
             </objects>
             <point key="canvasLocation" x="-87.5" y="1389"/>
         </scene>
-        <!--View Controller-->
+        <!--Filter View Controller-->
         <scene sceneID="rYT-Qw-a9q">
             <objects>
-                <viewController id="92W-Zu-zyA" sceneMemberID="viewController">
+                <viewController id="92W-Zu-zyA" customClass="FilterViewController" customModule="TODOtxt" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="kPe-HW-oXd">
                         <rect key="frame" x="0.0" y="0.0" width="575" height="303"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -919,6 +919,9 @@ DQ
 DQ
 </string>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="buttonClicked:" target="92W-Zu-zyA" id="ypE-4B-45E"/>
+                                </connections>
                             </button>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TL1-6r-H4W">
                                 <rect key="frame" x="385" y="11" width="82" height="32"/>
@@ -1007,6 +1010,11 @@ Gw
                             </textField>
                         </subviews>
                     </view>
+                    <connections>
+                        <outlet property="conditionTextfield" destination="FUe-4t-Deo" id="95P-6q-V0p"/>
+                        <outlet property="filterConditionTextfield" destination="FUe-4t-Deo" id="VDw-B6-A3Q"/>
+                        <outlet property="nameTextfield" destination="yXH-JB-LCZ" id="0Cp-dJ-F4Y"/>
+                    </connections>
                 </viewController>
                 <customObject id="4F5-Xa-7wt" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>

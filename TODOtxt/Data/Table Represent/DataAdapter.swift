@@ -38,26 +38,17 @@ class DataAdapter {
         storage.append(all)
         
         let uncompletedAggregator = ElementAggregator(element: .status)
-        let uncompletedOperator = Filter.FilterOperator.equals(value: nil)
-        let uncompletedFilter = Filter(filterOperator: uncompletedOperator, aggregator: uncompletedAggregator)
+        let uncompletedFilter = Filter(filterOperator: .equals, value: nil, aggregator: uncompletedAggregator)
         let uncomplete = Item("Uncompleted", filter: uncompletedFilter)
         storage.append(uncomplete)
         
         let archiveAggregator = ElementAggregator(element: .status)
-        let archiveOperator = Filter.FilterOperator.notEquals(value: nil)
-        let archiveFilter = Filter(filterOperator: archiveOperator, aggregator: archiveAggregator)
+        let archiveFilter = Filter(filterOperator: .notEquals, value: nil,  aggregator: archiveAggregator)
         let archive = Item("Archive", filter: archiveFilter)
         storage.append(archive)
         
-        let customAggregator = ElementAggregator(element: .project)
-        let customOperator = Filter.FilterOperator.containedIn(array: ["home","travel"])
-        let customFilter = Filter(filterOperator: customOperator, aggregator: customAggregator) && uncompletedFilter
-        let custom = Item("Home and Travel project", filter: customFilter)
-        storage.append(custom)
-        
         let todayAggregator = DateAggregator(style: .common)
-        let todayOperator = Filter.FilterOperator.equals(value: "b_today")
-        let todayFilter = Filter(filterOperator: todayOperator, aggregator: todayAggregator) && uncompletedFilter
+        let todayFilter = Filter(filterOperator: .equals, value: "b_today", aggregator: todayAggregator) && uncompletedFilter
         let today = Item("Today", filter: todayFilter)
         storage.append(today)
         

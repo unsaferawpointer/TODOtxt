@@ -12,55 +12,29 @@ enum Operator {
     
 }
 
-struct Filter { 
+class Filter { 
     
     enum FilterOperator {
-        case equals(value: String?)
-        case notEquals(value: String?)
-        case moreOrEquals(value: String)
-        case lessOrEquals(value: String)
-        case contains(value: String)
-        case containedIn(array: [String])
+        case equals
+        case notEquals
+        case moreOrEquals
+        case lessOrEquals
+        case contains
         
-        func condition(with aggregator: Aggregator) -> Condition {
-           
-            switch self {
-            case .equals(let value):
-                let condition = {(_ todo: ToDo) -> Bool in
-                    let key = aggregator.groupKey(for: todo)
-                    return key == value
-                }
-                return condition
-            case .notEquals(let value):
-                let condition = {(_ todo: ToDo) -> Bool in
-                    let key = aggregator.groupKey(for: todo)
-                    return key != value
-                }
-                return condition
-            case .moreOrEquals(let value):
-                let condition = {(_ todo: ToDo) -> Bool in
-                    let key = aggregator.groupKey(for: todo)
-                    return key ?? "" > value || key == value
-                }
-                return condition
-            case .lessOrEquals(let value):
-                let condition = {(_ todo: ToDo) -> Bool in
-                    let key = aggregator.groupKey(for: todo)
-                    return key ?? "" < value || key == value
-                }
-                return condition
-            case .contains(let value):
-                let condition = {(_ todo: ToDo) -> Bool in
-                    let key = aggregator.groupKey(for: todo)
-                    return (key ?? "").contains(value)
-                }
-                return condition
-            case .containedIn(let array):
-                let condition = {(_ todo: ToDo) -> Bool in
-                    let key = aggregator.groupKey(for: todo) ?? ""
-                    return array.contains(key)
-                }
-                return condition
+        init? (_ rawValue: String) {
+            switch rawValue {
+            case "=":
+                self = .equals
+            case "!=":
+                self = .notEquals
+            case "=>":
+                self = .moreOrEquals
+            case "<=":
+                self = .lessOrEquals
+            case "contains":
+                self = .contains
+            default:
+                return nil
             }
         }
     }
@@ -72,9 +46,36 @@ struct Filter {
     var name: String 
     private var condition: Condition
     
-    init(_ name: String = "", filterOperator: FilterOperator, aggregator: Aggregator) {
+    init(_ name: String = "", filterOperator: FilterOperator, value: String?, aggregator: Aggregator) {
         self.name = name
-        self.condition = filterOperator.condition(with: aggregator)
+        switch filterOperator {
+        case .equals:
+            self.condition = {(_ todo: ToDo) -> Bool in
+                let key = aggregator.groupKey(for: todo)
+                return key == value
+            }
+        case .notEquals:
+            self.condition = {(_ todo: ToDo) -> Bool in
+                let key = aggregator.groupKey(for: todo)
+                return key != value
+            }
+        case .moreOrEquals:
+            self.condition = {(_ todo: ToDo) -> Bool in
+                let key = aggregator.groupKey(for: todo)
+                return key ?? "" > value ?? "" || key == value
+            }
+        case .lessOrEquals:
+            self.condition = {(_ todo: ToDo) -> Bool in
+                let key = aggregator.groupKey(for: todo)
+                return key ?? "" < value ?? "" || key == value
+            }
+        case .contains:
+            self.condition = {(_ todo: ToDo) -> Bool in
+                let key = aggregator.groupKey(for: todo)
+                return (key ?? "").contains(value ?? "")
+            }
+        }
+        
     }
     
     init(_ name: String = "", alwaysReturn result: Bool) {
