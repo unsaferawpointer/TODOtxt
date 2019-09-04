@@ -9,6 +9,10 @@
 import Cocoa
 
 class FilterViewController: NSViewController {
+    
+    var document: Document {
+        return NSDocumentController.shared.document(for: view.window!) as! Document
+    }
 
     @IBOutlet weak var nameTextfield: NSTextField!
     @IBOutlet weak var conditionTextfield: NSTextField!
@@ -21,7 +25,7 @@ class FilterViewController: NSViewController {
         
     }
     
-    func parse() -> Filter? {
+    func parse() {
         let conditionStr = conditionTextfield.stringValue
         
         var components: [String] = []
@@ -43,19 +47,17 @@ class FilterViewController: NSViewController {
                 print("filterOperator = \(filterOperatorStr)")
                 print("value = \(value)")
                 
-                guard let filterOperator = Filter.FilterOperator(filterOperatorStr) else { return nil }
-                guard let mention = Element(rawValue: mentionStr) else { return nil }
+                guard let filterOperator = Filter.FilterOperator(filterOperatorStr) else { return  }
+                guard let mention = Element(rawValue: mentionStr) else { return  }
+                if filter == nil { filter = Filter() }
                 let aggregator = ElementAggregator(element: mention)
-                let filter = Filter(filterOperator: filterOperator, value: value, aggregator: aggregator)
-                return filter
+                filter!.setCondition(filterOperator: filterOperator, value: value, aggregator: aggregator)
             }
         }
         
-        return nil
     }
     
     @IBAction func buttonClicked(_ sender: Any) {
-        guard let filter = parse() else { return }
         
     }
     

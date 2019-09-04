@@ -44,10 +44,18 @@ class Filter {
     typealias Condition = ((_ todo: ToDo) -> Bool)
     
     var name: String 
-    private var condition: Condition
+    private var condition: Condition = {(todo: ToDo) -> Bool in return true }
+    
+    init(_ name: String = "") {
+        self.name = name
+    }
     
     init(_ name: String = "", filterOperator: FilterOperator, value: String?, aggregator: Aggregator) {
         self.name = name
+        self.setCondition(filterOperator: filterOperator, value: value, aggregator: aggregator)
+    }
+    
+    func setCondition(filterOperator: FilterOperator, value: String?, aggregator: Aggregator) {
         switch filterOperator {
         case .equals:
             self.condition = {(_ todo: ToDo) -> Bool in
@@ -75,7 +83,6 @@ class Filter {
                 return (key ?? "").contains(value ?? "")
             }
         }
-        
     }
     
     init(_ name: String = "", alwaysReturn result: Bool) {
