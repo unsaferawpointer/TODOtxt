@@ -33,12 +33,12 @@
 		F9755AA5231DBD2700A2FCBA /* Comparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AA4231DBD2700A2FCBA /* Comparator.swift */; };
 		F9755AA7231DBD2D00A2FCBA /* Aggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AA6231DBD2D00A2FCBA /* Aggregator.swift */; };
 		F9755AAD231DBD4900A2FCBA /* ToDo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AAA231DBD4900A2FCBA /* ToDo.swift */; };
-		F9755AAE231DBD4900A2FCBA /* DataAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AAC231DBD4900A2FCBA /* DataAdapter.swift */; };
 		F9755AB0231DBE0800A2FCBA /* TextStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AAF231DBE0800A2FCBA /* TextStorage.swift */; };
 		F9755AB4231DBEA500A2FCBA /* ItemCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AB2231DBEA500A2FCBA /* ItemCellView.swift */; };
 		F9755AB5231DBEA500A2FCBA /* ItemCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9755AB3231DBEA500A2FCBA /* ItemCellView.xib */; };
 		F9755AB7231DBF0400A2FCBA /* TodoStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AB6231DBF0400A2FCBA /* TodoStorage.swift */; };
 		F9755AB9231DD6AB00A2FCBA /* Themes.plist in Resources */ = {isa = PBXBuildFile; fileRef = F9755AB8231DD6AB00A2FCBA /* Themes.plist */; };
+		F9C6CCC223259051008026FD /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C6CCC123259051008026FD /* Item.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,12 +71,12 @@
 		F9755AA4231DBD2700A2FCBA /* Comparator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comparator.swift; sourceTree = "<group>"; };
 		F9755AA6231DBD2D00A2FCBA /* Aggregator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Aggregator.swift; sourceTree = "<group>"; };
 		F9755AAA231DBD4900A2FCBA /* ToDo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDo.swift; sourceTree = "<group>"; };
-		F9755AAC231DBD4900A2FCBA /* DataAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataAdapter.swift; sourceTree = "<group>"; };
 		F9755AAF231DBE0800A2FCBA /* TextStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextStorage.swift; sourceTree = "<group>"; };
 		F9755AB2231DBEA500A2FCBA /* ItemCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCellView.swift; sourceTree = "<group>"; };
 		F9755AB3231DBEA500A2FCBA /* ItemCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ItemCellView.xib; sourceTree = "<group>"; };
 		F9755AB6231DBF0400A2FCBA /* TodoStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoStorage.swift; sourceTree = "<group>"; };
 		F9755AB8231DD6AB00A2FCBA /* Themes.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Themes.plist; sourceTree = "<group>"; };
+		F9C6CCC123259051008026FD /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -212,7 +212,7 @@
 			isa = PBXGroup;
 			children = (
 				F9755AA9231DBD4900A2FCBA /* Basic */,
-				F9755AAB231DBD4900A2FCBA /* Table Represent */,
+				F9C6CCC123259051008026FD /* Item.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -224,14 +224,6 @@
 				F9755AB6231DBF0400A2FCBA /* TodoStorage.swift */,
 			);
 			path = Basic;
-			sourceTree = "<group>";
-		};
-		F9755AAB231DBD4900A2FCBA /* Table Represent */ = {
-			isa = PBXGroup;
-			children = (
-				F9755AAC231DBD4900A2FCBA /* DataAdapter.swift */,
-			);
-			path = "Table Represent";
 			sourceTree = "<group>";
 		};
 		F9755AB1231DBE7300A2FCBA /* cells */ = {
@@ -324,9 +316,9 @@
 				F9755AA1231DBD0D00A2FCBA /* Preferences.swift in Sources */,
 				F9755AAD231DBD4900A2FCBA /* ToDo.swift in Sources */,
 				F9755A7D231DBBE300A2FCBA /* SidebarViewController.swift in Sources */,
+				F9C6CCC223259051008026FD /* Item.swift in Sources */,
 				F9755A88231DBC8E00A2FCBA /* NSColor Extention.swift in Sources */,
 				F9755A9D231DBCF700A2FCBA /* SortedArray.swift in Sources */,
-				F9755AAE231DBD4900A2FCBA /* DataAdapter.swift in Sources */,
 				F9755A7B231DBBD400A2FCBA /* ContentViewController.swift in Sources */,
 				F9755AA5231DBD2700A2FCBA /* Comparator.swift in Sources */,
 				F9755A67231DB87900A2FCBA /* ViewController.swift in Sources */,

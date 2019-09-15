@@ -13,53 +13,44 @@ class FilterViewController: NSViewController {
     var document: Document {
         return NSDocumentController.shared.document(for: view.window!) as! Document
     }
+    
+    @objc var selectedIndex: Int = 0 {
+        didSet {
+            print("selectedIndex = \(selectedIndex)")
+            isHidden = !(templatesPopUpButton.lastItem == templatesPopUpButton.item(at: selectedIndex))
+        }
+    }
 
+    
     @IBOutlet weak var nameTextfield: NSTextField!
     @IBOutlet weak var conditionTextfield: NSTextField!
+    @IBOutlet weak var okButton: NSButton!
+    @IBOutlet weak var templatesPopUpButton: NSPopUpButton!
     
     var filter: Filter?
+    
+    @objc var isHidden: Bool = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here
+        conditionTextfield.delegate = self
+        
         
     }
     
-    func parse() {
-        let conditionStr = conditionTextfield.stringValue
-        
-        var components: [String] = []
-        let byAndArray = conditionStr.components(separatedBy: "AND")
-        for substring in byAndArray {
-            let byOrArray = substring.components(separatedBy: "OR")
-            components += byOrArray
-        }
-        
-        let pattern = #"^\s*(project|context)\s+(=|=>|<=|contains)\s+(\w+)\s+$"#
-        let regex = try! NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines])
-        for substring in components {
-            let range = substring.fullRange
-            if let match = regex.firstMatch(in: substring, options: [], range: range) {
-                let mentionStr = substring.substring(from: match.range(at: 1))
-                let filterOperatorStr = substring.substring(from: match.range(at: 2))
-                let value = substring.substring(from: match.range(at: 3))
-                print("mention = \(mentionStr)")
-                print("filterOperator = \(filterOperatorStr)")
-                print("value = \(value)")
-                
-                guard let filterOperator = Filter.FilterOperator(filterOperatorStr) else { return  }
-                guard let mention = Element(rawValue: mentionStr) else { return  }
-                if filter == nil { filter = Filter() }
-                let aggregator = ElementAggregator(element: mention)
-                filter!.setCondition(filterOperator: filterOperator, value: value, aggregator: aggregator)
-            }
-        }
-        
-    }
     
     @IBAction func buttonClicked(_ sender: Any) {
-        
+        print(#function)
     }
     
     
+    
+}
+
+extension FilterViewController: NSTextFieldDelegate {
+    func controlTextDidChange(_ obj: Notification) {
+        print(#function)
+        
+    }
 }

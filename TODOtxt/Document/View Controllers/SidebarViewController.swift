@@ -18,27 +18,52 @@ class SidebarViewController: NSViewController {
         return NSDocumentController.shared.document(for: view.window!) as! Document
     }
     
+    @IBOutlet var arrayController: NSArrayController!
     weak var delegate: SidebarDelegate?
     
-    @IBOutlet weak var tableView: NSTableView!
+    @objc var storage: [Item] = []
     
-    var dataAdapter = DataAdapter()
+    @IBOutlet weak var tableView: NSTableView!
     
     private var dragDropType = NSPasteboard.PasteboardType(rawValue: "private.table-row")
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
+        
+        let parser = FilterParser()
+        /*
+        let inboxFilter = try! parser.parse(form: ".uncompleted")
+        let inbox = Item("Inbox", filter: inboxFilter)
+        storage.append(inbox)
+        
+        let allFilter = try! parser.parse(form: "")
+        let all = Item("All", filter: allFilter)
+        storage.append(all)
+        
+        
+        let moscowFilter = try! parser.parse(form: "context = moscow")
+        let moscow = Item("Moscow", filter: moscowFilter)
+        storage.append(moscow)
+        
+        
+        let archiveFilter = try! parser.parse(form: ".completed")
+        let archive = Item("Archive", filter: archiveFilter)
+        storage.append(archive)
+        */
+        arrayController.content = storage
+        
         tableView.backgroundColor = .clear
         tableView.registerForDraggedTypes([dragDropType])
         let menu = NSMenu()
         menu.addItem(withTitle: "Delete", action: nil, keyEquivalent: String.backspace)
         menu.addItem(withTitle: "Rename", action: #selector(rename(_:)), keyEquivalent: "i")
         tableView.menu = menu
+        
     }
     
     func selectFirstIfPossible() {
-        if let first = dataAdapter.storage.first {
+        if let first = storage.first {
             delegate?.selectedItemDidChange(newItem: first)
         }
     }
@@ -55,18 +80,19 @@ class SidebarViewController: NSViewController {
 extension SidebarViewController: NSTableViewDataSource {
     
     func numberOfRows(in tableView: NSTableView) -> Int {
-        return dataAdapter.storage.count
+        return storage.count
     }
     
 }
 
 extension SidebarViewController: NSTableViewDelegate {
+    /*
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         
         let id = NSUserInterfaceItemIdentifier(rawValue: "cell")
         let cellView = tableView.makeView(withIdentifier: id, owner: self) as? ItemCellView
         
-        cellView?.textField?.stringValue = dataAdapter.storage[row].name
+        cellView?.textField?.stringValue = dataAdapter.storage[row].name as! String
         cellView?.imageView?.image = NSImage(imageLiteralResourceName: "filter")
         cellView?.badgeView.isHidden = !dataAdapter.storage[row].hasBadge
         
@@ -114,14 +140,16 @@ extension SidebarViewController: NSTableViewDelegate {
         
         return item
     }
+ */
     
 }
 
 extension SidebarViewController {
     func tableViewSelectionDidChange(_ notification: Notification) {
         let sRow = tableView.selectedRow
+        print(#function)
         guard sRow >= 0 else { fatalError("Empty selection is not supported") }
-        let newItem = dataAdapter.storage[sRow]
+        let newItem = storage[sRow]
         delegate?.selectedItemDidChange(newItem: newItem)
     }
 }
