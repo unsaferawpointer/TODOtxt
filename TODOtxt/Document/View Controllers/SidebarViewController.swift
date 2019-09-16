@@ -31,7 +31,7 @@ class SidebarViewController: NSViewController {
         super.viewDidLoad()
         // Do view setup here.
         
-        let parser = FilterParser()
+        //let parser = FilterParser()
         /*
         let inboxFilter = try! parser.parse(form: ".uncompleted")
         let inbox = Item("Inbox", filter: inboxFilter)

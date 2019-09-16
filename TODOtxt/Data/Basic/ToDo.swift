@@ -32,3 +32,22 @@ struct ToDo: Hashable, CustomStringConvertible {
     
 }
 
+class Task: NSObject {
+    
+    let string: String
+    
+    let project: String?
+    let context: String?
+    let priority: String?
+    let dateString: String?
+    
+    init(string: String, project: String? = nil, context: String? = nil, priority: String? = nil, dateString: String? = nil) {
+        self.string = string
+        self.project = project
+        self.context = context
+        self.priority = priority
+        self.dateString = dateString
+    }
+    
+}
+

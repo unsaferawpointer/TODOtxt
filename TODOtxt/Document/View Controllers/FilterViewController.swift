@@ -13,17 +13,9 @@ class FilterViewController: NSViewController {
     var document: Document {
         return NSDocumentController.shared.document(for: view.window!) as! Document
     }
-    
-    @objc var selectedIndex: Int = 0 {
-        didSet {
-            print("selectedIndex = \(selectedIndex)")
-            isHidden = !(templatesPopUpButton.lastItem == templatesPopUpButton.item(at: selectedIndex))
-        }
-    }
 
-    
+    @IBOutlet weak var predicateEditor: NSPredicateEditor!
     @IBOutlet weak var nameTextfield: NSTextField!
-    @IBOutlet weak var conditionTextfield: NSTextField!
     @IBOutlet weak var okButton: NSButton!
     @IBOutlet weak var templatesPopUpButton: NSPopUpButton!
     
@@ -34,7 +26,29 @@ class FilterViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here
-        conditionTextfield.delegate = self
+        //setupPredicateEditor()
+        predicateEditor.addRow(self)
+        
+    }
+    
+    func setupPredicateEditor() { 
+        let left = [NSExpression(forKeyPath: "context"),NSExpression(forKeyPath: "project")]
+        let operators = [NSComparisonPredicate.Operator.equalTo.rawValue as NSNumber]
+        
+        let rowTemplate = NSPredicateEditorRowTemplate(leftExpressions: left,
+                                                       rightExpressionAttributeType: .stringAttributeType,
+                                                       modifier: .all,
+                                                       operators: operators,
+                                                       options: 0)
+        
+       
+        
+        
+        predicateEditor.rowTemplates = [rowTemplate] 
+        predicateEditor.addRow(self)
+        
+        
+        
         
         
     }
@@ -42,15 +56,10 @@ class FilterViewController: NSViewController {
     
     @IBAction func buttonClicked(_ sender: Any) {
         print(#function)
+        //predicateEditor.objectValue = NSPredicate(format: "project = %@ AND context = %@", argumentArray: ["test","tests"])
+        print(predicateEditor.predicate)
     }
     
     
     
-}
-
-extension FilterViewController: NSTextFieldDelegate {
-    func controlTextDidChange(_ obj: Notification) {
-        print(#function)
-        
-    }
 }

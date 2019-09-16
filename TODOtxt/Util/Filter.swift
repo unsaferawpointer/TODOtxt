@@ -36,13 +36,13 @@ struct WrappedCondition {
     
 }
 
-enum FilterExpression {
+enum Filter {
     
     case condition(WrappedCondition)
-    indirect case addition(FilterExpression, FilterExpression)
-    indirect case multiplication(FilterExpression, FilterExpression)
+    indirect case addition(Filter, Filter)
+    indirect case multiplication(Filter, Filter)
     
-    private func evaluate(_ expression: FilterExpression) -> WrappedCondition {
+    private func evaluate(_ expression: Filter) -> WrappedCondition {
         switch expression {
         case let .condition(value):
             return value
@@ -277,177 +277,5 @@ enum ElementCondition {
     }
     
 }
-
-class FilterParser {
-    
-    enum FilterError: Error {
-        case operatorError
-        case mentionError
-        case valueError
-        case notExist
-    }
-    
-    func parseDateAggregatorCondition(from str: String) throws -> FilterExpression? {
-        
-        let range = str.fullRange
-        let pattern = #"\s*\.(today|tomorrow|overdue|current_week|current_month|current_year)\s*$"#
-        let regex = try! NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines])
-        if let match = regex.firstMatch(in: str, options: [], range: range) {
-            
-            let value = str.substring(from: match.range(at: 1))
-            if let dateCondition = DateCondition(rawValue: value) {
-                let wrappedCondition = WrappedCondition(dateCondition)
-                return FilterExpression.condition(wrappedCondition)
-            }
-        }
-        
-        return nil
-    }
-    
-}
-
-/*
-
-class FilterParser {
-    
-    enum FilterError: Error {
-        case operatorError
-        case mentionError
-        case valueError
-        case notExist
-    }
-    
-    func parse(form str: String) throws -> FilterExpression {
-        
-        var result: FilterCondition?
-        guard !str.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            return Filter(condition: { (todo) -> Bool in
-                return true
-            })
-        }
-        
-        do {
-            if let condition = try parseElementCondition(from: str) {
-                result = condition
-            } else if let condition = try parseDateElementCondition(from: str) {
-                result = condition
-            } else if let condition = try parseDateAggregatorCondition(from: str) {
-                result = condition
-            } else if let condition = try parseStatusCondition(from: str) {
-                result = condition
-            }
-        }
-        
-        if let condition = result {
-            let filter = FilterExpression.value(condition)
-            return filter
-        } else {
-            throw FilterError.notExist
-        }
-        
-        
-    }
-    
-    func parseElementCondition(from str: String) throws -> FilterCondition? {
-        let range = str.fullRange
-        let pattern = #"^\s*(project|context|priority)\s+(=|=>|<=|contains)\s+(\w+)\s*$"#
-        let regex = try! NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines])
-        if let match = regex.firstMatch(in: str, options: [], range: range) {
-           
-            let mentionStr = str.substring(from: match.range(at: 1))
-            let filterOperatorStr = str.substring(from: match.range(at: 2))
-            let value = str.substring(from: match.range(at: 3))
-            
-            guard let filterOperator = FilterOperator(filterOperatorStr) else { 
-                throw DataError.invalidFormat  
-            }
-            
-            guard let mention = Element(rawValue: mentionStr) else { 
-                throw DataError.invalidFormat
-            }
-            
-            let condition = ElementCondition(mention: mention, operation: filterOperator, value: value)
-            
-            return condition?.condition
-        }
-        
-        return nil
-    }
-    
-    func parseDateElementCondition(from str: String) throws -> FilterCondition? {
-        let range = str.fullRange
-        let pattern = #"^\s*(date)\s+(=|=>|<=)\s+((19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31))\s*$"#
-        let regex = try! NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines])
-        if let match = regex.firstMatch(in: str, options: [], range: range) {
-            
-            //let mentionStr = str.substring(from: match.range(at: 1))
-            let filterOperatorStr = str.substring(from: match.range(at: 2))
-            let value = str.substring(from: match.range(at: 3))
-            
-            guard let filterOperator = FilterOperator(filterOperatorStr) else { 
-                throw DataError.invalidFormat  
-            }
-            let mention = Element.date(granulity: .day)
-            
-            if let condition = ElementCondition(mention: mention, operation: filterOperator, value: value) {
-                return FilterExpression.value(FilterCondition(condition: condition.condition))
-            }
-            
-            return nil
-        }
-        
-        return nil
-    }
-    
-    func parseDateAggregatorCondition(from str: String) throws -> FilterCondition? {
-        let range = str.fullRange
-        let pattern = #"\s*\.(today|tomorrow|overdue|current_week|current_month|current_year)\s*$"#
-        let regex = try! NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines])
-        if let match = regex.firstMatch(in: str, options: [], range: range) {
-            
-            let value = str.substring(from: match.range(at: 3))
-            
-            guard let style = DateAggregator.Style(rawValue: value) else { 
-                throw DataError.invalidFormat  
-            }
-            
-            let aggregator = DateAggregator.init(style: style)
-            
-            let condition = {(_ todo: ToDo) -> Bool in
-                let key = aggregator.groupKey(for: todo)
-                return key == value
-            }
-                
-            return condition
-        }
-        
-        return nil
-    }
-    
-    func parseStatusCondition(from str: String) throws -> FilterCondition? {
-        let range = str.fullRange
-        let pattern = #"\s*\.(completed|uncompleted)\s*$"#
-        let regex = try! NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines])
-        if let match = regex.firstMatch(in: str, options: [], range: range) {
-            let value = str.substring(from: match.range(at: 1))
-            let aggregator = StatusAggregator()
-            let condition = {(_ todo: ToDo) -> Bool in
-                let key = aggregator.groupKey(for: todo)
-                return key == value
-            }
-            return condition
-        }
-        
-        return nil
-    }
-    
-          
-    
-}
-
-
-
-*/
-
 
 
