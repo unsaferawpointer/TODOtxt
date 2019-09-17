@@ -9,7 +9,7 @@
 import Cocoa
 
 protocol TextStorageDataDelegate: class {
-    func dataDidChanged(toInsert: [ToDo], toDelete: [ToDo])
+    func dataDidChanged(toInsert: [Task], toDelete: [Task])
 }
 
 class TextStorage: NSTextStorage {
@@ -19,8 +19,8 @@ class TextStorage: NSTextStorage {
     let backingStore = NSTextStorage()
     var parser: Parser = Parser()
     
-    var inserted = [ToDo]()
-    var removed = [ToDo]()
+    var inserted = [Task]()
+    var removed = [Task]()
     var observeChanging = true
     
     override var string: String {

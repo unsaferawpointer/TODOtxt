@@ -34,19 +34,45 @@ struct ToDo: Hashable, CustomStringConvertible {
 
 class Task: NSObject {
     
+    override func isEqual(_ object: Any?) -> Bool {
+        if let obj = object as? Task {
+            return self.string == obj.string
+        }
+        return false
+    }
+    
     let string: String
     
     let project: String?
-    let context: String?
+    @objc let context: String?
     let priority: String?
     let dateString: String?
+    let status: String?
     
-    init(string: String, project: String? = nil, context: String? = nil, priority: String? = nil, dateString: String? = nil) {
+    init(string: String, status: String? = nil, project: String? = nil, context: String? = nil, priority: String? = nil, dateString: String? = nil) {
         self.string = string
+        self.status = status
         self.project = project
         self.context = context
         self.priority = priority
         self.dateString = dateString
+    }
+    
+    func key(by element: Element) -> String? {
+        switch element {
+        case .project:
+            return project
+        case .context:
+            return context
+        case .priority:
+            return priority
+        case .status:
+            return status
+        case .date(granulity: .day):
+            return dateString
+        default:
+            return nil
+        }
     }
     
 }

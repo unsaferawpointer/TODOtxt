@@ -13,9 +13,9 @@ class Item: NSObject {
     var hasBadge: Bool = false
     
     @objc var name: String
-    var filter: Filter
+    var filter: NSPredicate
     
-    init(_ name: String, filter: Filter) {
+    init(_ name: String, filter: NSPredicate) {
         self.name = name
         self.filter = filter
     }

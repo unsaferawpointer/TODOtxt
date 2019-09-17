@@ -29,7 +29,7 @@ class MentionStorage {
     
     
     /// FIX ME inout
-    func insert(from todos: [ToDo]) {
+    func insert(from todos: [Task]) {
         for element in autocompletions {
             let array = todos.compactMap { (todo) -> String? in
                 return todo.key(by: element)
@@ -39,7 +39,7 @@ class MentionStorage {
     }
     
     /// FIX ME inout
-    func remove(from todos: [ToDo]) {
+    func remove(from todos: [Task]) {
         for element in autocompletions {
             let array = todos.compactMap { (todo) -> String? in
                 return todo.key(by: element)
@@ -57,8 +57,7 @@ class TodoStorage {
     let TODOS_LIMIT = 150
     
     private var comparator: Comparator = Comparator()
-    private var storage: [ToDo] = []
-    
+    private var storage: NSMutableArray = NSMutableArray(array: [Task]())    
     private var mentionStorage: MentionStorage = MentionStorage()
     
     init() {
@@ -73,13 +72,14 @@ class TodoStorage {
         performOperation(inserted: parser.parse(str), removed: [])
     }
     
-    func performOperation(inserted: [ToDo], removed: [ToDo]) {
+    func performOperation(inserted: [Task], removed: [Task]) {
         mentionStorage.remove(from: removed)
         mentionStorage.insert(from: inserted)
-        storage += inserted
-        for todo in removed {
-            let index = storage.firstIndex(of: todo)!
-            storage.remove(at: index)
+        storage.addObjects(from: inserted)
+        
+        for task in removed {
+            let index = storage.index(of: task)
+            storage.removeObject(at: index)
         }
     }
     
@@ -90,15 +90,18 @@ extension TodoStorage {
     
     var string: String {
         let empty = NSMutableString()
-        let sorted = storage.sorted(by: comparator.compare(_:_:))
+        // WARNING
+        let sorted = storage
         let mutStr = sorted.reduce(into: empty) { (result, todo) in
-            return result.append("\(todo.string)\n")
+            return result.append("\((todo as! Task).string)\n")
         }
         return mutStr.string
     }
     
-    func string(by filter: Filter) -> String {
-        let filtered = storage.filter(filter.contains(_:))
+    func string(by filter: NSPredicate) -> String {
+        // WARNING
+        //let filtered = storage.filter(filter.contains(_:))
+        let filtered = storage.filtered(using: filter) as! [Task]
         let sorted = filtered.sorted(by: comparator.compare(_:_:))
         let empty = NSMutableString()
         let mutStr = sorted.reduce(into: empty) { (result, todo) in

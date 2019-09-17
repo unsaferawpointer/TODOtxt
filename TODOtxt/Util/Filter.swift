@@ -10,25 +10,25 @@ import Foundation
 
 struct WrappedCondition {
     
-    let value: (_ todo: ToDo) -> Bool
+    let value: (_ todo: Task) -> Bool
     
     init(_ value: Condition) {
         self.value = value.condition
     }
     
-    init(_ value: @escaping (_ todo: ToDo) -> Bool) {
+    init(_ value: @escaping (_ todo: Task) -> Bool) {
         self.value = value
     }
     
     static func && (left: WrappedCondition, right: WrappedCondition) -> WrappedCondition {
-        let newCondition = { (_ todo: ToDo) -> Bool in 
+        let newCondition = { (_ todo: Task) -> Bool in 
             return left.value(todo) && right.value(todo)
         }
         return WrappedCondition(newCondition)
     }
     
     static func || (left: WrappedCondition, right: WrappedCondition) -> WrappedCondition {
-        let newCondition = { (_ todo: ToDo) -> Bool in 
+        let newCondition = { (_ todo: Task) -> Bool in 
             return left.value(todo) || right.value(todo)
         }
         return WrappedCondition(newCondition)
@@ -57,7 +57,7 @@ enum Filter {
         return evaluate(self)
     }
     
-    func contains(_ todo: ToDo) -> Bool {
+    func contains(_ todo: Task) -> Bool {
         let condition = evaluate()
         return condition.value(todo)
     }
@@ -111,7 +111,7 @@ enum FilterOperator {
 }
 
 protocol Condition {
-    var condition: (_ todo: ToDo) -> Bool { get }
+    var condition: (_ todo: Task) -> Bool { get }
 }
 
 enum DateCondition: Condition {
@@ -137,14 +137,14 @@ enum DateCondition: Condition {
         }
     }
     
-    var condition: (_ todo: ToDo) -> Bool {
+    var condition: (_ todo: Task) -> Bool {
         
-        let result = { (_ todo: ToDo) -> Bool in
+        let result = { (_ todo: Task) -> Bool in
             
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
             
-            guard let str = todo.dictionary[.date(granulity: .day)] else { return false }
+            guard let str = todo.dateString else { return false }
             let date = formatter.date(from: str)!
             
             let calendar = NSCalendar.current
@@ -247,8 +247,8 @@ enum ElementCondition {
         }
     }
     
-    var condition: (_ todo: ToDo) -> Bool {
-        let result = { (_ todo: ToDo) -> Bool in
+    var condition: (_ todo: Task) -> Bool {
+        let result = { (_ todo: Task) -> Bool in
             
             switch self {
             case .project(let operation, let value):

@@ -28,7 +28,6 @@ class FilterViewController: NSViewController {
         // Do view setup here
         //setupPredicateEditor()
         predicateEditor.addRow(self)
-        
     }
     
     func setupPredicateEditor() { 

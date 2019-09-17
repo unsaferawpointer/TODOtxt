@@ -118,7 +118,7 @@ extension ContentViewController: NSTextViewDelegate {
 }
 
 extension ContentViewController: TextStorageDataDelegate {
-    func dataDidChanged(toInsert: [ToDo], toDelete: [ToDo]) {
+    func dataDidChanged(toInsert: [Task], toDelete: [Task]) {
         backingStore!.performOperation(inserted: toInsert, removed: toDelete)
     }
    

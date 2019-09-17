@@ -205,30 +205,30 @@ extension Parser {
 // ********** PARSING DATA **********
 extension Parser {
     
-    func parse(_ string: String) -> [ToDo] {
-        var array = [ToDo]()
+    func parse(_ string: String) -> [Task] {
+        var array = [Task]()
         string.enumerateLines { (substring, stop) in
-            if let todo = self.parse(substring) {
-                array.append(todo)
+            if let task = self.parse(substring) {
+                array.append(task)
             }
         }
         return array
     }
     
     // parse text while reading a document
-    func parse(text: NSMutableString) -> [ToDo]  {
+    func parse(text: NSMutableString) -> [Task]  {
         
         let range = text.fullRange
         return parse(text, in: range)
         
     }
     
-    func parse(_ mutString: NSMutableString, in editedRange: NSRange) -> [ToDo] {
+    func parse(_ mutString: NSMutableString, in editedRange: NSRange) -> [Task] {
         
-        var array = [ToDo]()
+        var array = [Task]()
         mutString.enumerateSubstrings(in: editedRange, options: .byLines) { (substring, substringRange, enclosingRange, stop) in
-            if let body = substring, let todo = self.parse(body)  {
-                array.append(todo)
+            if let body = substring, let task = self.parse(body)  {
+                array.append(task)
             }
         }
         
@@ -237,19 +237,19 @@ extension Parser {
     
     // WARNING ambiguous func name
     // parsing todo
-    func parse(_ body: String) -> ToDo? {
+    func parse(_ body: String) -> Task? {
         
         guard hasTodo(body) else { return nil}
         
-        var dictionary = [Element : String]()
+        let project = parse(in: body, element: .project)
+        let context = parse(in: body, element: .context)
+        let priority = parse(in: body, element: .priority)
+        let dateString = parse(in: body, element: .date(granulity: .day))
+        let status = parse(in: body, element: .status)
         
-        for element in elements {
-            dictionary[element] = parse(in: body, element: element)
-        }
+        let task = Task(string: body, status: status, project: project, context: context, priority: priority, dateString: dateString)
         
-        let todo = ToDo(string: body, dictionary: dictionary)
-        
-        return todo
+        return task
     }
     
     func hasTodo(_ body: String) -> Bool {

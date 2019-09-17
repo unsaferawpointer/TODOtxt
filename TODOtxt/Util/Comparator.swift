@@ -22,18 +22,18 @@ struct Comparator {
     
     var order: [Element] = [.priority, .project, .date(granulity: .day), .context]
     
-    func compare(_ lhs: ToDo, _ rhs: ToDo) -> Bool {
+    func compare(_ lhs: Task, _ rhs: Task) -> Bool {
         
         // Reverse status comparison
-        let lhsStatus = lhs.dictionary[.status]
-        let rhsStatus = rhs.dictionary[.status]
+        let lhsStatus = lhs.status
+        let rhsStatus = rhs.status
         guard lhsStatus == rhsStatus else { 
             return compare(lhs: rhsStatus, rhs: lhsStatus)
         }
         
         for mention in order {
-            let lhsValue = lhs.dictionary[mention]
-            let rhsValue = rhs.dictionary[mention]
+            let lhsValue = lhs.key(by: mention)
+            let rhsValue = rhs.key(by: mention)
             if lhsValue != rhsValue {
                 return compare(lhs: lhsValue, rhs: rhsValue)
             }
@@ -53,20 +53,6 @@ struct Comparator {
         }
     }
     
-    /*
-    func compare <Element: Comparable> (lhs: Element?, rhs: Element?) -> ComparisonResult {
-        if lhs == nil {
-            return .orderedDescending
-        } else if rhs == nil {
-            return .orderedAscending
-        } else if lhs! < rhs! {
-            return .orderedAscending
-        } else if lhs! > rhs! {
-            return .orderedDescending
-        }
-        
-        return .orderedSame
-    }*/
 }
 
 

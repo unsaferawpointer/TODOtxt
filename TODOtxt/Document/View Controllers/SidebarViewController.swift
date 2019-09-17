@@ -31,21 +31,25 @@ class SidebarViewController: NSViewController {
         super.viewDidLoad()
         // Do view setup here.
         
-        //let parser = FilterParser()
-        /*
-        let inboxFilter = try! parser.parse(form: ".uncompleted")
+        
+        
+        let inboxFilter = NSPredicate(value: true)
         let inbox = Item("Inbox", filter: inboxFilter)
         storage.append(inbox)
         
-        let allFilter = try! parser.parse(form: "")
-        let all = Item("All", filter: allFilter)
-        storage.append(all)
         
-        
-        let moscowFilter = try! parser.parse(form: "context = moscow")
+        let moscowFilter = NSPredicate(format: "context = %@", argumentArray: ["moscow"])
         let moscow = Item("Moscow", filter: moscowFilter)
         storage.append(moscow)
         
+        let travelFilter = NSPredicate(format: "project = %@", argumentArray: ["travel"])
+        let travel = Item("Travel", filter: travelFilter)
+        storage.append(travel)
+        
+        /*
+        let allFilter = try! parser.parse(form: "")
+        let all = Item("All", filter: allFilter)
+        storage.append(all)
         
         let archiveFilter = try! parser.parse(form: ".completed")
         let archive = Item("Archive", filter: archiveFilter)
