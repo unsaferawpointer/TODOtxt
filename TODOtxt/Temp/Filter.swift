@@ -8,6 +8,7 @@
 
 import Foundation
 
+/*
 struct WrappedCondition {
     
     let value: (_ todo: Task) -> Bool
@@ -278,4 +279,4 @@ enum ElementCondition {
     
 }
 
-
+*/

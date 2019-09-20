@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F900C45A23335ABB007C9FC0 /* FiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F900C45923335ABB007C9FC0 /* FiltersViewController.swift */; };
 		F93E5947231F526700266D92 /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93E5946231F526700266D92 /* FilterViewController.swift */; };
 		F9755A65231DB87900A2FCBA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A64231DB87900A2FCBA /* AppDelegate.swift */; };
 		F9755A67231DB87900A2FCBA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A66231DB87900A2FCBA /* ViewController.swift */; };
@@ -32,7 +33,7 @@
 		F9755AA3231DBD1700A2FCBA /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AA2231DBD1700A2FCBA /* Parser.swift */; };
 		F9755AA5231DBD2700A2FCBA /* Comparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AA4231DBD2700A2FCBA /* Comparator.swift */; };
 		F9755AA7231DBD2D00A2FCBA /* Aggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AA6231DBD2D00A2FCBA /* Aggregator.swift */; };
-		F9755AAD231DBD4900A2FCBA /* ToDo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AAA231DBD4900A2FCBA /* ToDo.swift */; };
+		F9755AAD231DBD4900A2FCBA /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AAA231DBD4900A2FCBA /* Task.swift */; };
 		F9755AB0231DBE0800A2FCBA /* TextStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AAF231DBE0800A2FCBA /* TextStorage.swift */; };
 		F9755AB4231DBEA500A2FCBA /* ItemCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AB2231DBEA500A2FCBA /* ItemCellView.swift */; };
 		F9755AB5231DBEA500A2FCBA /* ItemCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9755AB3231DBEA500A2FCBA /* ItemCellView.xib */; };
@@ -42,6 +43,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F900C45923335ABB007C9FC0 /* FiltersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersViewController.swift; sourceTree = "<group>"; };
 		F93E5946231F526700266D92 /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
 		F9755A61231DB87900A2FCBA /* TODOtxt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TODOtxt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9755A64231DB87900A2FCBA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -70,7 +72,7 @@
 		F9755AA2231DBD1700A2FCBA /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		F9755AA4231DBD2700A2FCBA /* Comparator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comparator.swift; sourceTree = "<group>"; };
 		F9755AA6231DBD2D00A2FCBA /* Aggregator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Aggregator.swift; sourceTree = "<group>"; };
-		F9755AAA231DBD4900A2FCBA /* ToDo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDo.swift; sourceTree = "<group>"; };
+		F9755AAA231DBD4900A2FCBA /* Task.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
 		F9755AAF231DBE0800A2FCBA /* TextStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextStorage.swift; sourceTree = "<group>"; };
 		F9755AB2231DBEA500A2FCBA /* ItemCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCellView.swift; sourceTree = "<group>"; };
 		F9755AB3231DBEA500A2FCBA /* ItemCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ItemCellView.xib; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 		F9755A63231DB87900A2FCBA /* TODOtxt */ = {
 			isa = PBXGroup;
 			children = (
+				F9F4E0942333680400D0A125 /* Temp */,
 				F9755AA8231DBD4900A2FCBA /* Data */,
 				F9755A98231DBCE300A2FCBA /* Util */,
 				F9755A84231DBC6C00A2FCBA /* Extensions */,
@@ -140,6 +143,7 @@
 				F9755A7C231DBBE300A2FCBA /* SidebarViewController.swift */,
 				F9755A7A231DBBD300A2FCBA /* ContentViewController.swift */,
 				F93E5946231F526700266D92 /* FilterViewController.swift */,
+				F900C45923335ABB007C9FC0 /* FiltersViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -191,7 +195,6 @@
 			isa = PBXGroup;
 			children = (
 				F9755AA0231DBD0D00A2FCBA /* Preferences.swift */,
-				F9755A9E231DBD0600A2FCBA /* Filter.swift */,
 				F9755AA4231DBD2700A2FCBA /* Comparator.swift */,
 				F9755AA6231DBD2D00A2FCBA /* Aggregator.swift */,
 				F9755A99231DBCF700A2FCBA /* Collections */,
@@ -220,7 +223,7 @@
 		F9755AA9231DBD4900A2FCBA /* Basic */ = {
 			isa = PBXGroup;
 			children = (
-				F9755AAA231DBD4900A2FCBA /* ToDo.swift */,
+				F9755AAA231DBD4900A2FCBA /* Task.swift */,
 				F9755AB6231DBF0400A2FCBA /* TodoStorage.swift */,
 			);
 			path = Basic;
@@ -233,6 +236,14 @@
 				F9755AB3231DBEA500A2FCBA /* ItemCellView.xib */,
 			);
 			path = cells;
+			sourceTree = "<group>";
+		};
+		F9F4E0942333680400D0A125 /* Temp */ = {
+			isa = PBXGroup;
+			children = (
+				F9755A9E231DBD0600A2FCBA /* Filter.swift */,
+			);
+			path = Temp;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -314,9 +325,10 @@
 			files = (
 				F9755A95231DBCC100A2FCBA /* RulerView.swift in Sources */,
 				F9755AA1231DBD0D00A2FCBA /* Preferences.swift in Sources */,
-				F9755AAD231DBD4900A2FCBA /* ToDo.swift in Sources */,
+				F9755AAD231DBD4900A2FCBA /* Task.swift in Sources */,
 				F9755A7D231DBBE300A2FCBA /* SidebarViewController.swift in Sources */,
 				F9C6CCC223259051008026FD /* Item.swift in Sources */,
+				F900C45A23335ABB007C9FC0 /* FiltersViewController.swift in Sources */,
 				F9755A88231DBC8E00A2FCBA /* NSColor Extention.swift in Sources */,
 				F9755A9D231DBCF700A2FCBA /* SortedArray.swift in Sources */,
 				F9755A7B231DBBD400A2FCBA /* ContentViewController.swift in Sources */,

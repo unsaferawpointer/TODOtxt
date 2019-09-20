@@ -8,8 +8,6 @@
 
 import Cocoa
 
-
-
 class ContentViewController: NSViewController {
     
     var document: Document {

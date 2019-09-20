@@ -44,6 +44,8 @@ class Preferences {
     
     static let shared: Preferences = Preferences()
     
+    var items: [Item] = []
+    
     var themePairs: [ThemePair] = []
     var theme: Theme {
         let appearance = Appearance(rawValue: appearanceIndex)!

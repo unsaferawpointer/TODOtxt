@@ -8,30 +8,6 @@
 
 import Foundation
 
-func == (lhs: ToDo, rhs: ToDo) -> Bool {
-    return lhs.string == rhs.string
-}
-
-struct ToDo: Hashable, CustomStringConvertible {
-    
-    var string: String
-    var dictionary: [Element: String] = [:]
-    
-    var description: String {
-        return "TODO: \(string)"
-    }
-    
-    func key(by element: Element) -> String? {
-        return dictionary[element]
-    }
-    
-    init(string: String, dictionary: [Element: String] = [:]) {
-        self.string = string
-        self.dictionary = dictionary
-    }
-    
-}
-
 class Task: NSObject {
     
     override func isEqual(_ object: Any?) -> Bool {
@@ -43,19 +19,22 @@ class Task: NSObject {
     
     let string: String
     
-    let project: String?
+    @objc let project: String?
     @objc let context: String?
-    let priority: String?
-    let dateString: String?
-    let status: String?
+    @objc let priority: String?
+    @objc let dateString: String?
+    @objc let status: String?
     
-    init(string: String, status: String? = nil, project: String? = nil, context: String? = nil, priority: String? = nil, dateString: String? = nil) {
+    @objc let dueDate: NSDate?
+    
+    init(string: String, status: String? = nil, project: String? = nil, context: String? = nil, priority: String? = nil, dateString: String? = nil, dueDate: NSDate? = nil) {
         self.string = string
         self.status = status
         self.project = project
         self.context = context
         self.priority = priority
         self.dateString = dateString
+        self.dueDate = dueDate
     }
     
     func key(by element: Element) -> String? {

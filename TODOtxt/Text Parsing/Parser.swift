@@ -247,7 +247,17 @@ extension Parser {
         let dateString = parse(in: body, element: .date(granulity: .day))
         let status = parse(in: body, element: .status)
         
-        let task = Task(string: body, status: status, project: project, context: context, priority: priority, dateString: dateString)
+        var dueDate: NSDate?
+        
+        // WARNING
+        if let dateStr = dateString {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = DateGranulity.day.format
+            dueDate = dateFormatter.date(from: dateStr)! as NSDate
+        }
+            
+        
+        let task = Task(string: body, status: status, project: project, context: context, priority: priority, dateString: dateString, dueDate: dueDate)
         
         return task
     }

@@ -17,48 +17,30 @@ class FilterViewController: NSViewController {
     @IBOutlet weak var predicateEditor: NSPredicateEditor!
     @IBOutlet weak var nameTextfield: NSTextField!
     @IBOutlet weak var okButton: NSButton!
-    @IBOutlet weak var templatesPopUpButton: NSPopUpButton!
-    
-    var filter: Filter?
     
     @objc var isHidden: Bool = true
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do view setup here
-        //setupPredicateEditor()
-        predicateEditor.addRow(self)
+    @objc var item: Item? {
+        didSet {
+            configure()
+        }
     }
     
-    func setupPredicateEditor() { 
-        let left = [NSExpression(forKeyPath: "context"),NSExpression(forKeyPath: "project")]
-        let operators = [NSComparisonPredicate.Operator.equalTo.rawValue as NSNumber]
-        
-        let rowTemplate = NSPredicateEditorRowTemplate(leftExpressions: left,
-                                                       rightExpressionAttributeType: .stringAttributeType,
-                                                       modifier: .all,
-                                                       operators: operators,
-                                                       options: 0)
-        
-       
-        
-        
-        predicateEditor.rowTemplates = [rowTemplate] 
-        predicateEditor.addRow(self)
-        
-        
-        
-        
-        
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        configure()
+    }
+    
+    private func configure() {
+        nameTextfield?.stringValue = item?.name ?? "New filter"
+        predicateEditor?.objectValue = item?.filter
     }
     
     
     @IBAction func buttonClicked(_ sender: Any) {
         print(#function)
-        //predicateEditor.objectValue = NSPredicate(format: "project = %@ AND context = %@", argumentArray: ["test","tests"])
-        print(predicateEditor.predicate)
+        //predicateEditor.objectValue = NSPredicate(format: "ALL project = %@ AND context = %@", argumentArray: ["test","tests"])
+        print(predicateEditor.predicate?.predicateFormat)
     }
-    
-    
     
 }
