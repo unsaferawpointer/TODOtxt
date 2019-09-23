@@ -1,5 +1,5 @@
 //
-//  ContentViewController.swift
+//  TextViewController.swift
 //  TODO txt
 //
 //  Created by subzero on 24/08/2019.
@@ -8,28 +8,34 @@
 
 import Cocoa
 
-class ContentViewController: NSViewController {
+class TextViewController: NSViewController {
     
     var document: Document {
         return NSDocumentController.shared.document(for: view.window!) as! Document
     }
     
+    @IBOutlet weak var infoTextField: NSTextField!
+    @IBOutlet weak var scrollView: NSScrollView!
+    
     var theme: Theme {
         return Preferences.shared.theme
     }
     
-    var currentItem: Item?
-    var backingStore: TodoStorage?
+    var grouping: Grouping = .commonDateStyle
+    var refreshing: Bool = false
+    var backingStore: Storage?
     
     // VIEWS
     @IBOutlet weak var contentView: BackgroundView!
-    @IBOutlet weak var titleTextfield: NSTextField!
     @IBOutlet weak var textview: TextView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
         print(#function)
+        
+       
+        
         
         // ---------- text storage ----------
         let textStorage = TextStorage()
@@ -55,33 +61,80 @@ class ContentViewController: NSViewController {
         
         // ---------- other views configuration ----------
         contentView.backgroundColor = theme.background
-        titleTextfield.textColor = theme.foreground
         
         invalidateTheme()
+        
+        scrollView.contentView.postsBoundsChangedNotifications = true
         
         // ---------- setup notifications ----------
         NotificationCenter.default.addObserver(self, selector: #selector(themeDidChange(_:)), name: .themeDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(appearanceDidChange(_:)), name: .appearanceDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(frameDidChange(_:)), name: NSView.boundsDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reload(_:)), name: .badgeFilterDidChange, object: nil)
         
     }
     
-    func reload() {
+    @objc func frameDidChange(_ sender: Any) {
+        let frame = scrollView.contentView.frame
+        let bounds = scrollView.contentView.bounds
+        //print("frame = \(frame)")
+        //print("bounds = \(bounds)")
         
-        guard let store = backingStore, let item = currentItem else { return }
+        if bounds.origin.y < -100.0 {
+            refreshing = true
+            reload(self)
+        }
         
-        let newStr = store.string(by: item.filter)
-        textview.reload(with: newStr)
-        titleTextfield.stringValue = item.name
     }
+    
+    @IBAction func sort(_ sender: NSMenuItem) {
+        
+        switch sender.identifier!.rawValue {
+        case "project":
+            grouping = .project
+        case "context":
+            grouping = .context
+        case "priority":
+            grouping = .priority
+        case "due_date":
+            grouping = .date
+        case "status":
+            grouping = .status
+        case "due_date_state":
+            grouping = .commonDateStyle
+        default:
+            break
+        }
+        
+        reload(self)
+    }
+   
+    
+    @objc func reload(_ sender: Any) {
+        
+        guard backingStore != nil else { return }
+        
+        let newStr = backingStore!.string(by: grouping)
+        textview.reload(with: newStr)
+        updateInfo()
+    }
+    
+    private func updateInfo() {
+        let charactersLimit = backingStore?.CHARACTERS_LIMIT ?? 0
+        let tasksLimit = backingStore?.TASKS_LIMIT ?? 0
+        let tasksCount = backingStore?.storage.count ?? 0
+        let charactersCount = textview.string.count 
+        
+        let info = String(format: "%d/%d tasks, %d/%d characters", arguments: [tasksCount, tasksLimit, charactersCount, charactersLimit])
+        infoTextField.stringValue = info
+    }
+    
+
     
     private func invalidateTheme() {
         contentView.backgroundColor = theme.background
-        titleTextfield.textColor = theme.foreground
         textview.invalidateColorScheme()
-        
-        guard let store = backingStore, let item = currentItem else { return }
-        let filter = item.filter
-        textview.reload(with: store.string(by: filter))
+        infoTextField.textColor = theme.foreground
     }
     
     @objc func themeDidChange(_ notification: Notification) {
@@ -101,28 +154,21 @@ class ContentViewController: NSViewController {
     
 }
 
-extension ContentViewController: SidebarDelegate {
-    func selectedItemDidChange(newItem item: Item) {
-        self.currentItem = item
-        reload()
-    }
-}
-
-extension ContentViewController: NSTextViewDelegate {
+extension TextViewController: NSTextViewDelegate {
     func textView(_ textView: NSTextView, shouldChangeTextIn affectedCharRange: NSRange, replacementString: String?) -> Bool {
         let delta = (replacementString?.count ?? 0) - affectedCharRange.length
         return backingStore?.shouldChange(with: delta) ?? true
     }
 }
 
-extension ContentViewController: TextStorageDataDelegate {
+extension TextViewController: TextStorageDataDelegate {
     func dataDidChanged(toInsert: [Task], toDelete: [Task]) {
         backingStore!.performOperation(inserted: toInsert, removed: toDelete)
     }
    
 }
 
-extension ContentViewController: AutoCompletionDelegate {
+extension TextViewController: AutoCompletionDelegate {
     func complete(element: Element) -> [String] {
         return backingStore?.mentions(for: element) ?? []
     }
@@ -131,12 +177,13 @@ extension ContentViewController: AutoCompletionDelegate {
 
 
 
-extension ContentViewController: NSTextStorageDelegate {
+extension TextViewController: NSTextStorageDelegate {
     
     override func textStorageDidProcessEditing(_ notification: Notification) {
         guard let textStorage = textview.textStorage as? TextStorage else { return }
         if textStorage.observeChanging {
             document.updateChangeCount(.changeDone)
+            updateInfo()
         }
         if let rulerView = textview.enclosingScrollView?.verticalRulerView as? RulerView {
             rulerView.invalidateMarks()

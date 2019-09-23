@@ -33,7 +33,7 @@ class FiltersViewController: NSViewController {
         let clickedRow = tableView.clickedRow
         guard clickedRow > -1 else { return }
         let item = array[clickedRow]
-        sheetViewController.item = item
+        
         self.presentAsSheet(sheetViewController)
     }
     
@@ -45,7 +45,7 @@ class FiltersViewController: NSViewController {
         guard clickedRow > -1 else { return }
         let item = array[clickedRow]
         if let secondViewController = segue.destinationController as? FilterViewController {
-            secondViewController.item = item
+           
         }
     }  
     

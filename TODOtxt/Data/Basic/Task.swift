@@ -26,6 +26,9 @@ class Task: NSObject {
     @objc let status: String?
     
     @objc let dueDate: NSDate?
+    var isCompleted: Bool {
+        return status != nil
+    }
     
     init(string: String, status: String? = nil, project: String? = nil, context: String? = nil, priority: String? = nil, dateString: String? = nil, dueDate: NSDate? = nil) {
         self.string = string

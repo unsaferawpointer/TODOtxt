@@ -8,11 +8,11 @@
 
 import Foundation
 
-/*
+
 /// The class determinate how to group todos by keys
 class Aggregator {
     
-    typealias Grouping = ((_ todo: ToDo) -> String?)
+    typealias Grouping = ((_ todo: Task) -> String?)
     
     private let grouping: Grouping
     
@@ -20,24 +20,9 @@ class Aggregator {
         self.grouping = grouping
     }
     
-    /// Return filter where todo has groupKey != nil
-    var filter: Filter {
-        let condition = { [self] (_ todo: ToDo) -> Bool in
-            return self.grouping(todo) != nil
-        }
-        let filter = Filter(condition: condition)
-        return filter
-    }
+  
     
-    func filter(groupKeyEquals value: String) -> Filter {
-        let condition = { [self] (_ todo: ToDo) -> Bool in
-            return self.grouping(todo) == value
-        }
-        let filter = Filter(condition: condition)
-        return filter
-    }
-    
-    func groupKey(for todo: ToDo) -> String? {
+    func groupKey(for todo: Task) -> String? {
         return grouping(todo)
     }
     
@@ -49,7 +34,7 @@ class Aggregator {
 
 class StatusAggregator: Aggregator {
     init() {
-        let grouping = { (_ todo: ToDo) -> String? in 
+        let grouping = { (_ todo: Task) -> String? in 
             return todo.key(by: .status) == nil ? "uncompleted" : "completed"
         }
         
@@ -62,7 +47,7 @@ class ElementAggregator: Aggregator {
     
     init(element: Element) {
         
-        let grouping = { (_ todo: ToDo) -> String? in 
+        let grouping = { (_ todo: Task) -> String? in 
             return todo.key(by: element)
         }
         
@@ -84,12 +69,12 @@ class DateAggregator: Aggregator {
     
     init(style: Style) {
         
-        let grouping = { (_ todo: ToDo) -> String? in
+        let grouping = { (_ todo: Task) -> String? in
             
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
             
-            guard let str = todo.dictionary[.date(granulity: .day)] else { return nil }
+            guard let str = todo.dateString else { return nil }
             let date = formatter.date(from: str)!
             
             let calendar = NSCalendar.current
@@ -133,4 +118,4 @@ class DateAggregator: Aggregator {
     
     
 }
-*/
+

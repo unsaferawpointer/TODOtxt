@@ -22,15 +22,21 @@ extension Notification.Name {
     static let themeDidChange = Notification.Name(rawValue: "styleDidChange")
     static let markStyleDidChange = Notification.Name("markStyleDidChange")
     static let appearanceDidChange = Notification.Name("appearanceDidChange")
+    static let badgeFilterDidChange = Notification.Name("badgeFilterDidChange")
+    static let showBadgeDidChange = Notification.Name("showBadgeDidChange")
 }
 
 
-enum Appearance: Int, CaseIterable {
-    case system = 0, light, dark
+enum Appearance: String, CaseIterable {
+    
+    case system = "system"
+    case light = "light"
+    case dark = "dark"
+    
     var name: String {
         switch self {
         case .system:
-            return "Auto"
+            return "System"
         case .light:
             return "Light"
         case .dark:
@@ -44,11 +50,9 @@ class Preferences {
     
     static let shared: Preferences = Preferences()
     
-    var items: [Item] = []
-    
     var themePairs: [ThemePair] = []
     var theme: Theme {
-        let appearance = Appearance(rawValue: appearanceIndex)!
+        
         var themePair = themePairs[0]
         if themePairIndex < themePairs.count {
             themePair = themePairs[themePairIndex]
@@ -68,25 +72,71 @@ class Preferences {
         return UserDefaults.standard
     }
     
-    let APPEARANCE_INDEX_KEY = "appearance_index_key"
-    var appearanceIndex: Int = 0
+    public var isDarkMode: Bool {
+        let isDarkMode: Bool
+        
+        if #available(macOS 10.14, *) {
+            let appearance = NSApplication.shared.effectiveAppearance
+            if appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua {
+                isDarkMode = true
+            } else {
+                isDarkMode = false
+            }
+        } else {
+            isDarkMode = false
+        }
+        
+        return isDarkMode
+    }
     
+    // -------- BADGE_FILTER --------
+    let SHOW_BADGE_KEY = "show_badge_key"
+    var showBadge = false {
+        didSet {
+            let value = badgeFilter?.predicateFormat
+            userDefaults.set(value, forKey: BADGE_FILTER_KEY)
+            NotificationCenter.default.post(name: .showBadgeDidChange, object: nil)
+        }
+    }
+    
+    let BADGE_FILTER_KEY = "badge_filter_key"
+    var badgeFilter: NSPredicate? {
+        didSet {
+            let value = badgeFilter?.predicateFormat
+            userDefaults.set(value, forKey: BADGE_FILTER_KEY)
+            NotificationCenter.default.post(name: .badgeFilterDidChange, object: nil)
+        }
+    }
+    
+    // -------- APPEARANCE --------
+    let APPEARANCE_KEY = "appearance_key"
+    var appearance: Appearance = .system {
+        didSet {
+            let value = appearance.rawValue
+            userDefaults.set(value, forKey: APPEARANCE_KEY)
+            NotificationCenter.default.post(name: .appearanceDidChange, object: nil)
+        }
+    }
+    
+    // -------- THEME --------
     let THEME_PAIR_INDEX_KEY = "theme_pair_index"
     var themePairIndex: Int = 0
-    
-    let MARK_STYLE_INDEX_KEY = "mark_style_index"
-    var markStyleIndex: Int = 0
     
     private init() {
         
         userDefaults.register(defaults: [THEME_PAIR_INDEX_KEY : NSNumber(value: 0)])
         self.themePairIndex = userDefaults.index(forKey: THEME_PAIR_INDEX_KEY)
         
-        userDefaults.register(defaults: [APPEARANCE_INDEX_KEY : NSNumber(value: 0)])
-        self.appearanceIndex = userDefaults.index(forKey: APPEARANCE_INDEX_KEY)
+        userDefaults.register(defaults: [APPEARANCE_KEY : "system"])
+        let appearanceValue = userDefaults.string(forKey: APPEARANCE_KEY)!
+        self.appearance = Appearance(rawValue: appearanceValue)!
         
-        userDefaults.register(defaults: [MARK_STYLE_INDEX_KEY : NSNumber(value: 0)])
-        self.markStyleIndex = userDefaults.index(forKey: MARK_STYLE_INDEX_KEY)
+        userDefaults.register(defaults: [BADGE_FILTER_KEY : "context = 'example'"])
+        let badgeFilterValue = userDefaults.string(forKey: BADGE_FILTER_KEY)!
+        self.badgeFilter = NSPredicate(format: badgeFilterValue, argumentArray: nil)
+        
+        userDefaults.register(defaults: [SHOW_BADGE_KEY : false])
+        self.showBadge = userDefaults.bool(forKey: SHOW_BADGE_KEY)
         
         configureThemes()
     }
@@ -108,47 +158,11 @@ class Preferences {
         }
     }
     
-    public var isDarkMode: Bool {
-        let isDarkMode: Bool
-        
-        if #available(macOS 10.14, *) {
-            let appearance = NSApplication.shared.effectiveAppearance
-            if appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua {
-                isDarkMode = true
-            } else {
-                isDarkMode = false
-            }
-        } else {
-            isDarkMode = false
-        }
-        
-        return isDarkMode
-    }
-    
     // ********** Set **********
-    
     func setTheme(index: Int) {
         self.themePairIndex = index
         userDefaults.set(index: index, forKey: THEME_PAIR_INDEX_KEY)
         NotificationCenter.default.post(name: .themeDidChange, object: nil)
-    }
-    
-    func setAppearance(index: Int) {
-        
-        let oldTheme = theme
-        
-        self.appearanceIndex = index
-        userDefaults.set(index: index, forKey: APPEARANCE_INDEX_KEY)
-        
-        guard oldTheme != theme else { return }
-        
-        NotificationCenter.default.post(name: .appearanceDidChange, object: nil)
-    }
-    
-    func setMarkStyle(index: Int) {
-        self.markStyleIndex = index
-        userDefaults.set(index: index, forKey: MARK_STYLE_INDEX_KEY)
-        NotificationCenter.default.post(name: .markStyleDidChange, object: nil)
     }
     
 }

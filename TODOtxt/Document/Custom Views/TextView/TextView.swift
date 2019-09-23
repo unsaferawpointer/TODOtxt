@@ -108,8 +108,6 @@ class TextView: NSTextView {
         textStorage.observeChanging = true
     }
     
-    
-    
     override func keyDown(with event: NSEvent) {
         
         var shouldComplete = true
@@ -192,23 +190,33 @@ class TextView: NSTextView {
     // MENU SELECTORS
     // ========
     
-    private func validateSelection() -> Bool {
-        guard let lineString = selectedLineString else { return false}
+    private func isSingleTaskSelection() -> Bool {
+        guard let lineString = selectedLineString else { return false }
         return parser.hasTodo(lineString)
     }
     
     override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
-        print("validateMenuItem")
         
-        if menuItem.action == #selector(removeLines(_:)) {
-            return validateSelection()
+        if menuItem.action == #selector(toggleCompletion(_:)) {
+            return isSingleTaskSelection()
+        } else if menuItem.action == #selector(removeLines(_:)) {
+            return isSingleTaskSelection()
         } else if menuItem.action == #selector(encreasePriority(_:)) {
-            return validateSelection()
+            return isSingleTaskSelection()
         } else if menuItem.action == #selector(decreasePriority(_:)) {
-            return validateSelection()
-        } else if menuItem.action == #selector(toggleCompletion(_:)) {
-            return validateSelection()
+            return isSingleTaskSelection()
+        } else if menuItem.action == #selector(removePriority(_:)) {
+            return isSingleTaskSelection()
+        } else if menuItem.action == #selector(setDueDate(_:)) {
+            return isSingleTaskSelection()
+        } else if menuItem.action == #selector(encreaseDueDate(_:)) {
+            return isSingleTaskSelection()
+        } else if menuItem.action == #selector(decreaseDueDate(_:)) {
+            return isSingleTaskSelection()
+        } else if menuItem.action == #selector(removeDueDate(_:)) {
+            return isSingleTaskSelection()
         }
+        
         return super.validateMenuItem(menuItem)
     }
     
@@ -344,7 +352,7 @@ class TextView: NSTextView {
         
     }
     
-    @IBAction func removeDate(_ sender: Any?) {
+    @IBAction func removeDueDate(_ sender: Any?) {
         guard let lineRange = selectedLine, let lineString = selectedLineString else { return }
         if let (_ , enclosingRange) = parser.parse(.date(granulity: .day), inLine: lineString, at: lineRange.location) {
             replaceText(in: enclosingRange, with: "")

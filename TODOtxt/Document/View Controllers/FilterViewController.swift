@@ -15,31 +15,18 @@ class FilterViewController: NSViewController {
     }
 
     @IBOutlet weak var predicateEditor: NSPredicateEditor!
-    @IBOutlet weak var nameTextfield: NSTextField!
     @IBOutlet weak var okButton: NSButton!
     
-    @objc var isHidden: Bool = true
-    
-    @objc var item: Item? {
-        didSet {
-            configure()
-        }
-    }
+    @objc var filter: NSPredicate? = Preferences.shared.badgeFilter
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configure()
+        predicateEditor?.objectValue = filter
     }
-    
-    private func configure() {
-        nameTextfield?.stringValue = item?.name ?? "New filter"
-        predicateEditor?.objectValue = item?.filter
-    }
-    
     
     @IBAction func buttonClicked(_ sender: Any) {
         print(#function)
-        //predicateEditor.objectValue = NSPredicate(format: "ALL project = %@ AND context = %@", argumentArray: ["test","tests"])
+        Preferences.shared.badgeFilter = predicateEditor.predicate
         print(predicateEditor.predicate?.predicateFormat)
     }
     

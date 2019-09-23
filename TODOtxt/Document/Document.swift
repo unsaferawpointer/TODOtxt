@@ -10,20 +10,15 @@ import Cocoa
 
 class Document: NSDocument {
     
-    var storage: TodoStorage = TodoStorage()
+    var storage: Storage = Storage()
+    var badgeCount: Int {
+        return storage.badgeCount
+    }
     
     // Document has only one NSWindowController
-    var splitViewController: NSSplitViewController? {
+    var textViewController: TextViewController? {
         guard windowControllers.count > 0 else { return nil }
-        return windowControllers[0].contentViewController as? NSSplitViewController
-    }
-    
-    var contentViewController: ContentViewController? {
-        return splitViewController?.splitViewItems[1].viewController as? ContentViewController
-    }
-    
-    var sidebarViewController: SidebarViewController? {
-        return splitViewController?.splitViewItems[0].viewController as? SidebarViewController
+        return windowControllers[0].contentViewController as? TextViewController
     }
     
     override init() {
@@ -41,11 +36,10 @@ class Document: NSDocument {
         let storyboard = NSStoryboard(name: NSStoryboard.Name("Main"), bundle: nil)
         let windowController = storyboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("Document Window Controller")) as! NSWindowController
         self.addWindowController(windowController)
-        if let contentView = contentViewController, let sidebarView = sidebarViewController {
+        if let contentView = textViewController {
             contentView.backingStore = storage
-            contentView.reload()
-            sidebarView.delegate = contentView
-            sidebarView.selectFirstIfPossible()
+            contentView.reload(self)
+            
         }
         
     }
@@ -54,8 +48,12 @@ class Document: NSDocument {
         // Insert code here to write your document to data of the specified type, throwing an error in case of failure.
         // Alternatively, you could remove this method and override fileWrapper(ofType:), write(to:ofType:), or write(to:ofType:for:originalContentsURL:) instead.
         //throw NSError(domain: NSOSStatusErrorDomain, code: unimpErr, userInfo: nil)
+        if let str = textViewController?.textview.string {
+            return str.data(using: .utf8) ?? Data()
+        } else {
+            return Data()
+        }
         
-        return storage.data
     }
     
     override func read(from data: Data, ofType typeName: String) throws {
@@ -65,8 +63,7 @@ class Document: NSDocument {
         // If you do, you should also override isEntireFileLoaded to return false if the contents are lazily loaded.
         //throw NSError(domain: NSOSStatusErrorDomain, code: unimpErr, userInfo: nil)
         try storage.reload(data)
-        contentViewController?.reload()
-        
+        textViewController?.reload(self)
     }
     
 }

@@ -136,12 +136,14 @@ enum Element: Hashable {
     
 }
 
+enum LineType: Int {
+    case empty = 0, task, header
+}
+
 class Parser {
     
     var font: NSFont
     var boldFont: NSFont
-    
-    
     
     var elements: Set<Element> = [.status, .project, .context, .date(granulity: .day), .priority]
     var commonAttr:[NSAttributedString.Key: Any?]!
@@ -161,13 +163,38 @@ extension Parser {
     
     func highlight(theme: Theme, backingStorage: NSMutableAttributedString, in extendedRange: NSRange) {
         backingStorage.mutableString.enumerateSubstrings(in: extendedRange, options: .byLines) { (substring, range, enclosingRange, stop) in
-            self.hightlight(theme: theme, backingStorage: backingStorage, substring!, in: range)
+            self.hightlight(theme: theme, backingStorage: backingStorage, substring!, in: enclosingRange)
         }
     }
     
+    
     private func hightlight(theme: Theme, backingStorage: NSMutableAttributedString, _ body: String, in globalBodyRange: NSRange) {
         
-        guard hasTodo(body) else { return }
+        let lineType = self.lineType(of: body)
+        
+        switch lineType {
+        case .empty:
+            return
+        case .header:
+            let paragraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
+            paragraphStyle.lineBreakMode = .byTruncatingMiddle
+            paragraphStyle.alignment = .center
+            paragraphStyle.paragraphSpacing = 10.0
+            paragraphStyle.paragraphSpacingBefore = 10.0
+            backingStorage.addAttribute(.paragraphStyle, value: paragraphStyle, range: globalBodyRange)
+            
+            let foregroundColor = theme.line
+            backingStorage.addAttribute(.strikethroughStyle, value: 0, range: globalBodyRange)
+            backingStorage.addAttribute(.foregroundColor, value: foregroundColor, range: globalBodyRange)
+            
+            return
+        case .task:
+            break
+        }
+        
+        let paragraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
+        backingStorage.addAttribute(.paragraphStyle, value: paragraphStyle, range: globalBodyRange)
+        
         
         let completed = (parse(.status, inLine: body) != nil )
         
@@ -189,7 +216,6 @@ extension Parser {
                 if let range = parse(element, inLine: body, at: globalBodyRange.location)?.enclosingRange {
                     let color = theme.color(for: element)
                     backingStorage.addAttributes([.foregroundColor : color], range: range)
-                    //backingStorage.addAttributes([.font : font], range: range)
                 }
             }
             
@@ -263,8 +289,19 @@ extension Parser {
     }
     
     func hasTodo(_ body: String) -> Bool {
-        let result = body.trimmingCharacters(in: .whitespacesAndNewlines)
-        return result.count > 0
+        return lineType(of: body) == .task
+    }
+    
+    func lineType(of body: String) -> LineType {
+        guard body.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return .empty }
+        let pattern = #"^\-\-\-\-\-\-\-\-.+\-\-\-\-\-\-\-\-$"#
+        let range = body.fullRange
+        let regex = try! NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines])
+        if regex.firstMatch(in: body, options: [], range: range) != nil {
+            return .header
+        }
+        
+        return .task
     }
     
     

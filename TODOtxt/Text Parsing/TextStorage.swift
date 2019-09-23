@@ -106,6 +106,12 @@ extension TextStorage {
         let lastLineRange = backingStore.mutableString.lineRange(for: extendedRange)
         let fullRange = NSUnionRange(firstLineRange, lastLineRange)
         
+        let paragraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
+        //paragraphStyle.lineBreakMode = .byTruncatingMiddle
+       // paragraphStyle.alignment = .center
+        //paragraphStyle.paragraphSpacing = 10.0
+        //backingStore.addAttribute(.paragraphStyle, value: paragraphStyle, range: string.fullRange)
+        
         parser.highlight(theme: theme, backingStorage: backingStore, in: fullRange)
     }
     
