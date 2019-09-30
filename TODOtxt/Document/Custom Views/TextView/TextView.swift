@@ -359,17 +359,12 @@ class TextView: NSTextView {
         } 
     }
     
-    override func viewDidChangeEffectiveAppearance() {
-        if #available(OSX 10.14, *) {
-            super.viewDidChangeEffectiveAppearance()
-        } else {
-            // Fallback on earlier versions
-        }
-        print(#function)
+    @IBAction func removeCompleted(_ sender: Any?) {
+        
     }
     
     func invalidateColorScheme() {
-        self.selectedTextAttributes = [.backgroundColor : theme.selection, .foregroundColor : theme.foreground]
+        self.selectedTextAttributes = [.backgroundColor : theme.selection]
     }
     
 }
@@ -381,14 +376,47 @@ extension TextView {
         currentPopover?.close()
     }
     
-    private func replaceText(in range: NSRange, with string: String) {
-        if (shouldChangeText(in: range, replacementString: string)) {
-            textStorage!.mutableString.replaceCharacters(in: range, with: string)
-            didChangeText()
-            let newRange = NSRange(location: range.location, length: string.count)
-            showFindIndicator(for: newRange)
-        }
+    @objc func replaceText(in range: NSRange, with string: String) {
+        print(#function)
+        guard shouldChangeText(in: range, replacementString: string) else { return }
+        print("oldRange = \(range) newString = \(string)")
+        let newRange = NSRange(location: range.location, length: string.count)
+        let oldString = textStorage!.mutableString.substring(with: range)
+        print("newRange = \(newRange) oldString = \(oldString)")
+        if let u = undoManager {
+          u.registerUndo(withTarget: self) { this in
+            this.unreplaceText(in: newRange, with: oldString)
+          }//end u
+          u.setActionName("unreplaceText")
+        }//end if
+        
+        
+        replaceCharacters(in: range, with: string)
+        
+        
+        showFindIndicator(for: newRange)
     }
+    
+    @objc func unreplaceText(in range: NSRange, with string: String) {
+        print("\n")
+        print(#function)
+        guard shouldChangeText(in: range, replacementString: string) else { return }
+        print("oldRange = \(range) newString = \(string)")
+        let newRange = NSRange(location: range.location, length: string.count)
+        let oldString = textStorage!.mutableString.substring(with: range)
+        print("newRange = \(newRange) oldString = \(oldString)")
+        if let u = undoManager {
+          u.registerUndo(withTarget: self) { this in
+            this.replaceText(in: newRange, with: oldString)
+          }//end u
+          u.setActionName("replaceText")
+        }//end if
+        
+        replaceCharacters(in: range, with: string)
+        
+        showFindIndicator(for: newRange)
+    }
+    
     
     
 }
@@ -464,6 +492,8 @@ extension TextView: AutocompletionPopoverDelegate {
         } 
         
     }
+    
+    
     
     private func show(_ popover: AutocompletionPopover, at characterIndex: Int) {
         self.currentPopover?.close()

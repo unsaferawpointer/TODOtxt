@@ -122,8 +122,13 @@ class RulerView: NSRulerView {
                     
                     // Range of current line in the string.
                     let characterRangeForStringLine = (textView.string as NSString).lineRange(
-                        for: NSMakeRange( layoutManager.characterIndexForGlyph(at: glyphIndexForStringLine), 0 )
-                    )
+                        for: NSMakeRange( layoutManager.characterIndexForGlyph(at: glyphIndexForStringLine), 0 ))
+                    
+                    textView.textStorage!.enumerateAttribute(.paragraphStyle, in: characterRangeForStringLine, options: []) { (value, range, stop) in
+                        if let style = value as? NSParagraphStyle {
+                            
+                        }
+                    }
                     
                     let lineString = textView.string.substring(from: characterRangeForStringLine)
                     var toDraw = true

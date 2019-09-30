@@ -40,6 +40,9 @@
 		F9755AB5231DBEA500A2FCBA /* ItemCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9755AB3231DBEA500A2FCBA /* ItemCellView.xib */; };
 		F9755AB7231DBF0400A2FCBA /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AB6231DBF0400A2FCBA /* Storage.swift */; };
 		F9755AB9231DD6AB00A2FCBA /* Themes.plist in Resources */ = {isa = PBXBuildFile; fileRef = F9755AB8231DD6AB00A2FCBA /* Themes.plist */; };
+		F997D1F8233D42C700AE86BD /* RefreshableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F997D1F7233D42C700AE86BD /* RefreshableScrollView.swift */; };
+		F99FEB69233A177300336790 /* InfoTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99FEB68233A177300336790 /* InfoTextField.swift */; };
+		F99FEB6B233CB41F00336790 /* LayoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99FEB6A233CB41F00336790 /* LayoutManager.swift */; };
 		F9C6CCC223259051008026FD /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C6CCC123259051008026FD /* Item.swift */; };
 		F9D93B572334B71E00AC0D2E /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D93B562334B71E00AC0D2E /* TableViewController.swift */; };
 /* End PBXBuildFile section */
@@ -81,6 +84,9 @@
 		F9755AB3231DBEA500A2FCBA /* ItemCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ItemCellView.xib; sourceTree = "<group>"; };
 		F9755AB6231DBF0400A2FCBA /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 		F9755AB8231DD6AB00A2FCBA /* Themes.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Themes.plist; sourceTree = "<group>"; };
+		F997D1F7233D42C700AE86BD /* RefreshableScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshableScrollView.swift; sourceTree = "<group>"; };
+		F99FEB68233A177300336790 /* InfoTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTextField.swift; sourceTree = "<group>"; };
+		F99FEB6A233CB41F00336790 /* LayoutManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutManager.swift; sourceTree = "<group>"; };
 		F9C6CCC123259051008026FD /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		F9D93B562334B71E00AC0D2E /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -186,10 +192,13 @@
 		F9755A8B231DBCC000A2FCBA /* TextView */ = {
 			isa = PBXGroup;
 			children = (
+				F99FEB6A233CB41F00336790 /* LayoutManager.swift */,
 				F9755A8D231DBCC000A2FCBA /* TextView.swift */,
 				F9755A8E231DBCC000A2FCBA /* TablePopover.swift */,
 				F9755A8F231DBCC000A2FCBA /* DatePopover.swift */,
 				F9755A90231DBCC000A2FCBA /* RulerView.swift */,
+				F99FEB68233A177300336790 /* InfoTextField.swift */,
+				F997D1F7233D42C700AE86BD /* RefreshableScrollView.swift */,
 			);
 			path = TextView;
 			sourceTree = "<group>";
@@ -332,7 +341,9 @@
 				F9755A95231DBCC100A2FCBA /* RulerView.swift in Sources */,
 				F9755AA1231DBD0D00A2FCBA /* Preferences.swift in Sources */,
 				F9755AAD231DBD4900A2FCBA /* Task.swift in Sources */,
+				F99FEB69233A177300336790 /* InfoTextField.swift in Sources */,
 				F9755A7D231DBBE300A2FCBA /* SidebarViewController.swift in Sources */,
+				F99FEB6B233CB41F00336790 /* LayoutManager.swift in Sources */,
 				F9C6CCC223259051008026FD /* Item.swift in Sources */,
 				F900C45A23335ABB007C9FC0 /* FiltersViewController.swift in Sources */,
 				F9755A88231DBC8E00A2FCBA /* NSColor Extention.swift in Sources */,
@@ -346,6 +357,7 @@
 				F9D93B572334B71E00AC0D2E /* TableViewController.swift in Sources */,
 				F9755A80231DBC2600A2FCBA /* Theme.swift in Sources */,
 				F9755A97231DBCD500A2FCBA /* BadgeView.swift in Sources */,
+				F997D1F8233D42C700AE86BD /* RefreshableScrollView.swift in Sources */,
 				F93E5947231F526700266D92 /* FilterViewController.swift in Sources */,
 				F9755A94231DBCC100A2FCBA /* DatePopover.swift in Sources */,
 				F9755A8A231DBC9500A2FCBA /* String Extention.swift in Sources */,

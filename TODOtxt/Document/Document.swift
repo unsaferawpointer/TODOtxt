@@ -10,10 +10,11 @@ import Cocoa
 
 class Document: NSDocument {
     
-    var storage: Storage = Storage()
     var badgeCount: Int {
-        return storage.badgeCount
+        return textViewController?.backingStore.badgeCount ?? 0
     }
+    
+    var data: Data?
     
     // Document has only one NSWindowController
     var textViewController: TextViewController? {
@@ -30,6 +31,8 @@ class Document: NSDocument {
         return true
     }
     
+    
+    
     override func makeWindowControllers() {
         Swift.print(#function)
         // Returns the Storyboard that contains your Document window.
@@ -37,9 +40,7 @@ class Document: NSDocument {
         let windowController = storyboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("Document Window Controller")) as! NSWindowController
         self.addWindowController(windowController)
         if let contentView = textViewController {
-            contentView.backingStore = storage
-            contentView.reload(self)
-            
+            try! contentView.reload(data: data ?? Data())
         }
         
     }
@@ -62,8 +63,8 @@ class Document: NSDocument {
         // Alternatively, you could remove this method and override read(from:ofType:) instead.
         // If you do, you should also override isEntireFileLoaded to return false if the contents are lazily loaded.
         //throw NSError(domain: NSOSStatusErrorDomain, code: unimpErr, userInfo: nil)
-        try storage.reload(data)
-        textViewController?.reload(self)
+        self.data = data
+        try textViewController?.reload(data: data)
     }
     
 }

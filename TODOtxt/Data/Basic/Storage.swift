@@ -268,10 +268,12 @@ extension Storage {
         return storage.count
     }
     
+    /*
     func shouldChange(with delta: Int) -> Bool {
         guard delta > 0 else { return true }
-        
-        return count + delta <= CHARACTERS_LIMIT
+        let after = count + delta
+        NSLog("shouldChange = %d", after)
+        return after <= TASKS_LIMIT
     }
-    
+    */
 }

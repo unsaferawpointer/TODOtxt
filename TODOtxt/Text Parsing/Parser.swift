@@ -140,6 +140,10 @@ enum LineType: Int {
     case empty = 0, task, header
 }
 
+enum DueDateType: Int {
+    case none, overdue, today, tomorrow
+}
+
 class Parser {
     
     var font: NSFont
@@ -192,9 +196,21 @@ extension Parser {
             break
         }
         
-        let paragraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
-        backingStorage.addAttribute(.paragraphStyle, value: paragraphStyle, range: globalBodyRange)
         
+        
+        
+        /*
+        if let filter = Preferences.shared.badgeFilter, 
+            let todo = parse(body), 
+            filter.evaluate(with: todo) {
+            backingStorage.addAttribute(NSAttributedString.Key(rawValue: "pinned"), value: 1, range: NSRange(location: globalBodyRange.location, length: 1))
+        }*/
+        
+        
+        
+        let paragraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
+        //paragraphStyle.lineHeightMultiple = 1.3
+        backingStorage.addAttribute(.paragraphStyle, value: paragraphStyle, range: globalBodyRange)
         
         let completed = (parse(.status, inLine: body) != nil )
         
