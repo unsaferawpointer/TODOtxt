@@ -74,8 +74,8 @@ class DateAggregator: Aggregator {
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
             
-            guard let str = todo.dateString else { return nil }
-            let date = formatter.date(from: str)!
+            guard let date = todo.dueDate as Date? else { return nil }
+            //let date = formatter.date(from: str)!
             
             let calendar = NSCalendar.current
             let today = Date()

@@ -23,7 +23,7 @@ class Node: NSObject {
 
 class TableViewController: NSViewController {
     
-    var storage: Storage?
+    var storage: TaskStorage?
     @objc dynamic var nodes: [Node] = [Node(name: "+travel", children: [Node(name: "(A) Do it +travel"), Node(name: "(B) Then do that +travel")])]
     
     @IBOutlet weak var outlineView: NSOutlineView!

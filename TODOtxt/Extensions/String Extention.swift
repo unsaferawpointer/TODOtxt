@@ -23,3 +23,25 @@ extension String {
     
 }
 
+extension String {
+    static var upArrow: String {
+        return String(Character(UnicodeScalar(NSUpArrowFunctionKey)!))
+    }
+    
+    static var downArrow: String {
+        return String(Character(UnicodeScalar(NSDownArrowFunctionKey)!))
+    }
+    
+    static var leftArrow: String {
+        return String(Character(UnicodeScalar(NSLeftArrowFunctionKey)!))
+    }
+    
+    static var rightArrow: String {
+        return String(Character(UnicodeScalar(NSRightArrowFunctionKey)!))
+    }
+    
+    static var backspace: String {
+        return String(Character(UnicodeScalar(NSBackspaceCharacter)!))
+    }
+} 
+

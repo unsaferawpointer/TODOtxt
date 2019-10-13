@@ -8,34 +8,8 @@
 
 import Cocoa
 
-protocol AutoCompletionDelegate {
-    func complete(element: Element) -> [String]
-}
-
-extension String {
-    static var upArrow: String {
-        return String(Character(UnicodeScalar(NSUpArrowFunctionKey)!))
-    }
-    
-    static var downArrow: String {
-        return String(Character(UnicodeScalar(NSDownArrowFunctionKey)!))
-    }
-    
-    static var leftArrow: String {
-        return String(Character(UnicodeScalar(NSLeftArrowFunctionKey)!))
-    }
-    
-    static var rightArrow: String {
-        return String(Character(UnicodeScalar(NSRightArrowFunctionKey)!))
-    }
-    
-    static var backspace: String {
-        return String(Character(UnicodeScalar(NSBackspaceCharacter)!))
-    }
-} 
-
 struct PriorityArray {
-    let array: [String] = ["A","B","C","D","E","F","G","H","I","K","L","M","N","O","P","Q","R","S","T","V","X", "Y","Z"]
+    let array: [String] = [" ","A","B","C","D","E","F","G","H","I","K","L","M","N","O","P","Q","R","S","T","V","X", "Y","Z"]
     
     func element(before otherElement: String) -> String {
         if let index = array.firstIndex(of: otherElement), index > 0 {
@@ -60,13 +34,20 @@ struct PriorityArray {
     }
 }
 
-class TextView: NSTextView {
+protocol TaskTextViewDelegate: class {
+    func taskTextView(for element: Element) -> [String]
+}
+
+class TaskTextView: NSTextView {
     
-    weak var rulerView: RulerView?
+    weak var rulerView: TaskRulerView?
+    weak var autocompletionDelegate: TaskTextViewDelegate?
     
     var theme: Theme {
         return Preferences.shared.theme
     }
+    
+    // ********** Working with text **********
     
     var mutString: NSMutableString {
         return textStorage!.mutableString
@@ -96,17 +77,17 @@ class TextView: NSTextView {
     var editedRange: NSRange?
     var parser: Parser = Parser()
     
-    var completionDelegate: AutoCompletionDelegate?
+    var taskTextStorage: TaskTextStorage {
+        return textStorage as! TaskTextStorage
+    }
+    
+    // ********** Popovers **********
+    
     var currentPopover: AutocompletionPopover?
     
-    func reload(with text: String) {
-        undoManager?.removeAllActions()
-        currentPopover?.close()
-        let textStorage = self.textStorage as! TextStorage
-        textStorage.observeChanging = false
-        self.string = text
-        textStorage.observeChanging = true
-    }
+    
+    
+    // ******** Key event handling ********
     
     override func keyDown(with event: NSEvent) {
         
@@ -178,7 +159,62 @@ class TextView: NSTextView {
         
     }
     
+    override func deleteBackward(_ sender: Any?) {
+        let selRange = selectedRange()
+        let location = selRange.location
+        let startRange = NSRange(location: location, length: 0)
+        
+        let lineRange = mutString.lineRange(for: startRange)
+        print("selRange = \(selRange)")
+        print("lineRange = \(lineRange)")
+        let pattern = #"^\t*(\[(x|\s|\-|[A-Z])\]\s).*"#
+        let regex = try! NSRegularExpression(pattern: pattern, options: .anchorsMatchLines)
+        let lineStr = string.substring(from: lineRange)
+        print("firstTask = \(lineStr)")
+        if let result = regex.firstMatch(in: string, options: [], range: lineRange), result.range(at: 1).upperBound == selRange.location && selRange.length == 0 {
+            replaceText(in: result.range(at: 1), with: "")
+        } else {
+            super.deleteBackward(sender)
+        }
+    }
+    
+    override func insertNewline(_ sender: Any?) {
+        
+        let selRange = selectedRange()
+        let location = selRange.location
+        let startRange = NSRange(location: location, length: 0)
+        
+        let lineRange = mutString.lineRange(for: startRange)
+        print("selRange = \(selRange)")
+        print("lineRange = \(lineRange)")
+        if selRange.length == 0 {
+            
+            let pattern = #"^\t*(\[(x|\s|\-|[A-Z])\]\s).*"#
+            let regex = try! NSRegularExpression(pattern: pattern, options: .anchorsMatchLines)
+            let lineStr = string.substring(from: lineRange)
+            print("firstTask = \(lineStr)")
+            if let result = regex.firstMatch(in: string, options: [], range: lineRange), result.range(at: 1).upperBound <= location {
+                print("location = \(location)")
+                print("upperRange = \(result.range(at:1).upperBound)")
+                if result.range(at: 1).upperBound == location {
+                    replaceCharacters(in: result.range(at:1), with: "")
+                    
+                } else {
+                    replaceCharacters(in: NSRange(location: selRange.upperBound, length: 0), with: "\n[ ] ")
+                }
+            } else {
+                super.insertNewline(sender)
+            }
+        } else {
+            super.insertNewline(sender)
+        }
+        
+        
+        
+    }
+    
     // ********** Context menu **********
+    
     override func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
         if item.action == #selector(changeLayoutOrientation(_:)) {
             return false
@@ -186,9 +222,7 @@ class TextView: NSTextView {
         return super.validateUserInterfaceItem(item)
     }
     
-    // ========
-    // MENU SELECTORS
-    // ========
+    // ********* Menu selectors *********
     
     private func isSingleTaskSelection() -> Bool {
         guard let lineString = selectedLineString else { return false }
@@ -222,18 +256,23 @@ class TextView: NSTextView {
     
     
     // ********** Selectors **********
+    
+    
+    
     // ---------- common ----------
     @IBAction func toggleCompletion(_ sender: Any?) {
         
         guard let lineRange = selectedLine, let lineString = selectedLineString else { return }
         
-        if let (_ , enclosingRange) = parser.parse(.status, inLine: lineString, at: lineRange.location) {
-            replaceText(in: enclosingRange, with: "")
-        } else {
-            let leadLineRange = NSRange(location: lineRange.location, length: 0)
-            replaceText(in: leadLineRange, with: "x ")
+        if let (range , enclosingRange) = parser.parse(.status, inLine: lineString, at: lineRange.location) {
+            let status = string.substring(from: range)
+            switch status {
+            case "x":
+                replaceText(in: enclosingRange, with: "[ ]")
+            default:
+                replaceText(in: enclosingRange, with: "[x]")
+            }
         }
-        
     }
     
     @IBAction func removeLines(_ sender: Any?) {
@@ -248,20 +287,11 @@ class TextView: NSTextView {
         
         let priorityArray = PriorityArray()
         
-        if let (range , enclosingRange) = parser.parse(.priority, inLine: lineString, at: lineRange.location) {
+        if let (range , enclosingRange) = parser.parse(.status, inLine: lineString, at: lineRange.location) {
             let oldPriority = mutString.substring(with: range)
             let newPriority = priorityArray.element(before: oldPriority)
-            replaceText(in: enclosingRange, with: Element.priority.prefixString(for: newPriority))
-        } else {
-            let newPriority = priorityArray.last
-            if let (_ , enclosingRange) = parser.parse(.status, inLine: lineString, at: lineRange.location) {
-                let leadingRange = NSRange(location: enclosingRange.upperBound, length: 0)
-                replaceText(in: leadingRange, with: Element.priority.prefixString(for: newPriority))
-            } else {
-                let leadLineRange = NSRange(location: lineRange.location, length: 0)
-                replaceText(in: leadLineRange, with: Element.priority.prefixString(for: newPriority))
-            }
-        }
+            replaceText(in: enclosingRange, with: "[\(newPriority)]")
+        } 
         
     }
     
@@ -274,16 +304,7 @@ class TextView: NSTextView {
         if let (range , enclosingRange) = parser.parse(.priority, inLine: lineString, at: lineRange.location) {
             let oldPriority = mutString.substring(with: range)
             let newPriority = priorityArray.element(after: oldPriority)
-            replaceText(in: enclosingRange, with: Element.priority.prefixString(for: newPriority))
-        } else {
-            let newPriority = priorityArray.first
-            if let (_ , enclosingRange) = parser.parse(.status, inLine: lineString, at: lineRange.location) {
-                let leadingRange = NSRange(location: enclosingRange.upperBound, length: 0)
-                replaceText(in: leadingRange, with: Element.priority.prefixString(for: newPriority))
-            } else {
-                let leadLineRange = NSRange(location: lineRange.location, length: 0)
-                replaceText(in: leadLineRange, with: Element.priority.prefixString(for: newPriority))
-            }
+            replaceText(in: enclosingRange, with: "[\(newPriority)]")
         }
         
     }
@@ -359,8 +380,15 @@ class TextView: NSTextView {
         } 
     }
     
-    @IBAction func removeCompleted(_ sender: Any?) {
-        
+    func removeCompleted() {
+        textStorage?.mutableString.enumerateSubstrings(in: fullRange, options: .byLines, using: { (substring, range, enclosing, stop) in
+            if let body = substring, self.parser.parse(.status, inLine: body) != nil {
+                print("substring = \(substring)")
+                print("range = \(range)")
+                print("enclosing = \(enclosing)")
+                self.textStorage?.replaceCharacters(in: enclosing, with: "")
+            }
+        })
     }
     
     func invalidateColorScheme() {
@@ -369,7 +397,7 @@ class TextView: NSTextView {
     
 }
 
-extension TextView {
+extension TaskTextView {
     
     override func setSelectedRange(_ charRange: NSRange, affinity: NSSelectionAffinity, stillSelecting stillSelectingFlag: Bool) {
         super.setSelectedRange(charRange, affinity: affinity, stillSelecting: stillSelectingFlag)
@@ -423,7 +451,7 @@ extension TextView {
 
 // ********** Completion **********
 
-extension TextView: AutocompletionPopoverDelegate {
+extension TaskTextView: AutocompletionPopoverDelegate {
     
     func autocompletionDidChange(_ sender: AutocompletionPopover, str: String, element: Element) {
         print(#function)
@@ -457,7 +485,9 @@ extension TextView: AutocompletionPopoverDelegate {
             self.editedRange = enclosingRange
             switch element {
             case .context, .project:
-                var data = completionDelegate!.complete(element: element)
+                
+                var data: [String] = autocompletionDelegate?.taskTextView(for: element) ?? []
+                
                 data.removeAll { (value) -> Bool in
                     return value == mention || !value.hasPrefix(mention)
                 }
@@ -493,8 +523,6 @@ extension TextView: AutocompletionPopoverDelegate {
         
     }
     
-    
-    
     private func show(_ popover: AutocompletionPopover, at characterIndex: Int) {
         self.currentPopover?.close()
         self.currentPopover = popover
@@ -510,12 +538,22 @@ extension TextView: AutocompletionPopoverDelegate {
     
 }
 
-
-
-extension TextView {
+extension TaskTextView {
+    
     override func updateRuler() {
         super.updateRuler()
+        print(#function)
         rulerView?.needsDisplay = true
+    }
+    
+    // -------- Set w/o text parsing. Only highlight text --------
+    
+    func set(text: String) {
+        undoManager?.removeAllActions()
+        currentPopover?.close()
+        taskTextStorage.observeChanging = false
+        self.string = text
+        taskTextStorage.observeChanging = true
     }
     
 }

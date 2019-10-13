@@ -11,14 +11,15 @@ import Foundation
 
 public struct Bag<Element: Hashable & Comparable > {
     
-    private(set) var backingStorage: SortedArray<Element>
-    fileprivate var contents: [Element: Int]
-    
-    fileprivate var _changed: Set<Element> = []
-    fileprivate var _observeChanges: Bool = false
+    private(set) var storage: [Element] = []
+    fileprivate var contents: [Element: Int] = [:]
     
     subscript(position: Int) -> Element {
-        return backingStorage[position]
+        return storage[position]
+    }
+    
+    var sorted: [Element] {
+        return storage.sorted()
     }
     
     var uniqueCount: Int {
@@ -33,41 +34,6 @@ public struct Bag<Element: Hashable & Comparable > {
         return contents[object] ?? 0
     }
     
-    ///Start accumulate a changes.
-    mutating func beginChange() {
-        self._observeChanges = true
-        self.backingStorage.beginChange()
-    }
-    
-    ///End accumulate a changes.
-    mutating func endChange() {
-        self._observeChanges = false
-        self.backingStorage.endChange()
-        self._changed = []
-        
-    }
-    
-    public var changes: [OperationType: IndexSet] {
-        var result = backingStorage.changes
-        print("Bag class _changed = \(_changed)")
-        for object in _changed {
-            if let index = backingStorage._elements.firstIndex(of: object) {
-                print("index = \(index)")
-                result[.update]!.insert(index)
-            }
-        }
-        print("Bag class update changes = \(result[.update])")
-        return result
-    }
-    
-    // WARNING COMPARATOR
-    init() { 
-        let comparator = { (lhs: Element, rhs: Element )in lhs < rhs }
-        self.backingStorage = SortedArray<Element>(comparator: comparator)
-        self.contents = [:]
-    }
-    
-    
     public mutating func insert(_ objects: [Element]) {
         for object in objects {
             insert(object)
@@ -81,26 +47,22 @@ public struct Bag<Element: Hashable & Comparable > {
     }
     
     
-    
     ///If anObject is present in the bag, increments the count associated with it and return nil. Otherwise, insert anObject to the bag  and return anObject.
-    public mutating func insert(_ object: Element, occurrences: Int = 1) -> (object: Element, at: Int)? {
+    public mutating func insert(_ object: Element, occurrences: Int = 1) {
         
         precondition(occurrences > 0, "Can only add a positive number of occurrences")
         
         if let currentCount = contents[object] {
             contents[object] = currentCount + occurrences
-            if _observeChanges { _changed.insert(object) }
         } else {
             contents[object] = occurrences
-            let index = backingStorage.insert(object)
-            return (object: object, at: index)
+            storage.append(object)
         }
         
-        return nil
     }
     
     ///If anObject is present in the set, decrements the count associated with it and return nil. If the count is decremented to 0, anObject is removed from the set and return anObject.
-    public mutating func remove(_ object: Element, occurrences: Int = 1) -> Element? {
+    public mutating func remove(_ object: Element, occurrences: Int = 1) {
         
         guard let currentCount = contents[object], currentCount >= occurrences else {
             preconditionFailure("Removed non-existent elements")
@@ -110,14 +72,16 @@ public struct Bag<Element: Hashable & Comparable > {
         
         if currentCount > occurrences {
             contents[object] = currentCount - occurrences
-            if _observeChanges { _changed.insert(object) }
         } else {
             contents.removeValue(forKey: object)
-            backingStorage.remove(object)
-            return object
+            if let index = storage.firstIndex(of: object) {
+                storage.remove(at: index)
+            } else {
+                fatalError("The storage dont contains a object")
+            }
+            
         }
         
-        return nil
     }
     
     /*
@@ -129,7 +93,7 @@ public struct Bag<Element: Hashable & Comparable > {
     /// Removes all elements from the bag
     public mutating func removeAll() {
         contents.removeAll()
-        backingStorage.removeAll()
+        storage.removeAll()
     }
     
 }

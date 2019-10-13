@@ -11,10 +11,10 @@ import Cocoa
 class Document: NSDocument {
     
     var badgeCount: Int {
-        return textViewController?.backingStore.badgeCount ?? 0
+        return 0
     }
     
-    var data: Data?
+    var str: String = ""
     
     // Document has only one NSWindowController
     var textViewController: TextViewController? {
@@ -31,8 +31,6 @@ class Document: NSDocument {
         return true
     }
     
-    
-    
     override func makeWindowControllers() {
         Swift.print(#function)
         // Returns the Storyboard that contains your Document window.
@@ -40,7 +38,8 @@ class Document: NSDocument {
         let windowController = storyboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("Document Window Controller")) as! NSWindowController
         self.addWindowController(windowController)
         if let contentView = textViewController {
-            try! contentView.reload(data: data ?? Data())
+            contentView.objectValue = str
+            contentView.taskDocumentView.delegate = self
         }
         
     }
@@ -49,8 +48,8 @@ class Document: NSDocument {
         // Insert code here to write your document to data of the specified type, throwing an error in case of failure.
         // Alternatively, you could remove this method and override fileWrapper(ofType:), write(to:ofType:), or write(to:ofType:for:originalContentsURL:) instead.
         //throw NSError(domain: NSOSStatusErrorDomain, code: unimpErr, userInfo: nil)
-        if let str = textViewController?.textview.string {
-            return str.data(using: .utf8) ?? Data()
+        if let data = textViewController?.taskDocumentView.data {
+            return data
         } else {
             return Data()
         }
@@ -63,9 +62,16 @@ class Document: NSDocument {
         // Alternatively, you could remove this method and override read(from:ofType:) instead.
         // If you do, you should also override isEntireFileLoaded to return false if the contents are lazily loaded.
         //throw NSError(domain: NSOSStatusErrorDomain, code: unimpErr, userInfo: nil)
-        self.data = data
-        try textViewController?.reload(data: data)
+        guard let str = String(data: data, encoding: .utf8) else { throw DataError.invalidFormat }
+        guard str.count <= 4000 else { throw DataError.overflow}
+        self.str = str
+        textViewController?.objectValue = str
     }
     
 }
 
+extension Document: TaskDocumentViewDelegate {
+    func dataDidChange() {
+        updateChangeCount(.changeDone)
+    }
+}

@@ -9,7 +9,10 @@
 /* Begin PBXBuildFile section */
 		F900C45A23335ABB007C9FC0 /* FiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F900C45923335ABB007C9FC0 /* FiltersViewController.swift */; };
 		F93E5947231F526700266D92 /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93E5946231F526700266D92 /* FilterViewController.swift */; };
+		F940B0A72351D34200664043 /* IBMPlexMono-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F940B0A62351D34200664043 /* IBMPlexMono-SemiBold.ttf */; };
+		F940B0A923532D2100664043 /* IBMPlexMono-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F940B0A823532D2100664043 /* IBMPlexMono-Medium.ttf */; };
 		F95F8C742337E51600B86C15 /* DocumentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F95F8C732337E51600B86C15 /* DocumentController.swift */; };
+		F9721028234F304900608CAB /* LineFoldingTypesetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9721027234F304900608CAB /* LineFoldingTypesetter.swift */; };
 		F9755A65231DB87900A2FCBA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A64231DB87900A2FCBA /* AppDelegate.swift */; };
 		F9755A67231DB87900A2FCBA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A66231DB87900A2FCBA /* ViewController.swift */; };
 		F9755A69231DB87900A2FCBA /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A68231DB87900A2FCBA /* Document.swift */; };
@@ -22,10 +25,10 @@
 		F9755A86231DBC8800A2FCBA /* MutableString Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A85231DBC8800A2FCBA /* MutableString Extention.swift */; };
 		F9755A88231DBC8E00A2FCBA /* NSColor Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A87231DBC8E00A2FCBA /* NSColor Extention.swift */; };
 		F9755A8A231DBC9500A2FCBA /* String Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A89231DBC9500A2FCBA /* String Extention.swift */; };
-		F9755A92231DBCC100A2FCBA /* TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A8D231DBCC000A2FCBA /* TextView.swift */; };
+		F9755A92231DBCC100A2FCBA /* TaskTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A8D231DBCC000A2FCBA /* TaskTextView.swift */; };
 		F9755A93231DBCC100A2FCBA /* TablePopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A8E231DBCC000A2FCBA /* TablePopover.swift */; };
 		F9755A94231DBCC100A2FCBA /* DatePopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A8F231DBCC000A2FCBA /* DatePopover.swift */; };
-		F9755A95231DBCC100A2FCBA /* RulerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A90231DBCC000A2FCBA /* RulerView.swift */; };
+		F9755A95231DBCC100A2FCBA /* TaskRulerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A90231DBCC000A2FCBA /* TaskRulerView.swift */; };
 		F9755A97231DBCD500A2FCBA /* BadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A96231DBCD500A2FCBA /* BadgeView.swift */; };
 		F9755A9C231DBCF700A2FCBA /* Bag.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A9A231DBCF700A2FCBA /* Bag.swift */; };
 		F9755A9D231DBCF700A2FCBA /* SortedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A9B231DBCF700A2FCBA /* SortedArray.swift */; };
@@ -35,14 +38,20 @@
 		F9755AA5231DBD2700A2FCBA /* Comparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AA4231DBD2700A2FCBA /* Comparator.swift */; };
 		F9755AA7231DBD2D00A2FCBA /* Aggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AA6231DBD2D00A2FCBA /* Aggregator.swift */; };
 		F9755AAD231DBD4900A2FCBA /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AAA231DBD4900A2FCBA /* Task.swift */; };
-		F9755AB0231DBE0800A2FCBA /* TextStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AAF231DBE0800A2FCBA /* TextStorage.swift */; };
+		F9755AB0231DBE0800A2FCBA /* TaskTextStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AAF231DBE0800A2FCBA /* TaskTextStorage.swift */; };
 		F9755AB4231DBEA500A2FCBA /* ItemCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AB2231DBEA500A2FCBA /* ItemCellView.swift */; };
 		F9755AB5231DBEA500A2FCBA /* ItemCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9755AB3231DBEA500A2FCBA /* ItemCellView.xib */; };
-		F9755AB7231DBF0400A2FCBA /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AB6231DBF0400A2FCBA /* Storage.swift */; };
+		F9755AB7231DBF0400A2FCBA /* TaskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AB6231DBF0400A2FCBA /* TaskStorage.swift */; };
 		F9755AB9231DD6AB00A2FCBA /* Themes.plist in Resources */ = {isa = PBXBuildFile; fileRef = F9755AB8231DD6AB00A2FCBA /* Themes.plist */; };
 		F997D1F8233D42C700AE86BD /* RefreshableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F997D1F7233D42C700AE86BD /* RefreshableScrollView.swift */; };
+		F99CF91B234CCC0A00526612 /* IBMPlexMono-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F99CF91A234CCC0A00526612 /* IBMPlexMono-Light.ttf */; };
+		F99CF91D234CCE7F00526612 /* IBMPlexMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F99CF91C234CCE7F00526612 /* IBMPlexMono-Regular.ttf */; };
+		F99CF91F234DEE5F00526612 /* TaskTextAttachmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99CF91E234DEE5F00526612 /* TaskTextAttachmentCell.swift */; };
+		F99CF921234E1BC700526612 /* LineFoldingGlyphGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99CF920234E1BC700526612 /* LineFoldingGlyphGenerator.swift */; };
 		F99FEB69233A177300336790 /* InfoTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99FEB68233A177300336790 /* InfoTextField.swift */; };
-		F99FEB6B233CB41F00336790 /* LayoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99FEB6A233CB41F00336790 /* LayoutManager.swift */; };
+		F99FEB6B233CB41F00336790 /* TaskLayoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99FEB6A233CB41F00336790 /* TaskLayoutManager.swift */; };
+		F9C323CD2343CECB001CB6FF /* TaskDocumentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9C323CC2343CECB001CB6FF /* TaskDocumentView.xib */; };
+		F9C323CF2343D02C001CB6FF /* TaskDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C323CE2343D02C001CB6FF /* TaskDocumentView.swift */; };
 		F9C6CCC223259051008026FD /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C6CCC123259051008026FD /* Item.swift */; };
 		F9D93B572334B71E00AC0D2E /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D93B562334B71E00AC0D2E /* TableViewController.swift */; };
 /* End PBXBuildFile section */
@@ -50,7 +59,10 @@
 /* Begin PBXFileReference section */
 		F900C45923335ABB007C9FC0 /* FiltersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersViewController.swift; sourceTree = "<group>"; };
 		F93E5946231F526700266D92 /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
+		F940B0A62351D34200664043 /* IBMPlexMono-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexMono-SemiBold.ttf"; sourceTree = "<group>"; };
+		F940B0A823532D2100664043 /* IBMPlexMono-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexMono-Medium.ttf"; sourceTree = "<group>"; };
 		F95F8C732337E51600B86C15 /* DocumentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentController.swift; sourceTree = "<group>"; };
+		F9721027234F304900608CAB /* LineFoldingTypesetter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineFoldingTypesetter.swift; sourceTree = "<group>"; };
 		F9755A61231DB87900A2FCBA /* TODOtxt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TODOtxt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9755A64231DB87900A2FCBA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F9755A66231DB87900A2FCBA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -66,10 +78,10 @@
 		F9755A85231DBC8800A2FCBA /* MutableString Extention.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MutableString Extention.swift"; sourceTree = "<group>"; };
 		F9755A87231DBC8E00A2FCBA /* NSColor Extention.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSColor Extention.swift"; sourceTree = "<group>"; };
 		F9755A89231DBC9500A2FCBA /* String Extention.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String Extention.swift"; sourceTree = "<group>"; };
-		F9755A8D231DBCC000A2FCBA /* TextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextView.swift; sourceTree = "<group>"; };
+		F9755A8D231DBCC000A2FCBA /* TaskTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskTextView.swift; sourceTree = "<group>"; };
 		F9755A8E231DBCC000A2FCBA /* TablePopover.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TablePopover.swift; sourceTree = "<group>"; };
 		F9755A8F231DBCC000A2FCBA /* DatePopover.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatePopover.swift; sourceTree = "<group>"; };
-		F9755A90231DBCC000A2FCBA /* RulerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RulerView.swift; sourceTree = "<group>"; };
+		F9755A90231DBCC000A2FCBA /* TaskRulerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskRulerView.swift; sourceTree = "<group>"; };
 		F9755A96231DBCD500A2FCBA /* BadgeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BadgeView.swift; sourceTree = "<group>"; };
 		F9755A9A231DBCF700A2FCBA /* Bag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bag.swift; sourceTree = "<group>"; };
 		F9755A9B231DBCF700A2FCBA /* SortedArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortedArray.swift; sourceTree = "<group>"; };
@@ -79,14 +91,20 @@
 		F9755AA4231DBD2700A2FCBA /* Comparator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comparator.swift; sourceTree = "<group>"; };
 		F9755AA6231DBD2D00A2FCBA /* Aggregator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Aggregator.swift; sourceTree = "<group>"; };
 		F9755AAA231DBD4900A2FCBA /* Task.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
-		F9755AAF231DBE0800A2FCBA /* TextStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextStorage.swift; sourceTree = "<group>"; };
+		F9755AAF231DBE0800A2FCBA /* TaskTextStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskTextStorage.swift; sourceTree = "<group>"; };
 		F9755AB2231DBEA500A2FCBA /* ItemCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCellView.swift; sourceTree = "<group>"; };
 		F9755AB3231DBEA500A2FCBA /* ItemCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ItemCellView.xib; sourceTree = "<group>"; };
-		F9755AB6231DBF0400A2FCBA /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
+		F9755AB6231DBF0400A2FCBA /* TaskStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskStorage.swift; sourceTree = "<group>"; };
 		F9755AB8231DD6AB00A2FCBA /* Themes.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Themes.plist; sourceTree = "<group>"; };
 		F997D1F7233D42C700AE86BD /* RefreshableScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshableScrollView.swift; sourceTree = "<group>"; };
+		F99CF91A234CCC0A00526612 /* IBMPlexMono-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexMono-Light.ttf"; sourceTree = "<group>"; };
+		F99CF91C234CCE7F00526612 /* IBMPlexMono-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexMono-Regular.ttf"; sourceTree = "<group>"; };
+		F99CF91E234DEE5F00526612 /* TaskTextAttachmentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTextAttachmentCell.swift; sourceTree = "<group>"; };
+		F99CF920234E1BC700526612 /* LineFoldingGlyphGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineFoldingGlyphGenerator.swift; sourceTree = "<group>"; };
 		F99FEB68233A177300336790 /* InfoTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTextField.swift; sourceTree = "<group>"; };
-		F99FEB6A233CB41F00336790 /* LayoutManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutManager.swift; sourceTree = "<group>"; };
+		F99FEB6A233CB41F00336790 /* TaskLayoutManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskLayoutManager.swift; sourceTree = "<group>"; };
+		F9C323CC2343CECB001CB6FF /* TaskDocumentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskDocumentView.xib; sourceTree = "<group>"; };
+		F9C323CE2343D02C001CB6FF /* TaskDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDocumentView.swift; sourceTree = "<group>"; };
 		F9C6CCC123259051008026FD /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		F9D93B562334B71E00AC0D2E /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -131,6 +149,10 @@
 				F9755A6A231DB87A00A2FCBA /* Assets.xcassets */,
 				F9755A6C231DB87A00A2FCBA /* Main.storyboard */,
 				F9755A6F231DB87A00A2FCBA /* Info.plist */,
+				F99CF91C234CCE7F00526612 /* IBMPlexMono-Regular.ttf */,
+				F940B0A823532D2100664043 /* IBMPlexMono-Medium.ttf */,
+				F940B0A62351D34200664043 /* IBMPlexMono-SemiBold.ttf */,
+				F99CF91A234CCC0A00526612 /* IBMPlexMono-Light.ttf */,
 				F9755A70231DB87A00A2FCBA /* TODOtxt.entitlements */,
 			);
 			path = TODOtxt;
@@ -162,7 +184,6 @@
 			children = (
 				F9755A7F231DBC2600A2FCBA /* Theme.swift */,
 				F9755AA2231DBD1700A2FCBA /* Parser.swift */,
-				F9755AAF231DBE0800A2FCBA /* TextStorage.swift */,
 				F9755AB8231DD6AB00A2FCBA /* Themes.plist */,
 			);
 			path = "Text Parsing";
@@ -171,9 +192,7 @@
 		F9755A81231DBC3900A2FCBA /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
-				F9755A96231DBCD500A2FCBA /* BadgeView.swift */,
-				F9755A82231DBC5D00A2FCBA /* BackgroundView.swift */,
-				F9755AB1231DBE7300A2FCBA /* cells */,
+				F9865CC52343E2CC00EB846D /* TaskDocumentView */,
 				F9755A8B231DBCC000A2FCBA /* TextView */,
 			);
 			path = "Custom Views";
@@ -192,13 +211,16 @@
 		F9755A8B231DBCC000A2FCBA /* TextView */ = {
 			isa = PBXGroup;
 			children = (
-				F99FEB6A233CB41F00336790 /* LayoutManager.swift */,
-				F9755A8D231DBCC000A2FCBA /* TextView.swift */,
+				F99FEB6A233CB41F00336790 /* TaskLayoutManager.swift */,
+				F9755A8D231DBCC000A2FCBA /* TaskTextView.swift */,
+				F9755AB6231DBF0400A2FCBA /* TaskStorage.swift */,
+				F9755AAF231DBE0800A2FCBA /* TaskTextStorage.swift */,
 				F9755A8E231DBCC000A2FCBA /* TablePopover.swift */,
 				F9755A8F231DBCC000A2FCBA /* DatePopover.swift */,
-				F9755A90231DBCC000A2FCBA /* RulerView.swift */,
+				F9755A90231DBCC000A2FCBA /* TaskRulerView.swift */,
 				F99FEB68233A177300336790 /* InfoTextField.swift */,
 				F997D1F7233D42C700AE86BD /* RefreshableScrollView.swift */,
+				F99CF91E234DEE5F00526612 /* TaskTextAttachmentCell.swift */,
 			);
 			path = TextView;
 			sourceTree = "<group>";
@@ -218,7 +240,6 @@
 			isa = PBXGroup;
 			children = (
 				F9755A9A231DBCF700A2FCBA /* Bag.swift */,
-				F9755A9B231DBCF700A2FCBA /* SortedArray.swift */,
 			);
 			path = Collections;
 			sourceTree = "<group>";
@@ -235,7 +256,6 @@
 			isa = PBXGroup;
 			children = (
 				F9755AAA231DBD4900A2FCBA /* Task.swift */,
-				F9755AB6231DBF0400A2FCBA /* Storage.swift */,
 			);
 			path = Basic;
 			sourceTree = "<group>";
@@ -249,6 +269,15 @@
 			path = cells;
 			sourceTree = "<group>";
 		};
+		F9865CC52343E2CC00EB846D /* TaskDocumentView */ = {
+			isa = PBXGroup;
+			children = (
+				F9C323CE2343D02C001CB6FF /* TaskDocumentView.swift */,
+				F9C323CC2343CECB001CB6FF /* TaskDocumentView.xib */,
+			);
+			path = TaskDocumentView;
+			sourceTree = "<group>";
+		};
 		F9F4E0942333680400D0A125 /* Temp */ = {
 			isa = PBXGroup;
 			children = (
@@ -257,6 +286,12 @@
 				F9755A7C231DBBE300A2FCBA /* SidebarViewController.swift */,
 				F9C6CCC123259051008026FD /* Item.swift */,
 				F9D93B562334B71E00AC0D2E /* TableViewController.swift */,
+				F9755A96231DBCD500A2FCBA /* BadgeView.swift */,
+				F9755A82231DBC5D00A2FCBA /* BackgroundView.swift */,
+				F9755A9B231DBCF700A2FCBA /* SortedArray.swift */,
+				F9755AB1231DBE7300A2FCBA /* cells */,
+				F99CF920234E1BC700526612 /* LineFoldingGlyphGenerator.swift */,
+				F9721027234F304900608CAB /* LineFoldingTypesetter.swift */,
 			);
 			path = Temp;
 			sourceTree = "<group>";
@@ -324,7 +359,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9C323CD2343CECB001CB6FF /* TaskDocumentView.xib in Resources */,
 				F9755AB9231DD6AB00A2FCBA /* Themes.plist in Resources */,
+				F940B0A72351D34200664043 /* IBMPlexMono-SemiBold.ttf in Resources */,
+				F940B0A923532D2100664043 /* IBMPlexMono-Medium.ttf in Resources */,
+				F99CF91D234CCE7F00526612 /* IBMPlexMono-Regular.ttf in Resources */,
+				F99CF91B234CCC0A00526612 /* IBMPlexMono-Light.ttf in Resources */,
 				F9755A6B231DB87A00A2FCBA /* Assets.xcassets in Resources */,
 				F9755AB5231DBEA500A2FCBA /* ItemCellView.xib in Resources */,
 				F9755A6E231DB87A00A2FCBA /* Main.storyboard in Resources */,
@@ -338,21 +378,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F9755A95231DBCC100A2FCBA /* RulerView.swift in Sources */,
+				F9755A95231DBCC100A2FCBA /* TaskRulerView.swift in Sources */,
 				F9755AA1231DBD0D00A2FCBA /* Preferences.swift in Sources */,
 				F9755AAD231DBD4900A2FCBA /* Task.swift in Sources */,
 				F99FEB69233A177300336790 /* InfoTextField.swift in Sources */,
 				F9755A7D231DBBE300A2FCBA /* SidebarViewController.swift in Sources */,
-				F99FEB6B233CB41F00336790 /* LayoutManager.swift in Sources */,
+				F9C323CF2343D02C001CB6FF /* TaskDocumentView.swift in Sources */,
+				F99FEB6B233CB41F00336790 /* TaskLayoutManager.swift in Sources */,
 				F9C6CCC223259051008026FD /* Item.swift in Sources */,
 				F900C45A23335ABB007C9FC0 /* FiltersViewController.swift in Sources */,
 				F9755A88231DBC8E00A2FCBA /* NSColor Extention.swift in Sources */,
+				F9721028234F304900608CAB /* LineFoldingTypesetter.swift in Sources */,
 				F9755A9D231DBCF700A2FCBA /* SortedArray.swift in Sources */,
 				F9755A7B231DBBD400A2FCBA /* TextViewController.swift in Sources */,
 				F95F8C742337E51600B86C15 /* DocumentController.swift in Sources */,
 				F9755AA5231DBD2700A2FCBA /* Comparator.swift in Sources */,
 				F9755A67231DB87900A2FCBA /* ViewController.swift in Sources */,
+				F99CF921234E1BC700526612 /* LineFoldingGlyphGenerator.swift in Sources */,
 				F9755A9C231DBCF700A2FCBA /* Bag.swift in Sources */,
+				F99CF91F234DEE5F00526612 /* TaskTextAttachmentCell.swift in Sources */,
 				F9755A83231DBC5D00A2FCBA /* BackgroundView.swift in Sources */,
 				F9D93B572334B71E00AC0D2E /* TableViewController.swift in Sources */,
 				F9755A80231DBC2600A2FCBA /* Theme.swift in Sources */,
@@ -363,11 +407,11 @@
 				F9755A8A231DBC9500A2FCBA /* String Extention.swift in Sources */,
 				F9755AA7231DBD2D00A2FCBA /* Aggregator.swift in Sources */,
 				F9755A9F231DBD0600A2FCBA /* Filter.swift in Sources */,
-				F9755AB0231DBE0800A2FCBA /* TextStorage.swift in Sources */,
+				F9755AB0231DBE0800A2FCBA /* TaskTextStorage.swift in Sources */,
 				F9755AB4231DBEA500A2FCBA /* ItemCellView.swift in Sources */,
 				F9755A65231DB87900A2FCBA /* AppDelegate.swift in Sources */,
-				F9755AB7231DBF0400A2FCBA /* Storage.swift in Sources */,
-				F9755A92231DBCC100A2FCBA /* TextView.swift in Sources */,
+				F9755AB7231DBF0400A2FCBA /* TaskStorage.swift in Sources */,
+				F9755A92231DBCC100A2FCBA /* TaskTextView.swift in Sources */,
 				F9755A69231DB87900A2FCBA /* Document.swift in Sources */,
 				F9755A93231DBCC100A2FCBA /* TablePopover.swift in Sources */,
 				F9755A86231DBC8800A2FCBA /* MutableString Extention.swift in Sources */,

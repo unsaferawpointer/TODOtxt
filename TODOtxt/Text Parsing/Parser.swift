@@ -88,9 +88,9 @@ enum Element: Hashable {
     var pattern: String {
         switch self {
         case .status:
-            return #"^((x)\s).+"#
+            return #"^\t*(\[(x|\s|\-|[A-Z])\])\s.*"# //#"^((x)\s).+"#
         case .priority:
-            return #"^(?:x\s)?(\(([A-Z])\)\s)"#
+            return #"^^\t*(\[([A-Z]|\s)\])\s"#
         case .project:
             return #"(\s\+(\w+))\b"#
         case .context:
@@ -113,7 +113,7 @@ enum Element: Hashable {
         case .status:
             return "x "
         case .priority:
-            return "(\(value)) "
+            return "[\(value)] "
         case .project:
             return " +\(value)"
         case .context:
@@ -136,9 +136,7 @@ enum Element: Hashable {
     
 }
 
-enum LineType: Int {
-    case empty = 0, task, header
-}
+
 
 enum DueDateType: Int {
     case none, overdue, today, tomorrow
@@ -149,15 +147,13 @@ class Parser {
     var font: NSFont
     var boldFont: NSFont
     
-    var elements: Set<Element> = [.status, .project, .context, .date(granulity: .day), .priority]
+    var elements: Set<Element> = [.project, .context, .date(granulity: .day)]
     var commonAttr:[NSAttributedString.Key: Any?]!
     
     // ********** Init block **********
-    init(font: NSFont = NSFont.systemFont(ofSize: NSFont.systemFontSize)) {
-        self.font = font
-        
-        let fontManager = NSFontManager()
-        self.boldFont = fontManager.convert(font, toHaveTrait: .boldFontMask)
+    init() {
+        self.font = NSFont(name: "IBM Plex Mono", size: 14.0)!
+        self.boldFont = NSFont(name: "IBM Plex Mono Medium", size: 15.0)!
     }
     
 }
@@ -171,69 +167,68 @@ extension Parser {
         }
     }
     
-    
     private func hightlight(theme: Theme, backingStorage: NSMutableAttributedString, _ body: String, in globalBodyRange: NSRange) {
         
         let lineType = self.lineType(of: body)
         
         switch lineType {
         case .empty:
+            //backingStorage.addAttribute(NSAttributedString.Key("isHeader"), value: 0, range: globalBodyRange)
+            backingStorage.addAttribute(.font, value: font, range: globalBodyRange)
             return
         case .header:
+            
             let paragraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
-            paragraphStyle.lineBreakMode = .byTruncatingMiddle
-            paragraphStyle.alignment = .center
-            paragraphStyle.paragraphSpacing = 10.0
-            paragraphStyle.paragraphSpacingBefore = 10.0
+            paragraphStyle.alignment = .left
+            paragraphStyle.paragraphSpacing = 8.0
             backingStorage.addAttribute(.paragraphStyle, value: paragraphStyle, range: globalBodyRange)
-            
-            let foregroundColor = theme.line
+           
+            backingStorage.addAttribute(.font, value: boldFont, range: globalBodyRange)
+            backingStorage.addAttribute(.kern, value: 1.0, range: globalBodyRange)
             backingStorage.addAttribute(.strikethroughStyle, value: 0, range: globalBodyRange)
-            backingStorage.addAttribute(.foregroundColor, value: foregroundColor, range: globalBodyRange)
-            
+            backingStorage.addAttribute(.foregroundColor, value: NSColor.headerTextColor, range: globalBodyRange)
             return
         case .task:
+            backingStorage.addAttribute(.font, value: font, range: globalBodyRange)
             break
+        case .text:
+            backingStorage.addAttribute(.font, value: font, range: globalBodyRange)
+            backingStorage.addAttribute(.foregroundColor, value: NSColor.quaternaryLabelColor, range: globalBodyRange)
+            return
         }
         
         
-        
-        
-        /*
-        if let filter = Preferences.shared.badgeFilter, 
-            let todo = parse(body), 
-            filter.evaluate(with: todo) {
-            backingStorage.addAttribute(NSAttributedString.Key(rawValue: "pinned"), value: 1, range: NSRange(location: globalBodyRange.location, length: 1))
-        }*/
-        
-        
+        let task = parse(body)!
         
         let paragraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
-        //paragraphStyle.lineHeightMultiple = 1.3
+        paragraphStyle.firstLineHeadIndent = 14.0
+        paragraphStyle.headIndent = 14.0
+        paragraphStyle.paragraphSpacing = 4.0
+        
         backingStorage.addAttribute(.paragraphStyle, value: paragraphStyle, range: globalBodyRange)
         
-        let completed = (parse(.status, inLine: body) != nil )
         
-        if completed {
+        if task.isCompleted {
             
-            backingStorage.addAttribute(.foregroundColor, value: theme.completed, range: globalBodyRange)
+            backingStorage.addAttribute(.foregroundColor, value: NSColor.secondaryLabelColor, range: globalBodyRange)
             backingStorage.addAttribute(.strikethroughStyle, value: 1, range: globalBodyRange)
             
         } else {
             
-            let foregroundColor = theme.foreground
             backingStorage.addAttribute(.strikethroughStyle, value: 0, range: globalBodyRange)
-            backingStorage.addAttribute(.foregroundColor, value: foregroundColor, range: globalBodyRange)
+            backingStorage.addAttribute(.foregroundColor, value: NSColor.textColor, range: globalBodyRange)
             
-            var set = elements
-            set.remove(.priority)
+            if let (range, enclosingRange) = parse(.status, inLine: body, at: globalBodyRange.location) {
+                backingStorage.addAttributes([.foregroundColor : NSColor.color(hex: "#D38844")!], range: enclosingRange)
+            }
             
             for element in elements {
-                if let range = parse(element, inLine: body, at: globalBodyRange.location)?.enclosingRange {
+                if let (range, enclosingRange) = parse(element, inLine: body, at: globalBodyRange.location) {
                     let color = theme.color(for: element)
-                    backingStorage.addAttributes([.foregroundColor : color], range: range)
+                    backingStorage.addAttributes([.foregroundColor : NSColor.color(hex: "#D38844")!], range: enclosingRange)
                 }
             }
+            
             
         }
         
@@ -247,7 +242,32 @@ extension Parser {
 // ********** PARSING DATA **********
 extension Parser {
     
-    func parse(_ string: String) -> [Task] {
+    // ********** Common ********
+    
+    enum LineType: Int {
+        case empty = 0, task, header, text
+    }
+    
+    func lineType(of body: String) -> LineType {
+        guard body.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return .empty }
+        let pattern = #"^.+\:$"#
+        let range = body.fullRange
+        let regex = try! NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines])
+        if regex.firstMatch(in: body, options: [], range: range) != nil {
+            return .header
+        }
+        
+        let taskPattern = #"^\t*(\[(x|\s|\-|[A-Z])\])\s.*"#
+        let taskRegex = try! NSRegularExpression(pattern: taskPattern, options: .anchorsMatchLines)
+        if taskRegex.firstMatch(in: body, options: [], range: range) != nil {
+            return .task
+        }
+        
+        return .text
+    }
+    
+    
+    func parse(string: String) -> [Task] {
         var array = [Task]()
         string.enumerateLines { (substring, stop) in
             if let task = self.parse(substring) {
@@ -285,11 +305,14 @@ extension Parser {
         
         let project = parse(in: body, element: .project)
         let context = parse(in: body, element: .context)
-        let priority = parse(in: body, element: .priority)
+        //let priority = parse(in: body, element: .priority)
         let dateString = parse(in: body, element: .date(granulity: .day))
-        let status = parse(in: body, element: .status)
+        let statusString = parse(in: body, element: .status)
+        print("statusString = \(statusString)")
+        precondition(statusString != nil, "The status can`t be equals nil")
         
         var dueDate: NSDate?
+        var status: StatusType = .uncompleted
         
         // WARNING
         if let dateStr = dateString {
@@ -297,9 +320,20 @@ extension Parser {
             dateFormatter.dateFormat = DateGranulity.day.format
             dueDate = dateFormatter.date(from: dateStr)! as NSDate
         }
+        
+        switch statusString! {
+        case "x":
+            status = .completed
+        case "-":
+            status = .canceled
+        case " ":
+            status = .uncompleted
+        default:
+            status = .uncompleted
+        }
             
         
-        let task = Task(string: body, status: status, project: project, context: context, priority: priority, dateString: dateString, dueDate: dueDate)
+        let task = Task(string: body, status: status, project: project, context: context, dueDate: dueDate)
         
         return task
     }
@@ -307,19 +341,6 @@ extension Parser {
     func hasTodo(_ body: String) -> Bool {
         return lineType(of: body) == .task
     }
-    
-    func lineType(of body: String) -> LineType {
-        guard body.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return .empty }
-        let pattern = #"^\-\-\-\-\-\-\-\-.+\-\-\-\-\-\-\-\-$"#
-        let range = body.fullRange
-        let regex = try! NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines])
-        if regex.firstMatch(in: body, options: [], range: range) != nil {
-            return .header
-        }
-        
-        return .task
-    }
-    
     
     func parse(in body: String, element: Element) -> String? {
         if let range = parse(element, inLine: body)?.range {

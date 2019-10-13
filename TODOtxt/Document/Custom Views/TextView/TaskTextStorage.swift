@@ -8,19 +8,18 @@
 
 import Cocoa
 
-protocol TextStorageDataDelegate: class {
-    func dataDidChanged(toInsert: [Task], toDelete: [Task])
+protocol TaskTextStorageDelegate: class {
+    func taskTextStorage(insert tasks: [Task])
+    func taskTextStorage(remove tasks: [Task])
 }
 
-class TextStorage: NSTextStorage {
-    
-    weak var dataDelegate: TextStorageDataDelegate?
+class TaskTextStorage: NSTextStorage {
     
     let backingStore = NSTextStorage()
+    
+    weak var taskDelegate: TaskTextStorageDelegate?
     var parser: Parser = Parser()
     
-    var inserted = [Task]()
-    var removed = [Task]()
     var observeChanging = true
     
     override var string: String {
@@ -56,22 +55,15 @@ class TextStorage: NSTextStorage {
     }
     
     override func processEditing() {
-        
         highlight(in: editedRange)
-        
-        if !removed.isEmpty || !inserted.isEmpty {
-            dataDelegate?.dataDidChanged(toInsert: inserted, toDelete: removed)
-            removed.removeAll()
-            inserted.removeAll()
-        }
-        
         super.processEditing()
     }
     
 }
 
 // ********** Parsing data **********
-extension TextStorage {
+
+extension TaskTextStorage {
     
     private func toRemove(editedRange: NSRange, with delta: Int) {
         
@@ -80,7 +72,8 @@ extension TextStorage {
         let lastLineRange = backingStore.mutableString.lineRange(for: maxRange)
         let fullRange = NSUnionRange(firstLineRange, lastLineRange)
         
-        self.removed = parser.parse(backingStore.mutableString, in: fullRange)
+        let tasks = parser.parse(backingStore.mutableString, in: fullRange)
+        self.taskDelegate?.taskTextStorage(remove: tasks)
     }
     
     private func toInsert(editedRange: NSRange, with delta: Int) {
@@ -91,13 +84,15 @@ extension TextStorage {
         let lastLineRange = backingStore.mutableString.lineRange(for: extendedRange)
         let fullRange = NSUnionRange(firstLineRange, lastLineRange)
         
-        self.inserted = parser.parse(backingStore.mutableString, in: fullRange)
+        let tasks = parser.parse(backingStore.mutableString, in: fullRange)
+        self.taskDelegate?.taskTextStorage(insert: tasks)
     }
     
 }
 
 // ********** Hightlighting **********
-extension TextStorage {
+
+extension TaskTextStorage {
     
     func highlight(in range: NSRange) {
         
@@ -106,13 +101,8 @@ extension TextStorage {
         let lastLineRange = backingStore.mutableString.lineRange(for: extendedRange)
         let fullRange = NSUnionRange(firstLineRange, lastLineRange)
         
-        let paragraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
-        //paragraphStyle.lineBreakMode = .byTruncatingMiddle
-       // paragraphStyle.alignment = .center
-        //paragraphStyle.paragraphSpacing = 10.0
-        //backingStore.addAttribute(.paragraphStyle, value: paragraphStyle, range: string.fullRange)
-        
         parser.highlight(theme: theme, backingStorage: backingStore, in: fullRange)
+        
     }
     
 }

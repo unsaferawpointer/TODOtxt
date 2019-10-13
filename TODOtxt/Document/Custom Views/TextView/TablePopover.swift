@@ -134,6 +134,8 @@ extension TablePopover : NSTableViewDataSource {
     func numberOfRows(in tableView: NSTableView) -> Int {
         return data.count
     }
+    
+    
 }
 
 extension TablePopover : NSTableViewDelegate {

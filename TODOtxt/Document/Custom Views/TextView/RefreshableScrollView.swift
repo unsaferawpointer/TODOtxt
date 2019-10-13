@@ -8,8 +8,8 @@
 
 import Cocoa
 
-protocol RefreshableScrollViewDelegate {
-    func startResfresh()
+protocol RefreshableScrollViewDelegate: class {
+    func willStartUpdate()
 }
 
 enum State {
@@ -18,7 +18,7 @@ enum State {
 
 class RefreshableScrollView: NSScrollView {
     
-    var delegate: RefreshableScrollViewDelegate?
+    weak var delegate: RefreshableScrollViewDelegate?
     
     let OFFSET = -80
     var state: State = .none(offset: 0)
@@ -74,7 +74,7 @@ class RefreshableScrollView: NSScrollView {
             
             if offset < OFFSET {
                 self.state = .refreshing(offset: y)
-                delegate?.startResfresh()
+                delegate?.willStartUpdate()
             } else {
                 let delta = y - offset
                 if delta == 0 {

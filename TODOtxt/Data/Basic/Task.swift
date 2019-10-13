@@ -7,6 +7,34 @@
 //
 
 import Foundation
+import CoreData
+
+@objc enum StatusType2: Int, Comparable, RawRepresentable {
+    
+    init?(rawValue: Int) {
+        self = .completed
+    }
+    
+    typealias RawValue = Int
+    var rawValue: Int {
+        return 0
+    }
+    
+    static func < (lhs: StatusType2, rhs: StatusType2) -> Bool {
+        return lhs.rawValue < rhs.rawValue
+    }
+    
+    case uncompleted, completed, canceled
+}
+
+@objc enum StatusType: Int, Comparable, RawRepresentable {
+    
+    static func < (lhs: StatusType, rhs: StatusType) -> Bool {
+        return lhs.rawValue < rhs.rawValue
+    }
+    
+    case uncompleted, completed, canceled
+}
 
 class Task: NSObject {
     
@@ -19,24 +47,30 @@ class Task: NSObject {
     
     let string: String
     
+    override var description: String {
+        return "Task:\(string)"
+    }
+    
+    override var debugDescription: String {
+        return "Task:\(string)"
+    }
+    
     @objc let project: String?
     @objc let context: String?
     @objc let priority: String?
-    @objc let dateString: String?
-    @objc let status: String?
+    @objc let status: StatusType
     
     @objc let dueDate: NSDate?
     var isCompleted: Bool {
-        return status != nil
+        return status == .completed
     }
     
-    init(string: String, status: String? = nil, project: String? = nil, context: String? = nil, priority: String? = nil, dateString: String? = nil, dueDate: NSDate? = nil) {
+    init(string: String, status: StatusType = .uncompleted, project: String? = nil, context: String? = nil, priority: String? = nil, dueDate: NSDate? = nil) {
         self.string = string
         self.status = status
         self.project = project
         self.context = context
         self.priority = priority
-        self.dateString = dateString
         self.dueDate = dueDate
     }
     
@@ -48,12 +82,8 @@ class Task: NSObject {
             return context
         case .priority:
             return priority
-        case .status:
-            return status
-        case .date(granulity: .day):
-            return dateString
         default:
-            return nil
+            fatalError("Don`t implemented")
         }
     }
     

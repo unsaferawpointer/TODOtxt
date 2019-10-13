@@ -47,35 +47,20 @@ enum MarkStyle: Int, CaseIterable {
     }
 }
 
-extension TextView {
-    
-    func setUpLineNumberView() {
-        
-        if let scrollView = enclosingScrollView {
-            let rulerView = RulerView(textView: self)
-            scrollView.verticalRulerView = rulerView
-            scrollView.hasVerticalRuler = true
-            scrollView.rulersVisible = true
-        }
-        
-    }
-    
-}
 
-class RulerView: NSRulerView {
+class TaskRulerView: NSRulerView {
     
     var backgroundColor: NSColor {
-        return Preferences.shared.theme.background
+        return NSColor.textBackgroundColor
     }
     
     var foregroundColor: NSColor {
-        return Preferences.shared.theme.foreground
+        return NSColor.textColor
     }
     
     init(textView: NSTextView) {
         super.init(scrollView: textView.enclosingScrollView!, orientation: NSRulerView.Orientation.verticalRuler)
         self.clientView = textView
-        
         self.ruleThickness = 40
     }
     
@@ -83,23 +68,20 @@ class RulerView: NSRulerView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // Invalidates view to redraw line numbers
-    func invalidateMarks() {
-        self.needsDisplay = true
-    }
-    
-    
     override func drawHashMarksAndLabels(in rect: NSRect) {
+        
+        
         
         backgroundColor.setFill()
         rect.fill()
+        return
         
         let parser = Parser()
         
         if let textView = self.clientView as? NSTextView {
             if let layoutManager = textView.layoutManager {
                 
-                let baselineOffset = layoutManager.defaultLineHeight(for: textView.font!)
+                let baselineOffset = layoutManager.defaultLineHeight(for: textView.font!) * 1.6
                 
                 let relativePoint = self.convert(NSZeroPoint, from: textView)
                 let markAttributes = [NSAttributedString.Key.font: textView.font!, NSAttributedString.Key.foregroundColor: foregroundColor] as [NSAttributedString.Key : Any]
@@ -123,12 +105,6 @@ class RulerView: NSRulerView {
                     // Range of current line in the string.
                     let characterRangeForStringLine = (textView.string as NSString).lineRange(
                         for: NSMakeRange( layoutManager.characterIndexForGlyph(at: glyphIndexForStringLine), 0 ))
-                    
-                    textView.textStorage!.enumerateAttribute(.paragraphStyle, in: characterRangeForStringLine, options: []) { (value, range, stop) in
-                        if let style = value as? NSParagraphStyle {
-                            
-                        }
-                    }
                     
                     let lineString = textView.string.substring(from: characterRangeForStringLine)
                     var toDraw = true

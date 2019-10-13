@@ -666,42 +666,42 @@ DQ
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Sort" state="on" onStateImage="NSMenuOnStateTemplate" id="jpE-Kl-9Gr">
+                            <menuItem title="Sort" state="on" onStateImage="NSMenuOnStateTemplate" alternate="YES" id="jpE-Kl-9Gr">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Sort" id="nup-VV-evx">
+                                <menu key="submenu" title="Sort" autoenablesItems="NO" id="nup-VV-evx">
                                     <items>
-                                        <menuItem title="Project" keyEquivalent="1" identifier="project" id="QuG-vG-KiG">
+                                        <menuItem title="Project" state="on" onStateImage="NSMenuOnStateTemplate" alternate="YES" keyEquivalent="1" identifier="project" id="QuG-vG-KiG">
                                             <connections>
                                                 <action selector="sort:" target="Ady-hI-5gd" id="02r-sa-BIz"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Context" keyEquivalent="2" identifier="context" id="f6y-Tt-vSf">
+                                        <menuItem title="Context" onStateImage="NSMenuOnStateTemplate" alternate="YES" keyEquivalent="2" identifier="context" id="f6y-Tt-vSf">
                                             <connections>
                                                 <action selector="sort:" target="Ady-hI-5gd" id="WoY-4t-ZTB"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Priority" keyEquivalent="3" identifier="priority" id="U2r-cH-3EW">
+                                        <menuItem title="Priority" onStateImage="NSMenuOnStateTemplate" alternate="YES" keyEquivalent="3" identifier="priority" id="U2r-cH-3EW">
                                             <connections>
                                                 <action selector="sort:" target="Ady-hI-5gd" id="6s4-dJ-ZaS"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Due date" keyEquivalent="4" identifier="due_date" id="rs4-qf-5Bx">
+                                        <menuItem title="Due date" onStateImage="NSMenuOnStateTemplate" alternate="YES" keyEquivalent="4" identifier="due_date" id="rs4-qf-5Bx">
                                             <connections>
                                                 <action selector="sort:" target="Ady-hI-5gd" id="ozf-ip-gCp"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="rdL-d0-bvV"/>
-                                        <menuItem title="Completion state" keyEquivalent="5" identifier="status" id="1tS-u2-z5K">
+                                        <menuItem title="Completion state" onStateImage="NSMenuOnStateTemplate" alternate="YES" keyEquivalent="5" identifier="status" id="1tS-u2-z5K">
                                             <connections>
                                                 <action selector="sort:" target="Ady-hI-5gd" id="dpJ-t9-gZO"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Due date state" keyEquivalent="6" identifier="due_date_state" id="1ng-9N-Wzj">
+                                        <menuItem title="Due date state" onStateImage="NSMenuOnStateTemplate" alternate="YES" keyEquivalent="6" identifier="due_date_state" id="1ng-9N-Wzj">
                                             <connections>
                                                 <action selector="sort:" target="Ady-hI-5gd" id="nxu-DI-pGC"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Item" id="6lb-YA-A4P">
+                                        <menuItem title="Item" onStateImage="NSMenuOnStateTemplate" id="6lb-YA-A4P">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
                                     </items>
@@ -923,6 +923,9 @@ DQ
                                                         <expression type="keyPath">
                                                             <string key="keyPath">project</string>
                                                         </expression>
+                                                        <expression type="constant">
+                                                            <string key="constantValue">priority</string>
+                                                        </expression>
                                                     </array>
                                                     <integer key="rightExpressionObject" value="700"/>
                                                     <popUpMenus>
@@ -936,6 +939,11 @@ DQ
                                                                 <menuItem title="project" id="M4W-8M-yZ0">
                                                                     <expression key="representedObject" type="keyPath">
                                                                         <string key="keyPath">project</string>
+                                                                    </expression>
+                                                                </menuItem>
+                                                                <menuItem title="priority" id="rJw-fo-hTa">
+                                                                    <expression key="representedObject" type="constant">
+                                                                        <string key="constantValue">priority</string>
                                                                     </expression>
                                                                 </menuItem>
                                                             </items>
@@ -952,68 +960,42 @@ DQ
                                                         </menu>
                                                     </popUpMenus>
                                                 </predicateEditorRowTemplate>
-                                                <predicateEditorRowTemplate rowType="simple" id="AlU-xb-Rwg">
+                                                <predicateEditorRowTemplate rowType="simple" id="lXV-oG-Zdm">
                                                     <array key="leftExpressionObject">
                                                         <expression type="keyPath">
-                                                            <string key="keyPath">name</string>
-                                                        </expression>
-                                                        <expression type="keyPath">
-                                                            <string key="keyPath">address</string>
-                                                        </expression>
-                                                        <expression type="keyPath">
-                                                            <string key="keyPath">sign</string>
+                                                            <string key="keyPath">dueDate</string>
                                                         </expression>
                                                     </array>
-                                                    <array key="rightExpressionObject">
-                                                        <expression type="constant">
-                                                            <string key="constantValue">Constant Value</string>
-                                                        </expression>
-                                                    </array>
+                                                    <integer key="rightExpressionObject" value="900"/>
                                                     <popUpMenus>
-                                                        <menu id="fxz-76-aXn">
+                                                        <menu id="Rfv-MJ-Cxt">
                                                             <items>
-                                                                <menuItem title="name" state="on" id="oCH-KM-wzO">
+                                                                <menuItem title="dueDate" state="on" id="U5o-1q-hCw">
                                                                     <expression key="representedObject" type="keyPath">
-                                                                        <string key="keyPath">name</string>
-                                                                    </expression>
-                                                                </menuItem>
-                                                                <menuItem title="address" id="CJf-Jr-7QG">
-                                                                    <expression key="representedObject" type="keyPath">
-                                                                        <string key="keyPath">address</string>
-                                                                    </expression>
-                                                                </menuItem>
-                                                                <menuItem title="sign" id="7v0-nC-Mc8">
-                                                                    <expression key="representedObject" type="keyPath">
-                                                                        <string key="keyPath">sign</string>
+                                                                        <string key="keyPath">dueDate</string>
                                                                     </expression>
                                                                 </menuItem>
                                                             </items>
                                                         </menu>
-                                                        <menu id="TuG-fW-qIu">
+                                                        <menu id="6C1-Wt-Lhy">
                                                             <items>
-                                                                <menuItem title="contains" state="on" id="c5s-iQ-D2w">
-                                                                    <integer key="representedObject" value="99"/>
+                                                                <menuItem title="is less than" state="on" id="1ID-QM-ROP">
+                                                                    <integer key="representedObject" value="0"/>
                                                                 </menuItem>
-                                                                <menuItem title="begins with" id="x8d-vg-bJL">
-                                                                    <integer key="representedObject" value="8"/>
+                                                                <menuItem title="is greater than" id="0LI-K2-AFX">
+                                                                    <integer key="representedObject" value="2"/>
                                                                 </menuItem>
-                                                                <menuItem title="ends with" id="jOq-LY-Vzt">
-                                                                    <integer key="representedObject" value="9"/>
+                                                                <menuItem title="is less than or equal to" id="eTH-VS-hPd">
+                                                                    <integer key="representedObject" value="1"/>
                                                                 </menuItem>
-                                                                <menuItem title="is" id="8J9-YZ-cRt">
+                                                                <menuItem title="is greater than or equal to" id="fJC-tY-pKc">
+                                                                    <integer key="representedObject" value="3"/>
+                                                                </menuItem>
+                                                                <menuItem title="is" id="LJx-2q-5Eg">
                                                                     <integer key="representedObject" value="4"/>
                                                                 </menuItem>
-                                                                <menuItem title="is not" id="fIB-ze-W7w">
+                                                                <menuItem title="is not" id="NAz-rX-jqO">
                                                                     <integer key="representedObject" value="5"/>
-                                                                </menuItem>
-                                                            </items>
-                                                        </menu>
-                                                        <menu id="clo-Le-aFn">
-                                                            <items>
-                                                                <menuItem title="Constant Value" state="on" id="efE-Wi-pHm">
-                                                                    <expression key="representedObject" type="constant">
-                                                                        <string key="constantValue">Constant Value</string>
-                                                                    </expression>
                                                                 </menuItem>
                                                             </items>
                                                         </menu>
@@ -1062,67 +1044,12 @@ DQ
         <scene sceneID="NYC-lv-vcA">
             <objects>
                 <viewController id="fQN-R5-u1D" customClass="TextViewController" customModule="TODOtxt" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" id="NHC-5Y-1fX" customClass="BackgroundView" customModule="TODOtxt" customModuleProvider="target">
+                    <view key="view" id="NHC-5Y-1fX" customClass="TaskDocumentView" customModule="TODOtxt" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="744" height="546"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <subviews>
-                            <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qSW-jJ-co3" customClass="RefreshableScrollView" customModule="TODOtxt" customModuleProvider="target">
-                                <rect key="frame" x="52" y="48" width="640" height="441"/>
-                                <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="DiO-XQ-qzp">
-                                    <rect key="frame" x="0.0" y="0.0" width="640" height="441"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <subviews>
-                                        <textView drawsBackground="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" findStyle="panel" incrementalSearchingEnabled="YES" allowsUndo="YES" spellingCorrection="YES" smartInsertDelete="YES" id="v5v-nC-YQh" customClass="TextView" customModule="TODOtxt" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="0.0" width="640" height="441"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            <size key="minSize" width="640" height="441"/>
-                                            <size key="maxSize" width="640" height="10000000"/>
-                                            <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                        </textView>
-                                    </subviews>
-                                </clipView>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="640" id="0iz-K3-ULg"/>
-                                </constraints>
-                                <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="cMX-Du-hoF">
-                                    <rect key="frame" x="-100" y="-100" width="240" height="16"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </scroller>
-                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="pCj-hJ-gj3">
-                                    <rect key="frame" x="624" y="0.0" width="16" height="441"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </scroller>
-                            </scrollView>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cfi-te-lne" customClass="InfoTextField" customModule="TODOtxt" customModuleProvider="target">
-                                <rect key="frame" x="272" y="20" width="201" height="14"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="100/150 tasks, 1209/3000 characters" id="jXY-MG-Gac">
-                                    <font key="font" metaFont="smallSystem"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <progressIndicator wantsLayer="YES" fixedFrame="YES" maxValue="100" displayedWhenStopped="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="d7M-LM-V28">
-                                <rect key="frame" x="364" y="510" width="16" height="16"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            </progressIndicator>
-                        </subviews>
-                        <constraints>
-                            <constraint firstItem="qSW-jJ-co3" firstAttribute="centerX" secondItem="NHC-5Y-1fX" secondAttribute="centerX" id="4ma-As-GNk"/>
-                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="qSW-jJ-co3" secondAttribute="trailing" constant="52" id="BL0-5r-10i"/>
-                            <constraint firstAttribute="bottom" secondItem="qSW-jJ-co3" secondAttribute="bottom" constant="48" id="F1B-Ic-G1k"/>
-                            <constraint firstItem="qSW-jJ-co3" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="NHC-5Y-1fX" secondAttribute="leading" constant="52" id="H44-12-n8n"/>
-                            <constraint firstItem="qSW-jJ-co3" firstAttribute="top" secondItem="NHC-5Y-1fX" secondAttribute="top" constant="57" id="no9-fM-IUg"/>
-                        </constraints>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     </view>
                     <connections>
-                        <outlet property="contentView" destination="NHC-5Y-1fX" id="InC-7K-JMd"/>
-                        <outlet property="infoTextField" destination="cfi-te-lne" id="t7k-u0-G0x"/>
-                        <outlet property="progressIndicator" destination="d7M-LM-V28" id="RW1-pG-pv4"/>
-                        <outlet property="scrollView" destination="qSW-jJ-co3" id="EHG-8R-rLE"/>
-                        <outlet property="textview" destination="v5v-nC-YQh" id="9gZ-Uw-5H3"/>
+                        <outlet property="taskDocumentView" destination="NHC-5Y-1fX" id="Rs1-NJ-hdU"/>
                     </connections>
                 </viewController>
                 <customObject id="uqY-pm-DCq" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

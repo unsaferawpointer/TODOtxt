@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="15400" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15400"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="TaskDocumentView" customModule="TODOtxt" customModuleProvider="target">
+            <connections>
+                <outlet property="infoTextField" destination="sa9-gc-RnF" id="srb-rl-cRR"/>
+                <outlet property="progressIndicator" destination="7Fp-G5-rfB" id="4Rn-jH-YHR"/>
+                <outlet property="scrollView" destination="BMa-X1-zjf" id="eEj-y8-nx0"/>
+                <outlet property="textView" destination="Lcw-uR-ZMW" id="czh-QG-Vqm"/>
+                <outlet property="view" destination="Laz-Mu-ujs" id="hyH-kb-rgf"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <box misplaced="YES" boxType="custom" borderType="none" cornerRadius="4" title="Box" titlePosition="noTitle" id="Laz-Mu-ujs">
+            <rect key="frame" x="0.0" y="0.0" width="688" height="707"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <view key="contentView" id="8c9-22-mt9">
+                <rect key="frame" x="0.0" y="0.0" width="688" height="707"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <subviews>
+                    <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BMa-X1-zjf" customClass="RefreshableScrollView" customModule="TODOtxt" customModuleProvider="target">
+                        <rect key="frame" x="24" y="30" width="640" height="645"/>
+                        <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="KVx-on-vnD">
+                            <rect key="frame" x="0.0" y="0.0" width="640" height="645"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <textView drawsBackground="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" id="Lcw-uR-ZMW" customClass="TaskTextView" customModule="TODOtxt" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="640" height="645"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <size key="minSize" width="640" height="645"/>
+                                    <size key="maxSize" width="711" height="10000000"/>
+                                    <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                </textView>
+                            </subviews>
+                        </clipView>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="640" id="GgR-j6-myf"/>
+                        </constraints>
+                        <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="4Hx-xk-FOG">
+                            <rect key="frame" x="-100" y="-100" width="240" height="16"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                        <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="jhw-Xb-hzf">
+                            <rect key="frame" x="624" y="0.0" width="16" height="645"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                    </scrollView>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sa9-gc-RnF" customClass="InfoTextField" customModule="TODOtxt" customModuleProvider="target">
+                        <rect key="frame" x="328" y="8" width="33" height="14"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="nJc-fl-C4E">
+                            <font key="font" metaFont="message" size="11"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <progressIndicator wantsLayer="YES" maxValue="100" displayedWhenStopped="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="7Fp-G5-rfB">
+                        <rect key="frame" x="336" y="683" width="16" height="16"/>
+                    </progressIndicator>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="BMa-X1-zjf" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="8c9-22-mt9" secondAttribute="leading" constant="24" id="1Eg-kZ-E2A"/>
+                    <constraint firstAttribute="bottom" secondItem="sa9-gc-RnF" secondAttribute="bottom" constant="8" id="AZe-Hu-OD8"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="BMa-X1-zjf" secondAttribute="trailing" constant="24" id="NZF-Wn-4qY"/>
+                    <constraint firstItem="sa9-gc-RnF" firstAttribute="centerX" secondItem="8c9-22-mt9" secondAttribute="centerX" id="bzN-Vf-vf8"/>
+                    <constraint firstItem="7Fp-G5-rfB" firstAttribute="top" secondItem="8c9-22-mt9" secondAttribute="top" constant="8" id="ctP-ou-usx"/>
+                    <constraint firstItem="7Fp-G5-rfB" firstAttribute="centerX" secondItem="8c9-22-mt9" secondAttribute="centerX" id="jTl-Kh-Ks7"/>
+                    <constraint firstItem="BMa-X1-zjf" firstAttribute="centerX" secondItem="8c9-22-mt9" secondAttribute="centerX" id="m34-hn-DTh"/>
+                    <constraint firstItem="sa9-gc-RnF" firstAttribute="top" secondItem="BMa-X1-zjf" secondAttribute="bottom" constant="8" id="rdt-iR-Hv0"/>
+                    <constraint firstItem="BMa-X1-zjf" firstAttribute="top" secondItem="7Fp-G5-rfB" secondAttribute="bottom" constant="8" id="ugT-gF-pof"/>
+                </constraints>
+            </view>
+            <color key="borderColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+            <color key="fillColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+            <point key="canvasLocation" x="386.5" y="858.5"/>
+        </box>
+    </objects>
+</document>

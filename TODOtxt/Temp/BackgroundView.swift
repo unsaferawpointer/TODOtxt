@@ -8,12 +8,15 @@
 
 import Cocoa
 
+@IBDesignable
 class BackgroundView: NSView {
     
     var theme: Theme {
         return Preferences.shared.theme
     }
     
+    
+    @IBInspectable
     var backgroundColor: NSColor = .textBackgroundColor {
         didSet {
             wantsLayer = true
@@ -27,8 +30,9 @@ class BackgroundView: NSView {
         // Drawing code here.
     }
     
+    
     override func viewDidChangeEffectiveAppearance() {
-        self.layer?.backgroundColor = theme.background.cgColor
+        self.layer?.backgroundColor = backgroundColor.cgColor
     }
     
 }

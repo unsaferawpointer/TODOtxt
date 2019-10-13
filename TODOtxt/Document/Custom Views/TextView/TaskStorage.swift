@@ -12,6 +12,64 @@ enum DataError: Error {
     case overflow, invalidFormat
 }
 
+class TextOperation: Operation {
+    
+    var storage: NSMutableArray = NSMutableArray(array: [Task]())
+    var string: String = ""
+    var grouping: Grouping = .commonDateStyle
+    
+    init(storage: NSMutableArray) {
+        self.storage = storage
+    }
+    
+    override func main() {
+        //sleep(1)
+        let badgeFilter = Preferences.shared.badgeFilter
+        
+        let array = storage.compactMap { (element) -> Task? in
+            return element as? Task
+        }
+        
+        let dictionary = Dictionary(grouping: array) { (element) -> Group in
+            if element.isCompleted { return .completion(value: true) }
+            if let filter = badgeFilter, filter.evaluate(with: element) { return .pinned }
+            return grouping.group(for: element)
+        }
+        
+        let data = dictionary.sorted { (lhs, rhs) -> Bool in
+            return lhs.key.priority < rhs.key.priority
+        }
+        
+        let mutableStr = NSMutableString()
+        
+        for (section, tasks) in data {
+            mutableStr.append("## \(section.title)\n")
+            for task in tasks {
+                mutableStr.append("\(task.string)\n")
+            }
+        }
+        
+        self.string = mutableStr.string
+    }
+}
+
+class ParserOperation: Operation {
+    
+    var taskStorage: TaskStorage = TaskStorage()
+    var string: String = ""
+    
+    init(string: String) {
+        self.string = string
+    }
+    
+    override func main() {
+        //sleep(1)
+        let parser = Parser()
+        let array = parser.parse(string: string)
+        self.taskStorage = TaskStorage(tasks: array)
+    }
+}
+
 class MentionStorage {
     
     private(set) var autocompletions: Set<Element> = [.project, .context]
@@ -19,12 +77,12 @@ class MentionStorage {
     
     init() {
         for element in autocompletions {
-            storage[element] = Bag<String>()
+            storage[element] = Bag<String>.init()
         }
     }
     
     func mentions(for element: Element) -> [String] {
-        return storage[element]?.backingStorage._elements ?? [String]()
+        return storage[element]?.sorted ?? []
     }
     
     
@@ -110,7 +168,7 @@ enum Grouping {
                 return .mention(value: "1_\(key)")
             }
         case .date:
-            if let key = task.dateString {
+            if let key = task.dueDate?.description {
                 return .mention(value: "1_due:\(key)")
             }
         case .commonDateStyle:
@@ -118,8 +176,8 @@ enum Grouping {
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
             
-            guard let str = task.dateString else { return .none }
-            let date = formatter.date(from: str)!
+            guard let date = task.dueDate as Date? else { return .none }
+            
             
             let calendar = NSCalendar.current
             let today = Date()
@@ -149,43 +207,53 @@ enum Grouping {
     }
 }
 
-class Storage {
-    
-    // WARNING UNUSED TODOS_LIMIT
-    let CHARACTERS_LIMIT = 4_000
-    let TASKS_LIMIT = 150
+
+class TaskStorage {
     
     private var comparator: Comparator = Comparator()
-    private (set) var storage: NSMutableArray = NSMutableArray(array: [Task]())    
+    private (set) var storage: NSMutableArray   
     private var mentionStorage: MentionStorage = MentionStorage()
     
     init() {
-        
+        self.storage = NSMutableArray(array: [Task]())
     }
     
-    func reload(_ data: Data) throws {
-        guard let str = String(data: data, encoding: .utf8) else { throw DataError.invalidFormat}
-        guard str.count <= CHARACTERS_LIMIT else { throw DataError.overflow }
-        
+    init(tasks: [Task]) {
+        self.storage = NSMutableArray(array: [Task]())
+        insert(tasks)
+    }
+    
+    func reload(_ str: String) {
         let parser = Parser()
-        performOperation(inserted: parser.parse(str), removed: [])
+        let tasks = parser.parse(string: str)
+        self.storage = NSMutableArray(array: [Task]())
+        insert(tasks)
     }
     
-    func performOperation(inserted: [Task], removed: [Task]) {
-        mentionStorage.remove(from: removed)
-        mentionStorage.insert(from: inserted)
-        storage.addObjects(from: inserted)
-        
-        for task in removed {
+    func insert(_ tasks: [Task]) {
+        mentionStorage.insert(from: tasks)
+        storage.addObjects(from: tasks)
+    }
+    
+    func remove(_ tasks: [Task]) {
+        mentionStorage.remove(from: tasks)
+        for task in tasks {
             let index = storage.index(of: task)
             storage.removeObject(at: index)
         }
     }
     
-    
 }
 
-extension Storage {
+extension TaskStorage {
+    
+    func remove(by filter: NSPredicate) {
+        let removed = storage.filtered(using: filter)
+        for task in removed as! [Task] {
+            mentionStorage.remove(from: [task])
+            storage.remove(task)
+        }
+    }
     
     func string(by grouping: Grouping) -> String {
         
@@ -209,7 +277,7 @@ extension Storage {
         let mutableStr = NSMutableString()
         
         for (section, tasks) in data {
-            mutableStr.append("-------- \(section.title) --------\n")
+            mutableStr.append("******** \(section.title) ********\n")
             for task in tasks {
                 mutableStr.append("\(task.string)\n")
             }
@@ -252,7 +320,7 @@ extension Storage {
 }
 
 // Data validation
-extension Storage {
+extension TaskStorage {
     
     var badgeCount: Int {
         if let filter = Preferences.shared.badgeFilter {
@@ -268,12 +336,4 @@ extension Storage {
         return storage.count
     }
     
-    /*
-    func shouldChange(with delta: Int) -> Bool {
-        guard delta > 0 else { return true }
-        let after = count + delta
-        NSLog("shouldChange = %d", after)
-        return after <= TASKS_LIMIT
-    }
-    */
 }
