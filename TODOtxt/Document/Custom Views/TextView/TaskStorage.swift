@@ -85,7 +85,6 @@ class MentionStorage {
         return storage[element]?.sorted ?? []
     }
     
-    
     /// FIX ME inout
     func insert(from todos: [Task]) {
         for element in autocompletions {
@@ -108,104 +107,7 @@ class MentionStorage {
     
 }
 
-enum Group: Hashable {
-    
-    case mention(value: String)
-    case date(value: String)
-    case completion(value: Bool)
-    case pinned
-    case none
-    
-    var title: String {
-        switch self {
-        case .mention(let value):
-            return String(value.dropFirst(2))
-        case .completion(let value):
-            return value ? "completed" : "uncompleted"
-        case .date(let value):
-            return String(value.dropFirst(4))
-        case .pinned:
-            return "pinned"
-        case .none:
-            return "w/o"
-        }
-    }
-    
-    var priority: String {
-        switch self {
-        case .pinned:
-            return "0"
-        case .mention(let value):
-            return value
-        case .date(let value):
-            return value
-        case .none:
-            return "2"
-        case .completion(let value):
-            return value ? "3" : "1"
-        }
-    }
-    
-}
 
-enum Grouping {
-    case project, context, priority, date
-    case commonDateStyle
-    case status
-    
-    func group(for task: Task) -> Group {
-        switch self {
-        case .project:
-            if let key = task.project {
-                return .mention(value: "1_+\(key)")
-            }
-        case .context:
-            if let key = task.context {
-                return .mention(value: "1_@\(key)")
-            }
-        case .priority:
-            if let key = task.priority {
-                return .mention(value: "1_\(key)")
-            }
-        case .date:
-            if let key = task.dueDate?.description {
-                return .mention(value: "1_due:\(key)")
-            }
-        case .commonDateStyle:
-            
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd"
-            
-            guard let date = task.dueDate as Date? else { return .none }
-            
-            
-            let calendar = NSCalendar.current
-            let today = Date()
-            let tomorrow = NSCalendar.current.date(byAdding: .day, value: 1, to: today)!
-            
-            if calendar.compare(today, to: date, toGranularity: .day) == .orderedDescending {
-                return .date(value: "1_0_overdue")
-            } else if calendar.compare(today, to: date, toGranularity: .day) == .orderedSame {
-                return .date(value: "1_1_today")
-            } else if calendar.compare(tomorrow, to: date, toGranularity: .day) == .orderedSame {
-                return .date(value: "1_2_tomorrow")
-            } else if calendar.compare(today, to: date, toGranularity: .weekOfYear) == .orderedSame {
-                return .date(value: "1_3_current week")
-            } else if calendar.compare(today, to: date, toGranularity: .month) == .orderedSame {
-                return .date(value: "1_4_current month")
-            } else if calendar.compare(today, to: date, toGranularity: .year) == .orderedSame {
-                return .date(value: "1_5_current year")
-            } else {
-                return .date(value: "1_6_later")
-            }
-        
-        case .status:
-            return .completion(value: task.isCompleted)
-        }
-        
-        return .none
-    }
-}
 
 
 class TaskStorage {

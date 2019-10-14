@@ -17,9 +17,13 @@ class Document: NSDocument {
     var str: String = ""
     
     // Document has only one NSWindowController
-    var textViewController: TextViewController? {
+    var splitViewController: NSSplitViewController? {
         guard windowControllers.count > 0 else { return nil }
-        return windowControllers[0].contentViewController as? TextViewController
+        return windowControllers[0].contentViewController as? NSSplitViewController
+    }
+    
+    var textViewController: TextViewController? {
+        return splitViewController?.splitViewItems[0].viewController as? TextViewController
     }
     
     override init() {
@@ -53,6 +57,8 @@ class Document: NSDocument {
         } else {
             return Data()
         }
+        
+        
         
     }
     

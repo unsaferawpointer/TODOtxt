@@ -11,6 +11,7 @@
 		F93E5947231F526700266D92 /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93E5946231F526700266D92 /* FilterViewController.swift */; };
 		F940B0A72351D34200664043 /* IBMPlexMono-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F940B0A62351D34200664043 /* IBMPlexMono-SemiBold.ttf */; };
 		F940B0A923532D2100664043 /* IBMPlexMono-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F940B0A823532D2100664043 /* IBMPlexMono-Medium.ttf */; };
+		F940B0AB2353631200664043 /* SourceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F940B0AA2353631200664043 /* SourceViewController.swift */; };
 		F95F8C742337E51600B86C15 /* DocumentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F95F8C732337E51600B86C15 /* DocumentController.swift */; };
 		F9721028234F304900608CAB /* LineFoldingTypesetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9721027234F304900608CAB /* LineFoldingTypesetter.swift */; };
 		F9755A65231DB87900A2FCBA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A64231DB87900A2FCBA /* AppDelegate.swift */; };
@@ -61,6 +62,7 @@
 		F93E5946231F526700266D92 /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
 		F940B0A62351D34200664043 /* IBMPlexMono-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexMono-SemiBold.ttf"; sourceTree = "<group>"; };
 		F940B0A823532D2100664043 /* IBMPlexMono-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexMono-Medium.ttf"; sourceTree = "<group>"; };
+		F940B0AA2353631200664043 /* SourceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceViewController.swift; sourceTree = "<group>"; };
 		F95F8C732337E51600B86C15 /* DocumentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentController.swift; sourceTree = "<group>"; };
 		F9721027234F304900608CAB /* LineFoldingTypesetter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineFoldingTypesetter.swift; sourceTree = "<group>"; };
 		F9755A61231DB87900A2FCBA /* TODOtxt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TODOtxt.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -175,6 +177,7 @@
 			children = (
 				F93E5946231F526700266D92 /* FilterViewController.swift */,
 				F9755A7A231DBBD300A2FCBA /* TextViewController.swift */,
+				F940B0AA2353631200664043 /* SourceViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -410,6 +413,7 @@
 				F9755AB0231DBE0800A2FCBA /* TaskTextStorage.swift in Sources */,
 				F9755AB4231DBEA500A2FCBA /* ItemCellView.swift in Sources */,
 				F9755A65231DB87900A2FCBA /* AppDelegate.swift in Sources */,
+				F940B0AB2353631200664043 /* SourceViewController.swift in Sources */,
 				F9755AB7231DBF0400A2FCBA /* TaskStorage.swift in Sources */,
 				F9755A92231DBCC100A2FCBA /* TaskTextView.swift in Sources */,
 				F9755A69231DB87900A2FCBA /* Document.swift in Sources */,

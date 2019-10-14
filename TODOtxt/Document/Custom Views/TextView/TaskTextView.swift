@@ -9,20 +9,20 @@
 import Cocoa
 
 struct PriorityArray {
-    let array: [String] = [" ","A","B","C","D","E","F","G","H","I","K","L","M","N","O","P","Q","R","S","T","V","X", "Y","Z"]
+    let array: [String] = ["A","B","C","D","E","F","G","H","I","K","L","M","N","O","P","Q","R","S","T","V","X", "Y","Z"]
     
-    func element(before otherElement: String) -> String {
+    func element(before otherElement: String, alternative: String) -> String {
         if let index = array.firstIndex(of: otherElement), index > 0 {
             return array[index - 1]
         }
-        return otherElement
+        return alternative
     }
     
-    func element(after otherElement: String) -> String {
+    func element(after otherElement: String, alternative: String) -> String {
         if let index = array.firstIndex(of: otherElement), index < array.count - 1 {
             return array[index + 1]
         }
-        return otherElement
+        return alternative
     }
     
     var first: String {
@@ -289,7 +289,7 @@ class TaskTextView: NSTextView {
         
         if let (range , enclosingRange) = parser.parse(.status, inLine: lineString, at: lineRange.location) {
             let oldPriority = mutString.substring(with: range)
-            let newPriority = priorityArray.element(before: oldPriority)
+            let newPriority = priorityArray.element(before: oldPriority, alternative: "Z")
             replaceText(in: enclosingRange, with: "[\(newPriority)]")
         } 
         
@@ -303,7 +303,7 @@ class TaskTextView: NSTextView {
         
         if let (range , enclosingRange) = parser.parse(.priority, inLine: lineString, at: lineRange.location) {
             let oldPriority = mutString.substring(with: range)
-            let newPriority = priorityArray.element(after: oldPriority)
+            let newPriority = priorityArray.element(after: oldPriority, alternative: "A")
             replaceText(in: enclosingRange, with: "[\(newPriority)]")
         }
         
@@ -314,7 +314,7 @@ class TaskTextView: NSTextView {
         guard let lineRange = selectedLine, let lineString = selectedLineString else { return }
        
         if let (_ , enclosingRange) = parser.parse(.priority, inLine: lineString, at: lineRange.location) {
-            replaceText(in: enclosingRange, with: "")
+            replaceText(in: enclosingRange, with: "[ ]")
         } 
         
     }

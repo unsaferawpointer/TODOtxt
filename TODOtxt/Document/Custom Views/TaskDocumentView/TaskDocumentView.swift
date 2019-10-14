@@ -71,6 +71,7 @@ class TaskDocumentView: NSView {
         
         // ---------- textview ----------
         textView.delegate = self
+        textView.autocompletionDelegate = self
         textView.font = NSFont(name: "IBM Plex Mono", size: 15.0)
         textView.insertionPointColor = NSColor.alert
         //textView.textContainer?.replaceLayoutManager(TaskLayoutManager())
@@ -276,6 +277,14 @@ extension TaskDocumentView: TaskTextStorageDelegate {
         print(tasks)
         taskStorage.remove(tasks)
     }
+}
+
+extension TaskDocumentView: TaskTextViewDelegate {
+    func taskTextView(for element: Element) -> [String] {
+        return taskStorage.mentions(for: element)
+    }
+    
+    
 }
 
 extension TaskDocumentView: RefreshableScrollViewDelegate {

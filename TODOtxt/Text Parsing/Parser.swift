@@ -193,7 +193,7 @@ extension Parser {
             break
         case .text:
             backingStorage.addAttribute(.font, value: font, range: globalBodyRange)
-            backingStorage.addAttribute(.foregroundColor, value: NSColor.quaternaryLabelColor, range: globalBodyRange)
+            backingStorage.addAttribute(.foregroundColor, value: NSColor.secondaryLabelColor, range: globalBodyRange)
             return
         }
         
@@ -225,7 +225,7 @@ extension Parser {
             for element in elements {
                 if let (range, enclosingRange) = parse(element, inLine: body, at: globalBodyRange.location) {
                     let color = theme.color(for: element)
-                    backingStorage.addAttributes([.foregroundColor : NSColor.color(hex: "#D38844")!], range: enclosingRange)
+                    backingStorage.addAttributes([.foregroundColor : NSColor.secondaryLabelColor], range: enclosingRange)
                 }
             }
             
