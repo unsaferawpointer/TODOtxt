@@ -20,7 +20,7 @@ struct ElementComparator {
 
 struct Comparator {
     
-    var order: [Element] = [.priority, .project, .date(granulity: .day), .context]
+    var order: [Element] = [.priority, .tag, .dueDate(granulity: .day), .startDate(granulity: .day)]
     
     func compare(_ lhs: Task, _ rhs: Task) -> Bool {
         

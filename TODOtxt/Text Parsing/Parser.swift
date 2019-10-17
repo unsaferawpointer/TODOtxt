@@ -40,50 +40,9 @@ enum Element: Hashable {
     
     case status
     case priority
-    case project
-    case context
-    case date(granulity: DateGranulity)
-    
-    var rawValue: String {
-        switch self {
-        case .status:
-            return "status"
-        case .priority:
-            return "priority"
-        case .project:
-            return "project"
-        case .context:
-            return "context"
-        case .date(granulity: .day):
-            return "date_day"
-        case .date(granulity: .month):
-            return "date_month"
-        case .date(granulity: .year):
-            return "date_year"
-        }
-    }
-    
-    /// Init by elementKey
-    init? (rawValue: String) {
-        switch rawValue {
-        case "status":
-            self = .status
-        case "priority":
-            self = .priority
-        case "project":
-            self = .project
-        case "context":
-            self = .context
-        case "date_day":
-            self = .date(granulity: .day)
-        case "date_month":
-            self = .date(granulity: .month)
-        case "date_year":
-            self = .date(granulity: .year)
-        default:
-            return nil
-        }
-    }
+    case tag
+    case dueDate(granulity: DateGranulity)
+    case startDate(granulity: DateGranulity)
     
     var pattern: String {
         switch self {
@@ -91,19 +50,26 @@ enum Element: Hashable {
             return #"^\t*(\[(x|\s|\-|[A-Z])\])\s.*"# //#"^((x)\s).+"#
         case .priority:
             return #"^^\t*(\[([A-Z]|\s)\])\s"#
-        case .project:
-            return #"(\s\+(\w+))\b"#
-        case .context:
-            return #"(\s\@(\w+))\b"#
-        case .date(let granulity):
+        case .tag:
+            return #"(\s#(\w+))\b"#
+        case .dueDate(let granulity):
             switch granulity {
             case .year:
-                return #"(\sdue\:(19[0-9]{2}|2[0-9]{3}))\b"#
+                return #"(@due\((19[0-9]{2}|2[0-9]{3}))\)\b"#
             case .month:
-                return #"(\sdue\:((19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])))\b"#
+                return #"(@due\(((19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])))\)\b"#
             case .day:
-                return #"(\sdue\:((19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31)))\b"#
+                return #"(@due\(((19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31)))\)\b"#
             } 
+        case .startDate(let granulity):
+            switch granulity {
+            case .year:
+                return #"(@start\((19[0-9]{2}|2[0-9]{3}))\)\b"#
+            case .month:
+                return #"(@start\(((19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])))\)\b"#
+            case .day:
+                return #"(@start\(((19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31)))\)\b"#
+            }
         }
     }
     
@@ -114,18 +80,18 @@ enum Element: Hashable {
             return "x "
         case .priority:
             return "[\(value)] "
-        case .project:
-            return " +\(value)"
-        case .context:
-            return " @\(value)"
-        case .date:
-            return " due:\(value)"
+        case .tag:
+            return " #\(value)"
+        case .dueDate:
+            return " @due(\(value))"
+        case .startDate:
+            return " @start(\(value))"
         }
     }
     
     func isValid(string: String) -> Bool {
         switch self {
-        case .date(granulity: .day):
+        case .dueDate(granulity: .day):
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
             return dateFormatter.date(from: string) != nil
@@ -147,13 +113,13 @@ class Parser {
     var font: NSFont
     var boldFont: NSFont
     
-    var elements: Set<Element> = [.project, .context, .date(granulity: .day)]
+    var elements: Set<Element> = [.tag, .startDate(granulity: .day), .dueDate(granulity: .day)]
     var commonAttr:[NSAttributedString.Key: Any?]!
     
     // ********** Init block **********
     init() {
         self.font = NSFont(name: "IBM Plex Mono", size: 14.0)!
-        self.boldFont = NSFont(name: "IBM Plex Mono Medium", size: 15.0)!
+        self.boldFont = NSFont(name: "IBM Plex Mono Medium", size: 14.0)!
     }
     
 }
@@ -189,20 +155,30 @@ extension Parser {
             backingStorage.addAttribute(.foregroundColor, value: NSColor.headerTextColor, range: globalBodyRange)
             return
         case .task:
+            
             backingStorage.addAttribute(.font, value: font, range: globalBodyRange)
             break
         case .text:
+            let paragraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
+            paragraphStyle.firstLineHeadIndent = 14.0
+            paragraphStyle.headIndent = 14.0
+            paragraphStyle.paragraphSpacing = 4.0
+            
+            backingStorage.addAttribute(.paragraphStyle, value: paragraphStyle, range: globalBodyRange)
             backingStorage.addAttribute(.font, value: font, range: globalBodyRange)
             backingStorage.addAttribute(.foregroundColor, value: NSColor.secondaryLabelColor, range: globalBodyRange)
             return
         }
         
         
-        let task = parse(body)!
+        let task = parseTask(for: body)!
         
         let paragraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
         paragraphStyle.firstLineHeadIndent = 14.0
         paragraphStyle.headIndent = 14.0
+        paragraphStyle.defaultTabInterval = 14.0
+        //paragraphStyle.tabStops = [NSTextTab(type: .leftTabStopType, location: 42.0),NSTextTab(type: .leftTabStopType, location: 70.0),NSTextTab(type: .leftTabStopType, location: 98.0),NSTextTab(type: .leftTabStopType, location: 136.0)]
+        
         paragraphStyle.paragraphSpacing = 4.0
         
         backingStorage.addAttribute(.paragraphStyle, value: paragraphStyle, range: globalBodyRange)
@@ -218,13 +194,13 @@ extension Parser {
             backingStorage.addAttribute(.strikethroughStyle, value: 0, range: globalBodyRange)
             backingStorage.addAttribute(.foregroundColor, value: NSColor.textColor, range: globalBodyRange)
             
-            if let (range, enclosingRange) = parse(.status, inLine: body, at: globalBodyRange.location) {
+            if let (range, enclosingRange) = parse(.status, inLine: body, with: globalBodyRange.location) {
                 backingStorage.addAttributes([.foregroundColor : NSColor.color(hex: "#D38844")!], range: enclosingRange)
             }
             
             for element in elements {
-                if let (range, enclosingRange) = parse(element, inLine: body, at: globalBodyRange.location) {
-                    let color = theme.color(for: element)
+                if let (range, enclosingRange) = parse(element, inLine: body, with: globalBodyRange.location) {
+                    
                     backingStorage.addAttributes([.foregroundColor : NSColor.secondaryLabelColor], range: enclosingRange)
                 }
             }
@@ -233,8 +209,6 @@ extension Parser {
         }
         
        
-        
-        
     }
     
 }
@@ -250,7 +224,7 @@ extension Parser {
     
     func lineType(of body: String) -> LineType {
         guard body.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return .empty }
-        let pattern = #"^.+\:$"#
+        let pattern = #"^#.+\:$"#
         let range = body.fullRange
         let regex = try! NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines])
         if regex.firstMatch(in: body, options: [], range: range) != nil {
@@ -270,7 +244,7 @@ extension Parser {
     func parse(string: String) -> [Task] {
         var array = [Task]()
         string.enumerateLines { (substring, stop) in
-            if let task = self.parse(substring) {
+            if let task = self.parseTask(for: substring) {
                 array.append(task)
             }
         }
@@ -289,7 +263,7 @@ extension Parser {
         
         var array = [Task]()
         mutString.enumerateSubstrings(in: editedRange, options: .byLines) { (substring, substringRange, enclosingRange, stop) in
-            if let body = substring, let task = self.parse(body)  {
+            if let body = substring, let task = self.parseTask(for: body)  {
                 array.append(task)
             }
         }
@@ -299,26 +273,38 @@ extension Parser {
     
     // WARNING ambiguous func name
     // parsing todo
-    func parse(_ body: String) -> Task? {
+    func parseTask(for line: String) -> Task? {
         
-        guard hasTodo(body) else { return nil}
+        guard isTask(line) else { return nil}
         
-        let project = parse(in: body, element: .project)
-        let context = parse(in: body, element: .context)
+        let hashtag = stringValue(in: line, for: .tag)
         //let priority = parse(in: body, element: .priority)
-        let dateString = parse(in: body, element: .date(granulity: .day))
-        let statusString = parse(in: body, element: .status)
-        print("statusString = \(statusString)")
+        let dueDateStr = stringValue(in: line, for: .dueDate(granulity: .day))
+        let startDateStr = stringValue(in: line, for: .startDate(granulity: .day))
+        let statusString = stringValue(in: line, for: .status)
+        
+        let (_, enclosingRange) = parse(.status, inLine: line)!
+        let bodyRange = NSRange(location: enclosingRange.upperBound, length: line.count - enclosingRange.length)
+        let body = line.substring(from: bodyRange).trimmingCharacters(in: .whitespaces)
+        
         precondition(statusString != nil, "The status can`t be equals nil")
         
         var dueDate: NSDate?
+        var startDate: NSDate?
         var status: StatusType = .uncompleted
         
         // WARNING
-        if let dateStr = dateString {
+        if let dateStr = dueDateStr {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = DateGranulity.day.format
             dueDate = dateFormatter.date(from: dateStr)! as NSDate
+        }
+        
+        // WARNING
+        if let dateStr = startDateStr {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = DateGranulity.day.format
+            startDate = dateFormatter.date(from: dateStr)! as NSDate
         }
         
         switch statusString! {
@@ -333,16 +319,16 @@ extension Parser {
         }
             
         
-        let task = Task(string: body, status: status, project: project, context: context, dueDate: dueDate)
+        let task = Task(string: line, body: body, status: status, dueDate: dueDate, startDate: startDate)
         
         return task
     }
     
-    func hasTodo(_ body: String) -> Bool {
+    func isTask(_ body: String) -> Bool {
         return lineType(of: body) == .task
     }
     
-    func parse(in body: String, element: Element) -> String? {
+    func stringValue(in body: String, for element: Element) -> String? {
         if let range = parse(element, inLine: body)?.range {
             let nsstring = body as NSString
             return nsstring.substring(with: range)
@@ -363,16 +349,15 @@ extension Parser {
         return nil
     }
     
-    
-    func parse(_ element: Element, inLine body: String, at shift: Int = 0) -> (range: NSRange, enclosingRange: NSRange)? {
+    func parse(_ element: Element, inLine line: String, with shift: Int = 0) -> (range: NSRange, enclosingRange: NSRange)? {
         let pattern = element.pattern
-        let range = NSString(string: body).range(of: body)
+        let range = NSString(string: line).range(of: line)
         guard let regex = try? NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines]) else { return nil }
-        if let match = regex.firstMatch(in: body, options: [], range: range) {
+        if let match = regex.firstMatch(in: line, options: [], range: range) {
             
             var range = match.range(at: 2)
             // Element validation
-            let str = body.substring(from: range)
+            let str = line.substring(from: range)
             guard element.isValid(string: str) else { return nil }
             
             range.location += shift
@@ -388,7 +373,7 @@ extension Parser {
     
     func detectFirst(elements: [Element], in string: String, beginAt location: Int, forSelectionAt index: Int) -> (element: Element, range: NSRange, enclosingRange: NSRange)? {
         for element in elements {
-            if let (range, enclosingRange) = parse(element, inLine: string, at: location) {
+            if let (range, enclosingRange) = parse(element, inLine: string, with: location) {
                 if range.contains(index) || range.upperBound == index { return (element, range, enclosingRange) }
             }
         }
@@ -403,7 +388,6 @@ extension Parser {
 
 extension Parser {
     
-
     func tailLine(substring: String, with shift: Int) -> (editedRange: NSRange, lastSymbolRange: NSRange)? {
         let pattern = #"(.)$"#
         let range = NSString(string: substring).range(of: substring)

@@ -108,7 +108,7 @@ class TaskRulerView: NSRulerView {
                     
                     let lineString = textView.string.substring(from: characterRangeForStringLine)
                     var toDraw = true
-                    if !parser.hasTodo(lineString) || parser.parse(.status, inLine: lineString) != nil {
+                    if !parser.isTask(lineString) || parser.parse(.status, inLine: lineString) != nil {
                         toDraw = false
                     }
                     

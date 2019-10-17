@@ -28,7 +28,7 @@ class TaskDocumentView: NSView {
     var taskStorage: TaskStorage = TaskStorage()
     var loadQueue = OperationQueue()
     var sortQueue = OperationQueue()
-    var grouping: Grouping = .status
+    var grouping: Grouping = Grouping()
     var isRefreshing = false {
         didSet {
             if isRefreshing {
@@ -74,7 +74,11 @@ class TaskDocumentView: NSView {
         textView.autocompletionDelegate = self
         textView.font = NSFont(name: "IBM Plex Mono", size: 15.0)
         textView.insertionPointColor = NSColor.alert
-        //textView.textContainer?.replaceLayoutManager(TaskLayoutManager())
+        
+        textView.textContainer?.replaceLayoutManager(TaskLayoutManager())
+        //textView.layoutManager?.showsControlCharacters = true
+        //textView.layoutManager?.showsInvisibleCharacters = true
+        
         
         // ---------- text storage ----------
         let textStorage = TaskTextStorage()
@@ -82,6 +86,7 @@ class TaskDocumentView: NSView {
         textStorage.taskDelegate = self
         textView.textContainer?.layoutManager?.replaceTextStorage(textStorage)
         textView.layoutManager?.allowsNonContiguousLayout = false
+        textView.layoutManager?.delegate = self
         
         // ---------- rulerview ----------
         
@@ -135,10 +140,11 @@ class TaskDocumentView: NSView {
         
     }
     
+    /*
     // ---------- sorting ----------
     @IBAction func sort(_ sender: NSMenuItem) {
         
-        /*
+        
         guard !isRefreshing else { return }
         
         self.isRefreshing = true
@@ -177,9 +183,9 @@ class TaskDocumentView: NSView {
         DispatchQueue.global(qos: .userInteractive).async {
             operation2.start()
         }
- */
+ 
         
-    }
+    }*/
     
     @IBAction func removeCompleted(_ sender: Any?) {
         guard !isRefreshing else { return }
@@ -220,6 +226,31 @@ extension TaskDocumentView: NSTextStorageDelegate {
         
         
         textView.rulerView!.needsDisplay = true
+    }
+    
+}
+
+extension TaskDocumentView: NSLayoutManagerDelegate {
+    func layoutManager(_ layoutManager: NSLayoutManager, shouldUse action: NSLayoutManager.ControlCharacterAction, forControlCharacterAt charIndex: Int) -> NSLayoutManager.ControlCharacterAction {
+        if charIndex < 3 { return .zeroAdvancement }
+        return action
+    }
+    
+    
+    
+
+    func layoutManager(_ layoutManager: NSLayoutManager, shouldGenerateGlyphs glyphs: UnsafePointer<CGGlyph>, properties props: UnsafePointer<NSLayoutManager.GlyphProperty>, characterIndexes charIndexes: UnsafePointer<Int>, font aFont: NSFont, forGlyphRange glyphRange: NSRange) -> Int {
+        let charIndex = charIndexes.pointee
+        
+        let properties = UnsafeMutablePointer<NSLayoutManager.GlyphProperty>(mutating: props)
+        let newGlyphs = UnsafeMutablePointer<CGGlyph>(mutating: glyphs)
+        
+        //properties[0] = .null
+        //properties[1] = .null
+        //properties[2] = .null
+        
+        layoutManager.setGlyphs(newGlyphs, properties: props, characterIndexes: charIndexes, font: aFont, forGlyphRange: glyphRange)
+        return glyphRange.length
     }
     
 }

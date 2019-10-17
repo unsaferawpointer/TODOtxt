@@ -46,6 +46,8 @@ class Task: NSObject {
     }
     
     let string: String
+    let body: String
+    let tasks: [Task] = []
     
     override var description: String {
         return "Task:\(string)"
@@ -55,31 +57,31 @@ class Task: NSObject {
         return "Task:\(string)"
     }
     
-    @objc let project: String?
-    @objc let context: String?
+    @objc let hashtag: String?
     @objc let priority: String?
     @objc let status: StatusType
     
     @objc let dueDate: NSDate?
+    @objc let startDate: NSDate?
+    
     var isCompleted: Bool {
         return status == .completed
     }
     
-    init(string: String, status: StatusType = .uncompleted, project: String? = nil, context: String? = nil, priority: String? = nil, dueDate: NSDate? = nil) {
+    init(string: String, body: String, status: StatusType = .uncompleted, hashtag: String? = nil, priority: String? = nil, dueDate: NSDate? = nil, startDate: NSDate? = nil) {
         self.string = string
+        self.body = body
         self.status = status
-        self.project = project
-        self.context = context
+        self.hashtag = hashtag
         self.priority = priority
         self.dueDate = dueDate
+        self.startDate = startDate
     }
     
     func key(by element: Element) -> String? {
         switch element {
-        case .project:
-            return project
-        case .context:
-            return context
+        case .tag:
+            return hashtag
         case .priority:
             return priority
         default:

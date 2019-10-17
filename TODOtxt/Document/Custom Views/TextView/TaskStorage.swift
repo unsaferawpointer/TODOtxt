@@ -16,7 +16,7 @@ class TextOperation: Operation {
     
     var storage: NSMutableArray = NSMutableArray(array: [Task]())
     var string: String = ""
-    var grouping: Grouping = .commonDateStyle
+    var grouping: Grouping = Grouping()
     
     init(storage: NSMutableArray) {
         self.storage = storage
@@ -43,10 +43,11 @@ class TextOperation: Operation {
         let mutableStr = NSMutableString()
         
         for (section, tasks) in data {
-            mutableStr.append("## \(section.title)\n")
+            mutableStr.append("#\(section.title):\n")
             for task in tasks {
                 mutableStr.append("\(task.string)\n")
             }
+            mutableStr.append("\n")
         }
         
         self.string = mutableStr.string
@@ -72,7 +73,7 @@ class ParserOperation: Operation {
 
 class MentionStorage {
     
-    private(set) var autocompletions: Set<Element> = [.project, .context]
+    private(set) var autocompletions: Set<Element> = [.tag]
     private(set) var storage: [Element: Bag<String>] = [:]
     
     init() {

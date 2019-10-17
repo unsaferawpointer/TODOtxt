@@ -10,6 +10,7 @@ import Cocoa
 
 class TaskLayoutManager: NSLayoutManager {
     
+    /*
     override init() {
         super.init()
         //self.typesetter = NSTypesetter()
@@ -22,29 +23,13 @@ class TaskLayoutManager: NSLayoutManager {
         //self.typesetter = NSTypesetter()
         self.glyphGenerator = NSGlyphGenerator()
         self.backgroundLayoutEnabled = false
-    }
+    }*/
     
     var selectionColor: NSColor {
         return Preferences.shared.theme.selection
     }
     
-    override func notShownAttribute(forGlyphAt glyphIndex: Int) -> Bool {
-        print(#function)
-        if glyphIndex == 2 {
-            return true
-        }
-        return super.notShownAttribute(forGlyphAt: glyphIndex)
-    }
-    
-    override func propertyForGlyph(at glyphIndex: Int) -> NSLayoutManager.GlyphProperty {
-        print(#function)
-        if glyphIndex == 2 {
-            return .null
-        }
-        return super.propertyForGlyph(at: glyphIndex)
-    }
-    
-    
+  
     override func drawBackground(forGlyphRange glyphsToShow: NSRange, at origin: NSPoint) {
         
         /*

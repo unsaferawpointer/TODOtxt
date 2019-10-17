@@ -12,6 +12,15 @@
 		F940B0A72351D34200664043 /* IBMPlexMono-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F940B0A62351D34200664043 /* IBMPlexMono-SemiBold.ttf */; };
 		F940B0A923532D2100664043 /* IBMPlexMono-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F940B0A823532D2100664043 /* IBMPlexMono-Medium.ttf */; };
 		F940B0AB2353631200664043 /* SourceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F940B0AA2353631200664043 /* SourceViewController.swift */; };
+		F940B0D02354B73100664043 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F940B0B22354AD6000664043 /* NotificationCenter.framework */; };
+		F940B0D32354B73100664043 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F940B0D22354B73100664043 /* TodayViewController.swift */; };
+		F940B0D62354B73100664043 /* TodayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F940B0D42354B73100664043 /* TodayViewController.xib */; };
+		F940B0DA2354B73100664043 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F940B0D82354B73100664043 /* InfoPlist.strings */; };
+		F940B0DE2354B73100664043 /* Plain ToDo.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F940B0CF2354B73100664043 /* Plain ToDo.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F940B0E623572CED00664043 /* TaskHeaderCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F940B0E523572CED00664043 /* TaskHeaderCellView.swift */; };
+		F940B0E823572CFF00664043 /* TaskHeaderCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F940B0E723572CFF00664043 /* TaskHeaderCellView.xib */; };
+		F940B0EA235732EE00664043 /* TaskDataCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F940B0E9235732EE00664043 /* TaskDataCellView.swift */; };
+		F940B0EC235732FD00664043 /* TaskDataCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F940B0EB235732FD00664043 /* TaskDataCellView.xib */; };
 		F95F8C742337E51600B86C15 /* DocumentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F95F8C732337E51600B86C15 /* DocumentController.swift */; };
 		F9721028234F304900608CAB /* LineFoldingTypesetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9721027234F304900608CAB /* LineFoldingTypesetter.swift */; };
 		F9755A65231DB87900A2FCBA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A64231DB87900A2FCBA /* AppDelegate.swift */; };
@@ -57,12 +66,47 @@
 		F9D93B572334B71E00AC0D2E /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D93B562334B71E00AC0D2E /* TableViewController.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		F940B0DC2354B73100664043 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F9755A59231DB87900A2FCBA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F940B0CE2354B73100664043;
+			remoteInfo = "Plain ToDo";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F940B0CA2354AD6000664043 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				F940B0DE2354B73100664043 /* Plain ToDo.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		F900C45923335ABB007C9FC0 /* FiltersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersViewController.swift; sourceTree = "<group>"; };
 		F93E5946231F526700266D92 /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
 		F940B0A62351D34200664043 /* IBMPlexMono-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexMono-SemiBold.ttf"; sourceTree = "<group>"; };
 		F940B0A823532D2100664043 /* IBMPlexMono-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexMono-Medium.ttf"; sourceTree = "<group>"; };
 		F940B0AA2353631200664043 /* SourceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceViewController.swift; sourceTree = "<group>"; };
+		F940B0B22354AD6000664043 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
+		F940B0CF2354B73100664043 /* Plain ToDo.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Plain ToDo.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F940B0D22354B73100664043 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
+		F940B0D52354B73100664043 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/TodayViewController.xib; sourceTree = "<group>"; };
+		F940B0D72354B73100664043 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F940B0D92354B73100664043 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		F940B0DB2354B73100664043 /* Plain_ToDo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Plain_ToDo.entitlements; sourceTree = "<group>"; };
+		F940B0E523572CED00664043 /* TaskHeaderCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskHeaderCellView.swift; sourceTree = "<group>"; };
+		F940B0E723572CFF00664043 /* TaskHeaderCellView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskHeaderCellView.xib; sourceTree = "<group>"; };
+		F940B0E9235732EE00664043 /* TaskDataCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDataCellView.swift; sourceTree = "<group>"; };
+		F940B0EB235732FD00664043 /* TaskDataCellView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskDataCellView.xib; sourceTree = "<group>"; };
 		F95F8C732337E51600B86C15 /* DocumentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentController.swift; sourceTree = "<group>"; };
 		F9721027234F304900608CAB /* LineFoldingTypesetter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineFoldingTypesetter.swift; sourceTree = "<group>"; };
 		F9755A61231DB87900A2FCBA /* TODOtxt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TODOtxt.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -112,6 +156,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		F940B0CC2354B73100664043 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F940B0D02354B73100664043 /* NotificationCenter.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F9755A5E231DB87900A2FCBA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -122,10 +174,43 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F940B0B12354AD6000664043 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F940B0B22354AD6000664043 /* NotificationCenter.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F940B0D12354B73100664043 /* Plain ToDo */ = {
+			isa = PBXGroup;
+			children = (
+				F940B0D22354B73100664043 /* TodayViewController.swift */,
+				F940B0D42354B73100664043 /* TodayViewController.xib */,
+				F940B0D72354B73100664043 /* Info.plist */,
+				F940B0D82354B73100664043 /* InfoPlist.strings */,
+				F940B0DB2354B73100664043 /* Plain_ToDo.entitlements */,
+			);
+			path = "Plain ToDo";
+			sourceTree = "<group>";
+		};
+		F940B0E223572C7F00664043 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				F940B0E523572CED00664043 /* TaskHeaderCellView.swift */,
+				F940B0E723572CFF00664043 /* TaskHeaderCellView.xib */,
+				F940B0E9235732EE00664043 /* TaskDataCellView.swift */,
+				F940B0EB235732FD00664043 /* TaskDataCellView.xib */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		F9755A58231DB87900A2FCBA = {
 			isa = PBXGroup;
 			children = (
 				F9755A63231DB87900A2FCBA /* TODOtxt */,
+				F940B0D12354B73100664043 /* Plain ToDo */,
+				F940B0B12354AD6000664043 /* Frameworks */,
 				F9755A62231DB87900A2FCBA /* Products */,
 			);
 			sourceTree = "<group>";
@@ -134,6 +219,7 @@
 			isa = PBXGroup;
 			children = (
 				F9755A61231DB87900A2FCBA /* TODOtxt.app */,
+				F940B0CF2354B73100664043 /* Plain ToDo.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -195,6 +281,7 @@
 		F9755A81231DBC3900A2FCBA /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
+				F940B0E223572C7F00664043 /* Cells */,
 				F9865CC52343E2CC00EB846D /* TaskDocumentView */,
 				F9755A8B231DBCC000A2FCBA /* TextView */,
 			);
@@ -302,6 +389,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		F940B0CE2354B73100664043 /* Plain ToDo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F940B0DF2354B73100664043 /* Build configuration list for PBXNativeTarget "Plain ToDo" */;
+			buildPhases = (
+				F940B0CB2354B73100664043 /* Sources */,
+				F940B0CC2354B73100664043 /* Frameworks */,
+				F940B0CD2354B73100664043 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Plain ToDo";
+			productName = "Plain ToDo";
+			productReference = F940B0CF2354B73100664043 /* Plain ToDo.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		F9755A60231DB87900A2FCBA /* TODOtxt */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F9755A73231DB87A00A2FCBA /* Build configuration list for PBXNativeTarget "TODOtxt" */;
@@ -309,10 +413,12 @@
 				F9755A5D231DB87900A2FCBA /* Sources */,
 				F9755A5E231DB87900A2FCBA /* Frameworks */,
 				F9755A5F231DB87900A2FCBA /* Resources */,
+				F940B0CA2354AD6000664043 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				F940B0DD2354B73100664043 /* PBXTargetDependency */,
 			);
 			name = TODOtxt;
 			productName = TODOtxt;
@@ -325,10 +431,13 @@
 		F9755A59231DB87900A2FCBA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1030;
+				LastSwiftUpdateCheck = 1110;
 				LastUpgradeCheck = 1030;
 				ORGANIZATIONNAME = antoncherkasov;
 				TargetAttributes = {
+					F940B0CE2354B73100664043 = {
+						CreatedOnToolsVersion = 11.1;
+					};
 					F9755A60231DB87900A2FCBA = {
 						CreatedOnToolsVersion = 10.3;
 						SystemCapabilities = {
@@ -353,21 +462,33 @@
 			projectRoot = "";
 			targets = (
 				F9755A60231DB87900A2FCBA /* TODOtxt */,
+				F940B0CE2354B73100664043 /* Plain ToDo */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		F940B0CD2354B73100664043 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F940B0D62354B73100664043 /* TodayViewController.xib in Resources */,
+				F940B0DA2354B73100664043 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F9755A5F231DB87900A2FCBA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				F9C323CD2343CECB001CB6FF /* TaskDocumentView.xib in Resources */,
 				F9755AB9231DD6AB00A2FCBA /* Themes.plist in Resources */,
+				F940B0EC235732FD00664043 /* TaskDataCellView.xib in Resources */,
 				F940B0A72351D34200664043 /* IBMPlexMono-SemiBold.ttf in Resources */,
 				F940B0A923532D2100664043 /* IBMPlexMono-Medium.ttf in Resources */,
 				F99CF91D234CCE7F00526612 /* IBMPlexMono-Regular.ttf in Resources */,
 				F99CF91B234CCC0A00526612 /* IBMPlexMono-Light.ttf in Resources */,
+				F940B0E823572CFF00664043 /* TaskHeaderCellView.xib in Resources */,
 				F9755A6B231DB87A00A2FCBA /* Assets.xcassets in Resources */,
 				F9755AB5231DBEA500A2FCBA /* ItemCellView.xib in Resources */,
 				F9755A6E231DB87A00A2FCBA /* Main.storyboard in Resources */,
@@ -377,6 +498,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		F940B0CB2354B73100664043 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F940B0D32354B73100664043 /* TodayViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F9755A5D231DB87900A2FCBA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -415,6 +544,8 @@
 				F9755A65231DB87900A2FCBA /* AppDelegate.swift in Sources */,
 				F940B0AB2353631200664043 /* SourceViewController.swift in Sources */,
 				F9755AB7231DBF0400A2FCBA /* TaskStorage.swift in Sources */,
+				F940B0E623572CED00664043 /* TaskHeaderCellView.swift in Sources */,
+				F940B0EA235732EE00664043 /* TaskDataCellView.swift in Sources */,
 				F9755A92231DBCC100A2FCBA /* TaskTextView.swift in Sources */,
 				F9755A69231DB87900A2FCBA /* Document.swift in Sources */,
 				F9755A93231DBCC100A2FCBA /* TablePopover.swift in Sources */,
@@ -425,7 +556,31 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		F940B0DD2354B73100664043 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F940B0CE2354B73100664043 /* Plain ToDo */;
+			targetProxy = F940B0DC2354B73100664043 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
+		F940B0D42354B73100664043 /* TodayViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F940B0D52354B73100664043 /* Base */,
+			);
+			name = TodayViewController.xib;
+			sourceTree = "<group>";
+		};
+		F940B0D82354B73100664043 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F940B0D92354B73100664043 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		F9755A6C231DB87A00A2FCBA /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -437,6 +592,50 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		F940B0E02354B73100664043 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Plain ToDo/Plain_ToDo.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 48KV35Y6PN;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = "Plain ToDo/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.antoncherkasov.TODOtxt.Plain-ToDo";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		F940B0E12354B73100664043 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Plain ToDo/Plain_ToDo.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 48KV35Y6PN;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = "Plain ToDo/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.antoncherkasov.TODOtxt.Plain-ToDo";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		F9755A71231DB87A00A2FCBA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -555,6 +754,7 @@
 		F9755A74231DB87A00A2FCBA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = TODOtxt/TODOtxt.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -574,6 +774,7 @@
 		F9755A75231DB87A00A2FCBA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = TODOtxt/TODOtxt.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -593,6 +794,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		F940B0DF2354B73100664043 /* Build configuration list for PBXNativeTarget "Plain ToDo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F940B0E02354B73100664043 /* Debug */,
+				F940B0E12354B73100664043 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		F9755A5C231DB87900A2FCBA /* Build configuration list for PBXProject "TODOtxt" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

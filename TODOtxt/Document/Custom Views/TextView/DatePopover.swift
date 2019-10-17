@@ -125,7 +125,7 @@ class DatePopover: NSPopover, AutocompletionPopover {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let stringDate = dateFormatter.string(from: date)
-        autocompletionDelegate?.autocompletionDidChange(self, str: stringDate, element: .date(granulity: .day))
+        autocompletionDelegate?.autocompletionDidChange(self, str: stringDate, element: .dueDate(granulity: .day))
     }
     
 }

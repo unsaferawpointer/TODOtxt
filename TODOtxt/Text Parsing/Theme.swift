@@ -62,8 +62,9 @@ struct Theme: Equatable {
         self.scheme = handler(scheme)
     }
     
+    /*
     func color(for element: Element) -> NSColor {
         return scheme[element.rawValue] ?? defaultColor
-    }
+    }*/
 }
 

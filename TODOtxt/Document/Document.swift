@@ -17,13 +17,13 @@ class Document: NSDocument {
     var str: String = ""
     
     // Document has only one NSWindowController
-    var splitViewController: NSSplitViewController? {
+    var tabViewController: NSTabViewController? {
         guard windowControllers.count > 0 else { return nil }
-        return windowControllers[0].contentViewController as? NSSplitViewController
+        return windowControllers[0].contentViewController as? NSTabViewController
     }
     
     var textViewController: TextViewController? {
-        return splitViewController?.splitViewItems[0].viewController as? TextViewController
+        return tabViewController?.tabViewItems[0].viewController as? TextViewController
     }
     
     override init() {

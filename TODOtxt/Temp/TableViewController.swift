@@ -34,17 +34,6 @@ class TableViewController: NSViewController {
         
         guard storage != nil else { return }
         
-        let array = storage!.storage.compactMap { (element) -> Task? in
-            return element as? Task
-        }
-        
-        let dictionary = Dictionary(grouping: array) { (element) -> String in
-            return element.context ?? "empty"
-        }
-        
-        let data = dictionary.sorted { (lhs, rhs) -> Bool in
-            return lhs.key < rhs.key
-        }
         
         /*
         nodes = data.flatMap { (element) -> Node in
@@ -56,6 +45,7 @@ class TableViewController: NSViewController {
     }
     
     private func reload() {
+        /*
         let array = storage!.storage.compactMap { (element) -> Task? in
             return element as? Task
         }
@@ -67,7 +57,7 @@ class TableViewController: NSViewController {
         let data = dictionary.sorted { (lhs, rhs) -> Bool in
             return lhs.key < rhs.key
         }
-        
+        */
         /*
         nodes = data.flatMap { (element) -> Node in
             return Node(name: element.key, children: element.value)

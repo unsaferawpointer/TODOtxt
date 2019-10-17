@@ -209,8 +209,38 @@ class TaskTextView: NSTextView {
             super.insertNewline(sender)
         }
         
+    }
+    
+    override func insertTab(_ sender: Any?) {
+        let selRange = selectedRange()
+        let location = selRange.location
+        let startRange = NSRange(location: location, length: 0)
         
-        
+        let lineRange = mutString.lineRange(for: startRange)
+        print("selRange = \(selRange)")
+        print("lineRange = \(lineRange)")
+        if selRange.length == 0 {
+            
+            let pattern = #"^\t*(\[(x|\s|\-|[A-Z])\]\s).*"#
+            let regex = try! NSRegularExpression(pattern: pattern, options: .anchorsMatchLines)
+            let lineStr = string.substring(from: lineRange)
+            print("firstTask = \(lineStr)")
+            if let result = regex.firstMatch(in: string, options: [], range: lineRange), result.range(at: 1).upperBound <= location {
+                print("location = \(location)")
+                print("upperRange = \(result.range(at:1).upperBound)")
+                if result.range(at: 1).upperBound == location {
+                    replaceCharacters(in: result.range(at:1), with: "")
+                    
+                } else {
+                    let range = NSRange(location: lineRange.location, length: 0)
+                    replaceText(in: range, with: "\t")
+                }
+            } else {
+                super.insertTab(sender)
+            }
+        } else {
+            super.insertTab(sender)
+        }
     }
     
     // ********** Context menu **********
@@ -226,7 +256,7 @@ class TaskTextView: NSTextView {
     
     private func isSingleTaskSelection() -> Bool {
         guard let lineString = selectedLineString else { return false }
-        return parser.hasTodo(lineString)
+        return parser.isTask(lineString)
     }
     
     override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
@@ -257,6 +287,26 @@ class TaskTextView: NSTextView {
     
     // ********** Selectors **********
     
+    @IBAction func shiftRight(_ sender: Any?) {
+        guard let lineRange = selectedLine else { return }
+        let line = mutString.substring(with: lineRange)
+        
+        if parser.lineType(of: line) == .task {
+            let range = NSRange(location: lineRange.location, length: 0)
+            replaceText(in: range, with: "\t")
+        }
+    }
+    
+    
+    @IBAction func shiftLeft(_ sender: Any?) {
+        guard let lineRange = selectedLine else { return }
+        let line = mutString.substring(with: lineRange)
+        
+        if parser.lineType(of: line) == .task, line.hasPrefix("\t") {
+            let range = NSRange(location: lineRange.location, length: 1)
+            replaceText(in: range, with: "")
+        }
+    }
     
     
     // ---------- common ----------
@@ -264,15 +314,14 @@ class TaskTextView: NSTextView {
         
         guard let lineRange = selectedLine, let lineString = selectedLineString else { return }
         
-        if let (range , enclosingRange) = parser.parse(.status, inLine: lineString, at: lineRange.location) {
-            let status = string.substring(from: range)
-            switch status {
-            case "x":
-                replaceText(in: enclosingRange, with: "[ ]")
-            default:
-                replaceText(in: enclosingRange, with: "[x]")
-            }
-        }
+        guard let (range , enclosingRange) = parser.parse(.status, inLine: lineString, with: lineRange.location) else { return }
+        
+        let indent = enclosingRange.location - lineRange.location
+        
+        let oldStatus = string.substring(from: range)
+        let newStatus = (oldStatus == "x") ? " " : "x"
+        replaceText(in: enclosingRange, with: "[\(newStatus)]")
+        
     }
     
     @IBAction func removeLines(_ sender: Any?) {
@@ -287,7 +336,7 @@ class TaskTextView: NSTextView {
         
         let priorityArray = PriorityArray()
         
-        if let (range , enclosingRange) = parser.parse(.status, inLine: lineString, at: lineRange.location) {
+        if let (range , enclosingRange) = parser.parse(.status, inLine: lineString, with: lineRange.location) {
             let oldPriority = mutString.substring(with: range)
             let newPriority = priorityArray.element(before: oldPriority, alternative: "Z")
             replaceText(in: enclosingRange, with: "[\(newPriority)]")
@@ -301,7 +350,7 @@ class TaskTextView: NSTextView {
         
         let priorityArray = PriorityArray()
         
-        if let (range , enclosingRange) = parser.parse(.priority, inLine: lineString, at: lineRange.location) {
+        if let (range , enclosingRange) = parser.parse(.priority, inLine: lineString, with: lineRange.location) {
             let oldPriority = mutString.substring(with: range)
             let newPriority = priorityArray.element(after: oldPriority, alternative: "A")
             replaceText(in: enclosingRange, with: "[\(newPriority)]")
@@ -313,7 +362,7 @@ class TaskTextView: NSTextView {
         
         guard let lineRange = selectedLine, let lineString = selectedLineString else { return }
        
-        if let (_ , enclosingRange) = parser.parse(.priority, inLine: lineString, at: lineRange.location) {
+        if let (_ , enclosingRange) = parser.parse(.priority, inLine: lineString, with: lineRange.location) {
             replaceText(in: enclosingRange, with: "[ ]")
         } 
         
@@ -326,11 +375,11 @@ class TaskTextView: NSTextView {
         guard let lineRange = selectedLine, let lineString = selectedLineString else { return }
         
         var date = Date()
-        let element: Element = .date(granulity: .day)
+        let element: Element = .dueDate(granulity: .day)
         
         var popoverAnchor: NSRange!
         
-        if let (range, enclosingRange) = parser.parse(element, inLine: lineString, at: lineRange.location){
+        if let (range, enclosingRange) = parser.parse(element, inLine: lineString, with: lineRange.location){
             let mention = textStorage!.mutableString.substring(with: range)
             date = DateGranulity.day.date(from: mention)!
             self.editedRange = enclosingRange
@@ -361,9 +410,9 @@ class TaskTextView: NSTextView {
         
         guard let lineRange = selectedLine, let lineString = selectedLineString else { return }
         
-        let element: Element = .date(granulity: .day)
+        let element: Element = .dueDate(granulity: .day)
         
-        if let (range, enclosingRange) = parser.parse(element, inLine: lineString, at: lineRange.location){
+        if let (range, enclosingRange) = parser.parse(element, inLine: lineString, with: lineRange.location){
             let mention = textStorage!.mutableString.substring(with: range)
             let oldDate = DateGranulity.day.date(from: mention)!
             let newDate = Calendar.autoupdatingCurrent.date(byAdding: .day, value: day, to: oldDate)!
@@ -375,7 +424,7 @@ class TaskTextView: NSTextView {
     
     @IBAction func removeDueDate(_ sender: Any?) {
         guard let lineRange = selectedLine, let lineString = selectedLineString else { return }
-        if let (_ , enclosingRange) = parser.parse(.date(granulity: .day), inLine: lineString, at: lineRange.location) {
+        if let (_ , enclosingRange) = parser.parse(.dueDate(granulity: .day), inLine: lineString, with: lineRange.location) {
             replaceText(in: enclosingRange, with: "")
         } 
     }
@@ -468,7 +517,7 @@ extension TaskTextView: AutocompletionPopoverDelegate {
         
         let body = textStorage!.mutableString.substring(with: lineRange)
         
-        let result = parser.detectFirst(elements: [.project, .context, .date(granulity: .day), .date(granulity: .month), .date(granulity: .year)], in: body, beginAt: lineRange.location, forSelectionAt: sRange.location)
+        let result = parser.detectFirst(elements: [.tag, .dueDate(granulity: .day), .dueDate(granulity: .month), .dueDate(granulity: .year)], in: body, beginAt: lineRange.location, forSelectionAt: sRange.location)
         
         return result
     }
@@ -484,7 +533,7 @@ extension TaskTextView: AutocompletionPopoverDelegate {
             let mention = textStorage!.mutableString.substring(with: range)
             self.editedRange = enclosingRange
             switch element {
-            case .context, .project:
+            case .tag:
                 
                 var data: [String] = autocompletionDelegate?.taskTextView(for: element) ?? []
                 
@@ -497,7 +546,7 @@ extension TaskTextView: AutocompletionPopoverDelegate {
                 popover.reload(data, with: mention)
                 popover.element = element
                 show(popover, at: range.location)
-            case .date(let granulity) where granulity == .month || granulity == .year:
+            case .dueDate(let granulity) where granulity == .month || granulity == .year:
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = granulity.format
                 let date = dateFormatter.date(from: mention)!
