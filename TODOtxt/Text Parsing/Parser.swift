@@ -7,10 +7,60 @@
 //
 
 import Cocoa
+/*
+ #"(@due\((19[0-9]{2}|2[0-9]{3}))\)\b"#
+ case .month:
+     return #"(@due\(((19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])))\)\b"#
+ case .day:
+     return #"(\B@due\(((19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31))\s\)\B)"#
+ case .time:
+     return #"(\B@due\(((19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31))\s((0[0-9]|1[0-9]|2[0-4]):([0-5][0-9]))\)\B)"#
+ */
+
+
+   
+   
+   /*
+   func parse(_ pattern: String, in body: String, with shift: Int = 0) -> NSRange? {
+       let range = NSString(string: body).range(of: body)
+       guard let regex = try? NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines]) else { return nil }
+       if let match = regex.firstMatch(in: body, options: [], range: range) {
+           var range = match.range
+           range.location += shift
+           return range
+       }
+       
+       return nil
+   }
+   
+   func parse(_ element: Token, inLine line: String, with shift: Int = 0) -> (range: NSRange, enclosingRange: NSRange)? {
+       let pattern = element.pattern
+       let range = NSString(string: line).range(of: line)
+       guard let regex = try? NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines]) else { return nil }
+       if let match = regex.firstMatch(in: line, options: [], range: range) {
+           
+           var range = match.range(at: 2)
+           // Element validation
+           let str = line.substring(from: range)
+           guard element.isValid(string: str) else { return nil }
+           
+           range.location += shift
+           
+           var enclosingRange = match.range(at: 1)
+           enclosingRange.location += shift
+           
+           return (range, enclosingRange)
+       }
+       
+       return nil
+   }
+*/
+
 
 enum DateGranulity: Int {
     
-    case day = 0, month, year
+    case day = 0, month, year, time
+    
     var format: String {
         switch self {
         case .day:
@@ -19,65 +69,41 @@ enum DateGranulity: Int {
             return "yyyy-MM"
         case .year:
             return "yyyy"
+        case .time:
+            return "yyyy-MM-dd hh:mm"
         }
-    }
-    
-    func date(from str: String) -> Date? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = self.format
-        return dateFormatter.date(from: str)
-    }
-    
-    func string(from date: Date) -> String? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = self.format
-        return dateFormatter.string(from: date)
     }
     
 }
 
-enum Element: Hashable {
+enum Token: Hashable {
     
-    case status
+    case type
     case priority
+    case dueDate
+    case startDate
     case tag
-    case dueDate(granulity: DateGranulity)
-    case startDate(granulity: DateGranulity)
     
     var pattern: String {
         switch self {
-        case .status:
+        case .type:
             return #"^\t*(\[(x|\s|\-|[A-Z])\])\s.*"# //#"^((x)\s).+"#
         case .priority:
             return #"^^\t*(\[([A-Z]|\s)\])\s"#
+        case .dueDate:
+            return #"\B(@due\((.+?)\))\B"#
+        case .startDate:
+            return #"\B(@start\((.+?)\))\B"#
         case .tag:
             return #"(\s#(\w+))\b"#
-        case .dueDate(let granulity):
-            switch granulity {
-            case .year:
-                return #"(@due\((19[0-9]{2}|2[0-9]{3}))\)\b"#
-            case .month:
-                return #"(@due\(((19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])))\)\b"#
-            case .day:
-                return #"(@due\(((19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31)))\)\b"#
-            } 
-        case .startDate(let granulity):
-            switch granulity {
-            case .year:
-                return #"(@start\((19[0-9]{2}|2[0-9]{3}))\)\b"#
-            case .month:
-                return #"(@start\(((19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])))\)\b"#
-            case .day:
-                return #"(@start\(((19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31)))\)\b"#
-            }
         }
     }
     
     func prefixString(for value: String) -> String {
         guard value.isEmpty == false else { return "" }
         switch self {
-        case .status:
-            return "x "
+        case .type:
+            return "[\(value)]"
         case .priority:
             return "[\(value)] "
         case .tag:
@@ -91,10 +117,16 @@ enum Element: Hashable {
     
     func isValid(string: String) -> Bool {
         switch self {
-        case .dueDate(granulity: .day):
+        case .dueDate, .startDate:
+            let array: [DateGranulity] = [.day, .month, .year, .time]
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            return dateFormatter.date(from: string) != nil
+            for granulity in array {
+                dateFormatter.dateFormat = granulity.format
+                if dateFormatter.date(from: string) != nil {
+                    return true
+                }
+            }
+            return false
         default:
             return true
         }
@@ -113,7 +145,7 @@ class Parser {
     var font: NSFont
     var boldFont: NSFont
     
-    var elements: Set<Element> = [.tag, .startDate(granulity: .day), .dueDate(granulity: .day)]
+    var elements: Set<Token> = [.tag, .startDate, .dueDate]
     var commonAttr:[NSAttributedString.Key: Any?]!
     
     // ********** Init block **********
@@ -134,6 +166,8 @@ extension Parser {
     }
     
     private func hightlight(theme: Theme, backingStorage: NSMutableAttributedString, _ body: String, in globalBodyRange: NSRange) {
+        
+        let shifting = globalBodyRange.location
         
         let lineType = self.lineType(of: body)
         
@@ -190,19 +224,16 @@ extension Parser {
             backingStorage.addAttribute(.strikethroughStyle, value: 1, range: globalBodyRange)
             
         } else {
-            
+            let foregroundColor = NSColor(calibratedRed: 73/255, green: 67/255, blue: 73/255, alpha: 1.0)
             backingStorage.addAttribute(.strikethroughStyle, value: 0, range: globalBodyRange)
-            backingStorage.addAttribute(.foregroundColor, value: NSColor.textColor, range: globalBodyRange)
+            backingStorage.addAttribute(.foregroundColor, value: foregroundColor, range: globalBodyRange)
             
-            if let (range, enclosingRange) = parse(.status, inLine: body, with: globalBodyRange.location) {
-                backingStorage.addAttributes([.foregroundColor : NSColor.color(hex: "#D38844")!], range: enclosingRange)
+            if let enclosingRange = parseHashtag(in: body)?.enclosingRange.shifted(by: shifting) {
+                backingStorage.addAttributes([.foregroundColor : NSColor.secondaryLabelColor], range: enclosingRange)
             }
             
-            for element in elements {
-                if let (range, enclosingRange) = parse(element, inLine: body, with: globalBodyRange.location) {
-                    
-                    backingStorage.addAttributes([.foregroundColor : NSColor.secondaryLabelColor], range: enclosingRange)
-                }
+            if let enclosingRange = parsePriority(in: body)?.enclosingRange.shifted(by: shifting) {
+                backingStorage.addAttributes([.foregroundColor : NSColor.orange], range: enclosingRange)
             }
             
             
@@ -240,7 +271,6 @@ extension Parser {
         return .text
     }
     
-    
     func parse(string: String) -> [Task] {
         var array = [Task]()
         string.enumerateLines { (substring, stop) in
@@ -277,49 +307,16 @@ extension Parser {
         
         guard isTask(line) else { return nil}
         
-        let hashtag = stringValue(in: line, for: .tag)
-        //let priority = parse(in: body, element: .priority)
-        let dueDateStr = stringValue(in: line, for: .dueDate(granulity: .day))
-        let startDateStr = stringValue(in: line, for: .startDate(granulity: .day))
-        let statusString = stringValue(in: line, for: .status)
+        let priority = self.parsePriority(in: line)?.priority
+        let dueDate = self.parseDueDate(in: line)?.date
+        let startDate = self.parseStartDate(in: line)?.date
+        let hashtag = self.hashtag(in: line)
         
-        let (_, enclosingRange) = parse(.status, inLine: line)!
-        let bodyRange = NSRange(location: enclosingRange.upperBound, length: line.count - enclosingRange.length)
-        let body = line.substring(from: bodyRange).trimmingCharacters(in: .whitespaces)
-        
-        precondition(statusString != nil, "The status can`t be equals nil")
-        
-        var dueDate: NSDate?
-        var startDate: NSDate?
-        var status: StatusType = .uncompleted
-        
-        // WARNING
-        if let dateStr = dueDateStr {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = DateGranulity.day.format
-            dueDate = dateFormatter.date(from: dateStr)! as NSDate
-        }
-        
-        // WARNING
-        if let dateStr = startDateStr {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = DateGranulity.day.format
-            startDate = dateFormatter.date(from: dateStr)! as NSDate
-        }
-        
-        switch statusString! {
-        case "x":
-            status = .completed
-        case "-":
-            status = .canceled
-        case " ":
-            status = .uncompleted
-        default:
-            status = .uncompleted
-        }
-            
-        
-        let task = Task(string: line, body: body, status: status, dueDate: dueDate, startDate: startDate)
+        //let (_, enclosingRange) = parse(.type, inLine: line)!
+        //let bodyRange = NSRange(location: enclosingRange.upperBound, length: line.count - enclosingRange.length)
+        let body = line//line.substring(from: bodyRange).trimmingCharacters(in: .whitespaces)
+   
+        let task = Task(string: line, body: body, priority: priority!, hashtag: hashtag, dueDate: dueDate, startDate: startDate)
         
         return task
     }
@@ -328,102 +325,134 @@ extension Parser {
         return lineType(of: body) == .task
     }
     
-    func stringValue(in body: String, for element: Element) -> String? {
-        if let range = parse(element, inLine: body)?.range {
-            let nsstring = body as NSString
-            return nsstring.substring(with: range)
-        } else { 
-            return nil
-        }
-    }
+    // ******** Parsing tokens ********
     
-    func parse(_ pattern: String, in body: String, with shift: Int = 0) -> NSRange? {
-        let range = NSString(string: body).range(of: body)
-        guard let regex = try? NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines]) else { return nil }
-        if let match = regex.firstMatch(in: body, options: [], range: range) {
-            var range = match.range
-            range.location += shift
-            return range
-        }
-        
-        return nil
-    }
+    // -------- common function --------
     
-    func parse(_ element: Element, inLine line: String, with shift: Int = 0) -> (range: NSRange, enclosingRange: NSRange)? {
-        let pattern = element.pattern
+    func textCheckingResult(for pattern: String, in line: String) -> NSTextCheckingResult? {
         let range = NSString(string: line).range(of: line)
         guard let regex = try? NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines]) else { return nil }
-        if let match = regex.firstMatch(in: line, options: [], range: range) {
-            
-            var range = match.range(at: 2)
-            // Element validation
-            let str = line.substring(from: range)
-            guard element.isValid(string: str) else { return nil }
-            
-            range.location += shift
-            
-            var enclosingRange = match.range(at: 1)
-            enclosingRange.location += shift
-            
-            return (range, enclosingRange)
+        return regex.firstMatch(in: line, options: [], range: range)
+    }
+    
+    // -------- hashtag --------
+    
+    func hashtag(in line: String) -> String? {
+        if let ( _, wordRange, _) = parseHashtag(in: line) {
+            return line.substring(from: wordRange)
         }
-        
         return nil
     }
     
-    func detectFirst(elements: [Element], in string: String, beginAt location: Int, forSelectionAt index: Int) -> (element: Element, range: NSRange, enclosingRange: NSRange)? {
-        for element in elements {
-            if let (range, enclosingRange) = parse(element, inLine: string, with: location) {
-                if range.contains(index) || range.upperBound == index { return (element, range, enclosingRange) }
+    func parseHashtag(in line: String) -> (prefixRange: NSRange, wordRange: NSRange, enclosingRange: NSRange)? {
+        let pattern = #"\B((#)(\w+))\B"#
+        if let match = textCheckingResult(for: pattern, in: line) {
+            let prefixRange = match.range(at: 2)
+            let wordRange = match.range(at: 3)
+            let enclosingRange = match.range(at: 1)
+            return (prefixRange, wordRange, enclosingRange)
+        }
+        return nil
+    }
+    
+    func detectHashtag(in line: String, beginAt stringLocation: Int, forSelectionAt selectionLocation: Int) -> (element: Token, range: NSRange, enclosingRange: NSRange)? {
+        let nSelLocation = selectionLocation - stringLocation
+        if let (prefixRange, wordRange, enclosingRange) = parseHashtag(in: line) {
+            if prefixRange.upperBound >= nSelLocation && wordRange.upperBound <= nSelLocation { 
+                return (.tag, wordRange, enclosingRange)
             }
         }
         return nil
     }
     
-}
-
-// =====================
-// REPLACING 
-// =====================
-
-extension Parser {
+    // -------- task priority --------
     
-    func tailLine(substring: String, with shift: Int) -> (editedRange: NSRange, lastSymbolRange: NSRange)? {
-        let pattern = #"(.)$"#
-        let range = NSString(string: substring).range(of: substring)
-        guard let regex = try? NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines]) else { return nil }
-        if let match = regex.firstMatch(in: substring, options: [], range: range) {
-            var range = match.range(at: 1)
-            range.location += shift
-            let editedRange = NSRange(location: range.upperBound, length: 0)
-            return (editedRange: editedRange, lastSymbolRange: range)
+    func parsePriority(in line: String) -> (priority: TaskPriority, priorityRange: NSRange, enclosingRange: NSRange)? {
+        if let (priorityRange, enclosingRange) = priorityRange(in: line) {
+            let value = line.substring(from: priorityRange)
+            switch value {
+            case "x":
+                return (.completed, priorityRange, enclosingRange)
+            case " ":
+                return (.uncompleted, priorityRange, enclosingRange)
+            default:
+                return (.hasPriority(value: value), priorityRange, enclosingRange)
+            }
         }
-        
         return nil
     }
     
-    func headerLine(substring: String, with shift: Int) -> NSRange? {
-        let pattern = #"^\s*"#
-        return parse(pattern, in: substring, with: shift)
+    func priorityRange(in line: String) -> (priorityRange: NSRange, enclosingRange: NSRange)? {
+        let pattern = #"^\t*(\[(x|\s|\-|[A-Z])\])\s"#
+        if let match = textCheckingResult(for: pattern, in: line) {
+            let priorityRange = match.range(at: 2)
+            let enclosingRange = match.range(at: 1)
+             return (priorityRange, enclosingRange)
+        }
+        return nil
     }
+    
+    // -------- due date --------
+    
+    func parseDueDate(in line: String) -> (date: TaskDate, dateTimeRange: NSRange, enclosingRange: NSRange)? {
+        let array: [DateGranulity] = [.day, .month, .year, .time]
+        if let (dateTimeRange, enclosingRange) = dueDateRange(in: line) {
+            let str = line.substring(from: dateTimeRange)
+            let dateFormatter = DateFormatter()
+            for granulity in array {
+                dateFormatter.dateFormat = granulity.format
+                if let date = dateFormatter.date(from: str) {
+                    return (TaskDate(date: date, granulity: granulity), dateTimeRange, enclosingRange)
+                }
+            }
+        }
+        return nil
+    }
+    
+    func dueDateRange(in line: String) -> (dateTimeRange: NSRange, enclosingRange: NSRange)? {
+        let pattern = #"\B(@due\((.+?)\))\B"#
+        if let match = textCheckingResult(for: pattern, in: line) {
+            let dateTimeRange = match.range(at: 2)
+            let enclosingRange = match.range(at: 1)
+             return (dateTimeRange, enclosingRange)
+        }
+        return nil
+    }
+    
+    // -------- start date --------
+    
+    func parseStartDate(in line: String) -> (date: TaskDate, dateTimeRange: NSRange, enclosingRange: NSRange)? {
+        let array: [DateGranulity] = [.day, .month, .year, .time]
+        if let (dateTimeRange, enclosingRange) = startDateRange(in: line) {
+            let str = line.substring(from: dateTimeRange)
+            let dateFormatter = DateFormatter()
+            for granulity in array {
+                dateFormatter.dateFormat = granulity.format
+                if let date = dateFormatter.date(from: str) {
+                    return (TaskDate(date: date, granulity: granulity), dateTimeRange, enclosingRange)
+                }
+            }
+            return nil
+        }
+        return nil
+    }
+    
+    func startDateRange(in line: String) -> (dateTimeRange: NSRange, enclosingRange: NSRange)? {
+        let pattern = #"\B(@start\((.+?)\))\B"#
+        if let match = textCheckingResult(for: pattern, in: line) {
+            let dateTimeRange = match.range(at: 2)
+            let enclosingRange = match.range(at: 1)
+             return (dateTimeRange, enclosingRange)
+        }
+        return nil
+    }
+    
     
 }
 
-enum DateStyle: Int, CaseIterable {
-    case day = 0, month, year, common
-    var title: String {
-        switch self {
-        case .common:
-            return "by default"
-        case .day:
-            return "by day"
-        case .month:
-            return "by month"
-        case .year:
-            return "by year"
-        }
-    }
-}
+
+
+
 
 
 

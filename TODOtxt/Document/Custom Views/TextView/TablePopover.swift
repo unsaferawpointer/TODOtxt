@@ -10,7 +10,7 @@ import Cocoa
 
 class TablePopover: NSPopover, AutocompletionPopover {
     
-    var element: Element!
+    var element: Token!
     
     var tableView: NSTableView!
     

@@ -17,44 +17,41 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="31z-3z-rie">
-            <rect key="frame" x="0.0" y="0.0" width="577" height="35"/>
+            <rect key="frame" x="0.0" y="0.0" width="577" height="39"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="p6V-uf-sxR">
-                    <rect key="frame" x="6" y="9" width="18" height="18"/>
+                    <rect key="frame" x="8" y="14" width="12" height="12"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="14" id="BIQ-CO-SIQ"/>
-                        <constraint firstAttribute="width" constant="14" id="Kpd-eg-tvs"/>
+                        <constraint firstAttribute="height" constant="12" id="BIQ-CO-SIQ"/>
+                        <constraint firstAttribute="width" constant="12" id="Kpd-eg-tvs"/>
                     </constraints>
-                    <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="igR-KX-yh7">
+                    <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="checkbox_uncompleted" imagePosition="left" alternateImage="checkbox_completed" imageScaling="proportionallyDown" inset="2" id="igR-KX-yh7">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <color key="contentTintColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                 </button>
-                <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0x0-kl-0sk">
-                    <rect key="frame" x="30" y="2" width="539" height="31"/>
+                <stackView distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0x0-kl-0sk">
+                    <rect key="frame" x="28" y="4" width="541" height="31"/>
                     <subviews>
-                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bfd-FT-lzv">
-                            <rect key="frame" x="-2" y="15" width="535" height="16"/>
-                            <textFieldCell key="cell" lineBreakMode="truncatingTail" truncatesLastVisibleLine="YES" title="Label" usesSingleLineMode="YES" id="hiM-pH-19Z">
+                        <textField horizontalHuggingPriority="253" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pIv-1u-klF">
+                            <rect key="frame" x="-2" y="8" width="38" height="15"/>
+                            <textFieldCell key="cell" lineBreakMode="truncatingTail" truncatesLastVisibleLine="YES" title="12:30" usesSingleLineMode="YES" id="EPL-yZ-wES">
+                                <font key="font" metaFont="systemSemibold" size="12"/>
+                                <color key="textColor" name="linkColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                        </textField>
+                        <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bfd-FT-lzv">
+                            <rect key="frame" x="40" y="8" width="503" height="16"/>
+                            <textFieldCell key="cell" lineBreakMode="truncatingTail" truncatesLastVisibleLine="YES" title="Открытыие конференции DevCon" usesSingleLineMode="YES" id="hiM-pH-19Z">
                                 <font key="font" usesAppearanceFont="YES"/>
                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                             </textFieldCell>
                         </textField>
-                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pIv-1u-klF">
-                            <rect key="frame" x="-2" y="0.0" width="35" height="15"/>
-                            <textFieldCell key="cell" lineBreakMode="truncatingTail" truncatesLastVisibleLine="YES" title="Label" usesSingleLineMode="YES" id="EPL-yZ-wES">
-                                <font key="font" metaFont="system" size="12"/>
-                                <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
-                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                            </textFieldCell>
-                        </textField>
                     </subviews>
-                    <constraints>
-                        <constraint firstAttribute="trailing" secondItem="Bfd-FT-lzv" secondAttribute="trailing" constant="8" id="Lwk-4r-LfV"/>
-                    </constraints>
                     <visibilityPriorities>
                         <integer value="1000"/>
                         <integer value="1000"/>
@@ -68,13 +65,17 @@
             <constraints>
                 <constraint firstItem="p6V-uf-sxR" firstAttribute="leading" secondItem="31z-3z-rie" secondAttribute="leading" constant="8" id="2QI-rW-02z"/>
                 <constraint firstItem="0x0-kl-0sk" firstAttribute="centerY" secondItem="31z-3z-rie" secondAttribute="centerY" id="2dx-EA-ZNo"/>
-                <constraint firstAttribute="bottom" secondItem="0x0-kl-0sk" secondAttribute="bottom" constant="2" id="3mZ-30-Bng"/>
+                <constraint firstItem="0x0-kl-0sk" firstAttribute="top" secondItem="31z-3z-rie" secondAttribute="top" constant="4" id="5DC-I6-RgO"/>
+                <constraint firstAttribute="bottom" secondItem="0x0-kl-0sk" secondAttribute="bottom" constant="4" id="Ho5-fx-SY5"/>
                 <constraint firstItem="p6V-uf-sxR" firstAttribute="centerY" secondItem="31z-3z-rie" secondAttribute="centerY" id="X0d-71-xc6"/>
                 <constraint firstAttribute="trailing" secondItem="0x0-kl-0sk" secondAttribute="trailing" constant="8" id="bhP-Rc-Inh"/>
-                <constraint firstItem="0x0-kl-0sk" firstAttribute="top" secondItem="31z-3z-rie" secondAttribute="top" constant="2" id="ftA-d6-VOL"/>
                 <constraint firstItem="0x0-kl-0sk" firstAttribute="leading" secondItem="p6V-uf-sxR" secondAttribute="trailing" constant="8" id="tqg-RS-jZY"/>
             </constraints>
             <point key="canvasLocation" x="26.5" y="67"/>
         </customView>
     </objects>
+    <resources>
+        <image name="checkbox_completed" width="16" height="16"/>
+        <image name="checkbox_uncompleted" width="16" height="16"/>
+    </resources>
 </document>

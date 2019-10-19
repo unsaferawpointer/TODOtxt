@@ -50,7 +50,7 @@ class Grouping {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         
-        guard let date = task.dueDate as Date? else { return .none }
+        guard let date = task.dueDate?.date as Date? else { return .none }
         
         let calendar = NSCalendar.current
         let today = Date()
@@ -114,15 +114,15 @@ class SourceViewController: NSViewController {
 
         Путешествия:
         [x] Аквапарк в тайланде
-        [ ] Поездка на шри - ланку в ноябре due:2019-11-07
+        [ ] Поездка на шри - ланку в ноябре @due(2019-11-07)
 
         Заведения:
         [ ] Бар «на связи» @moscow
         [ ] Ресторан «в темноте» @moscow
 
         Остальное:
-        [C] Водительские права due:2020-06-01
-        [B] Посещение стоматолога due:2020-01-10
+        [C] Водительские права @due(2020-06-01)
+        [B] Посещение стоматолога @due(2020-01-10)
         """
         let parser = Parser()
         
@@ -192,7 +192,7 @@ extension SourceViewController: NSOutlineViewDelegate {
         print("item = \(item)")
         if let group = item as? TasksGroup {
             if let cell = outlineView.makeView(withIdentifier: headerID, owner: nil) as? TaskHeaderCellView {
-                cell.textField?.stringValue = group.title
+                //cell.textField?.stringValue = group.title
                 return cell
             }
         } else if let task = item as? Task {

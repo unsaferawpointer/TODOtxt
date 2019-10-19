@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		F900C45A23335ABB007C9FC0 /* FiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F900C45923335ABB007C9FC0 /* FiltersViewController.swift */; };
+		F91CC2CD23598F5A00C2825E /* TaskTimeDataCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F91CC2CC23598F5A00C2825E /* TaskTimeDataCellView.xib */; };
+		F91CC2CF2359FF5100C2825E /* NSRange Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F91CC2CE2359FF5100C2825E /* NSRange Extension.swift */; };
 		F93E5947231F526700266D92 /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93E5946231F526700266D92 /* FilterViewController.swift */; };
 		F940B0A72351D34200664043 /* IBMPlexMono-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F940B0A62351D34200664043 /* IBMPlexMono-SemiBold.ttf */; };
 		F940B0A923532D2100664043 /* IBMPlexMono-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F940B0A823532D2100664043 /* IBMPlexMono-Medium.ttf */; };
@@ -92,6 +94,8 @@
 
 /* Begin PBXFileReference section */
 		F900C45923335ABB007C9FC0 /* FiltersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersViewController.swift; sourceTree = "<group>"; };
+		F91CC2CC23598F5A00C2825E /* TaskTimeDataCellView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskTimeDataCellView.xib; sourceTree = "<group>"; };
+		F91CC2CE2359FF5100C2825E /* NSRange Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSRange Extension.swift"; sourceTree = "<group>"; };
 		F93E5946231F526700266D92 /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
 		F940B0A62351D34200664043 /* IBMPlexMono-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexMono-SemiBold.ttf"; sourceTree = "<group>"; };
 		F940B0A823532D2100664043 /* IBMPlexMono-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexMono-Medium.ttf"; sourceTree = "<group>"; };
@@ -201,6 +205,7 @@
 				F940B0E723572CFF00664043 /* TaskHeaderCellView.xib */,
 				F940B0E9235732EE00664043 /* TaskDataCellView.swift */,
 				F940B0EB235732FD00664043 /* TaskDataCellView.xib */,
+				F91CC2CC23598F5A00C2825E /* TaskTimeDataCellView.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -294,6 +299,7 @@
 				F9755A85231DBC8800A2FCBA /* MutableString Extention.swift */,
 				F9755A87231DBC8E00A2FCBA /* NSColor Extention.swift */,
 				F9755A89231DBC9500A2FCBA /* String Extention.swift */,
+				F91CC2CE2359FF5100C2825E /* NSRange Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -481,6 +487,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F91CC2CD23598F5A00C2825E /* TaskTimeDataCellView.xib in Resources */,
 				F9C323CD2343CECB001CB6FF /* TaskDocumentView.xib in Resources */,
 				F9755AB9231DD6AB00A2FCBA /* Themes.plist in Resources */,
 				F940B0EC235732FD00664043 /* TaskDataCellView.xib in Resources */,
@@ -517,6 +524,7 @@
 				F9755A7D231DBBE300A2FCBA /* SidebarViewController.swift in Sources */,
 				F9C323CF2343D02C001CB6FF /* TaskDocumentView.swift in Sources */,
 				F99FEB6B233CB41F00336790 /* TaskLayoutManager.swift in Sources */,
+				F91CC2CF2359FF5100C2825E /* NSRange Extension.swift in Sources */,
 				F9C6CCC223259051008026FD /* Item.swift in Sources */,
 				F900C45A23335ABB007C9FC0 /* FiltersViewController.swift in Sources */,
 				F9755A88231DBC8E00A2FCBA /* NSColor Extention.swift in Sources */,

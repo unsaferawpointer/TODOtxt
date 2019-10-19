@@ -190,6 +190,7 @@ class TaskDocumentView: NSView {
     @IBAction func removeCompleted(_ sender: Any?) {
         guard !isRefreshing else { return }
 
+        /*
         self.isRefreshing = true
         
         let operation2 = TextOperation(storage: taskStorage.storage)
@@ -208,6 +209,7 @@ class TaskDocumentView: NSView {
             self?.taskStorage.remove(by: NSPredicate(format: "status != nil", argumentArray: nil))
             operation2.start()
         }
+ */
     }
     
     
@@ -311,7 +313,7 @@ extension TaskDocumentView: TaskTextStorageDelegate {
 }
 
 extension TaskDocumentView: TaskTextViewDelegate {
-    func taskTextView(for element: Element) -> [String] {
+    func taskTextView(for element: Token) -> [String] {
         return taskStorage.mentions(for: element)
     }
     

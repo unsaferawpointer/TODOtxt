@@ -8,19 +8,20 @@
 
 import Foundation
 
+/*
 
 struct ElementComparator {
     
-    var element: Element
+    var element: Token
     
-    init(element: Element) {
+    init(element: Token) {
         self.element = element
     }
 }
 
 struct Comparator {
     
-    var order: [Element] = [.priority, .tag, .dueDate(granulity: .day), .startDate(granulity: .day)]
+    var order: [Token] = [.priority, .tag, .dueDate, .startDate]
     
     func compare(_ lhs: Task, _ rhs: Task) -> Bool {
         
@@ -54,5 +55,5 @@ struct Comparator {
     }
     
 }
-
+*/
 

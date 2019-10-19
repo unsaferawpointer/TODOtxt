@@ -35,7 +35,7 @@ struct PriorityArray {
 }
 
 protocol TaskTextViewDelegate: class {
-    func taskTextView(for element: Element) -> [String]
+    func taskTextView(for element: Token) -> [String]
 }
 
 class TaskTextView: NSTextView {
@@ -312,15 +312,12 @@ class TaskTextView: NSTextView {
     // ---------- common ----------
     @IBAction func toggleCompletion(_ sender: Any?) {
         
-        guard let lineRange = selectedLine, let lineString = selectedLineString else { return }
+        guard let lineString = selectedLineString else { return }
         
-        guard let (range , enclosingRange) = parser.parse(.status, inLine: lineString, with: lineRange.location) else { return }
+        guard let (oldPriority, priorityRange, enclosingRange) = parser.parsePriority(in: lineString) else { return }
         
-        let indent = enclosingRange.location - lineRange.location
-        
-        let oldStatus = string.substring(from: range)
-        let newStatus = (oldStatus == "x") ? " " : "x"
-        replaceText(in: enclosingRange, with: "[\(newStatus)]")
+        let newPriority = (oldPriority == .completed) ? " " : "x"
+        replaceText(in: enclosingRange, with: "[\(newPriority)]")
         
     }
     
@@ -332,25 +329,22 @@ class TaskTextView: NSTextView {
     
     @IBAction func encreasePriority(_ sender: Any?) {
         
-        guard let lineRange = selectedLine, let lineString = selectedLineString else { return }
+        guard let lineString = selectedLineString else { return }
         
         let priorityArray = PriorityArray()
-        
-        if let (range , enclosingRange) = parser.parse(.status, inLine: lineString, with: lineRange.location) {
+        if let (priority, range, enclosingRange) = parser.parsePriority(in: lineString) {
             let oldPriority = mutString.substring(with: range)
             let newPriority = priorityArray.element(before: oldPriority, alternative: "Z")
             replaceText(in: enclosingRange, with: "[\(newPriority)]")
-        } 
-        
+        }
     }
     
     @IBAction func decreasePriority(_ sender: Any?) {
         
-        guard let lineRange = selectedLine, let lineString = selectedLineString else { return }
+        guard let lineString = selectedLineString else { return }
         
         let priorityArray = PriorityArray()
-        
-        if let (range , enclosingRange) = parser.parse(.priority, inLine: lineString, with: lineRange.location) {
+        if let (priority, range, enclosingRange) = parser.parsePriority(in: lineString) {
             let oldPriority = mutString.substring(with: range)
             let newPriority = priorityArray.element(after: oldPriority, alternative: "A")
             replaceText(in: enclosingRange, with: "[\(newPriority)]")
@@ -360,11 +354,11 @@ class TaskTextView: NSTextView {
     
     @IBAction func removePriority(_ sender: Any?) {
         
-        guard let lineRange = selectedLine, let lineString = selectedLineString else { return }
-       
-        if let (_ , enclosingRange) = parser.parse(.priority, inLine: lineString, with: lineRange.location) {
+        guard let lineString = selectedLineString else { return }
+        
+        if let (_, _ , enclosingRange) = parser.parsePriority(in: lineString) {
             replaceText(in: enclosingRange, with: "[ ]")
-        } 
+        }
         
     }
     
@@ -372,12 +366,26 @@ class TaskTextView: NSTextView {
     
     @IBAction func setDueDate(_ sender: Any?) {
         
-        guard let lineRange = selectedLine, let lineString = selectedLineString else { return }
+        /*
+        guard let lineString = selectedLineString else { return }
         
         var date = Date()
-        let element: Element = .dueDate(granulity: .day)
+        let element: Token = .dueDate
         
         var popoverAnchor: NSRange!
+        
+        if let (oldDate, range, enclosingRange) = parser.parseDueDate(in: lineString){
+            date = oldDate.date
+            self.editedRange = enclosingRange
+            popoverAnchor = range
+        } else {
+            if let (editedRange, lastSymbolRange) = parser.tailLine(substring: lineString, with: lineRange.location) {
+                self.editedRange = editedRange
+                popoverAnchor = NSRange(location: lastSymbolRange.location, length: 1)
+            } else {
+                fatalError("range not found")
+            }
+        }
         
         if let (range, enclosingRange) = parser.parse(element, inLine: lineString, with: lineRange.location){
             let mention = textStorage!.mutableString.substring(with: range)
@@ -396,6 +404,7 @@ class TaskTextView: NSTextView {
         let popover = DatePopover()
         popover.setDate(date)
         show(popover, in: popoverAnchor)
+ */
     }
     
     @IBAction func encreaseDueDate(_ sender: Any?) {
@@ -408,36 +417,35 @@ class TaskTextView: NSTextView {
     
     private func changeDueDate(by day: Int) {
         
-        guard let lineRange = selectedLine, let lineString = selectedLineString else { return }
+        guard let lineString = selectedLineString else { return }
         
-        let element: Element = .dueDate(granulity: .day)
-        
-        if let (range, enclosingRange) = parser.parse(element, inLine: lineString, with: lineRange.location){
-            let mention = textStorage!.mutableString.substring(with: range)
-            let oldDate = DateGranulity.day.date(from: mention)!
-            let newDate = Calendar.autoupdatingCurrent.date(byAdding: .day, value: day, to: oldDate)!
-            let newStr = DateGranulity.day.string(from: newDate)!
-            replaceText(in: enclosingRange, with: element.prefixString(for: newStr))
+        if let (oldDate, dateTimeRange, enclosingRange) = parser.parseDueDate(in: lineString) {
+            let newDate = Calendar.autoupdatingCurrent.date(byAdding: .day, value: day, to: oldDate.date)!
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = oldDate.granulity.format
+            let newDateStr = dateFormatter.string(from: newDate)
+            replaceText(in: enclosingRange, with: Token.dueDate.prefixString(for: newDateStr))
         }
         
     }
     
     @IBAction func removeDueDate(_ sender: Any?) {
-        guard let lineRange = selectedLine, let lineString = selectedLineString else { return }
-        if let (_ , enclosingRange) = parser.parse(.dueDate(granulity: .day), inLine: lineString, with: lineRange.location) {
+        guard let lineString = selectedLineString else { return }
+        if let (_ , enclosingRange) = parser.dueDateRange(in: lineString) {
             replaceText(in: enclosingRange, with: "")
         } 
     }
     
     func removeCompleted() {
+        /*
         textStorage?.mutableString.enumerateSubstrings(in: fullRange, options: .byLines, using: { (substring, range, enclosing, stop) in
-            if let body = substring, self.parser.parse(.status, inLine: body) != nil {
+            if let body = substring, self.parser.parse(.type, inLine: body) != nil {
                 print("substring = \(substring)")
                 print("range = \(range)")
                 print("enclosing = \(enclosing)")
                 self.textStorage?.replaceCharacters(in: enclosing, with: "")
             }
-        })
+        })*/
     }
     
     func invalidateColorScheme() {
@@ -502,7 +510,7 @@ extension TaskTextView {
 
 extension TaskTextView: AutocompletionPopoverDelegate {
     
-    func autocompletionDidChange(_ sender: AutocompletionPopover, str: String, element: Element) {
+    func autocompletionDidChange(_ sender: AutocompletionPopover, str: String, element: Token) {
         print(#function)
         guard editedRange != nil else { return }
         replaceText(in: editedRange!, with: element.prefixString(for: str))
@@ -510,14 +518,14 @@ extension TaskTextView: AutocompletionPopoverDelegate {
         sender.close()
     }
     
-    private func findCompletion(in sRange: NSRange) -> (element: Element, range: NSRange, enclosingRange: NSRange)? {
+    private func findCompletion(in sRange: NSRange) -> (element: Token, range: NSRange, enclosingRange: NSRange)? {
         
         let lineRange = textStorage!.mutableString.lineRange(for: sRange)
         guard lineRange.length > 0 else { return nil }
         
         let body = textStorage!.mutableString.substring(with: lineRange)
         
-        let result = parser.detectFirst(elements: [.tag, .dueDate(granulity: .day), .dueDate(granulity: .month), .dueDate(granulity: .year)], in: body, beginAt: lineRange.location, forSelectionAt: sRange.location)
+        let result = parser.detectHashtag(in: body, beginAt: lineRange.location, forSelectionAt: sRange.location)
         
         return result
     }
@@ -546,10 +554,18 @@ extension TaskTextView: AutocompletionPopoverDelegate {
                 popover.reload(data, with: mention)
                 popover.element = element
                 show(popover, at: range.location)
-            case .dueDate(let granulity) where granulity == .month || granulity == .year:
+            case .dueDate:
+                
+                var date: Date!
+                
+                let array: [DateGranulity] = [.day, .month, .year, .time]
                 let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = granulity.format
-                let date = dateFormatter.date(from: mention)!
+                for granulity in array {
+                    dateFormatter.dateFormat = granulity.format
+                    if let d = dateFormatter.date(from: string) {
+                        date = d
+                    }
+                }
                 
                 let popover = DatePopover()
                 popover.setDate(date)

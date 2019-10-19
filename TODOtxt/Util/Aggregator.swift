@@ -8,7 +8,7 @@
 
 import Foundation
 
-
+/*
 /// The class determinate how to group todos by keys
 class Aggregator {
     
@@ -36,7 +36,7 @@ class Aggregator {
 class StatusAggregator: Aggregator {
     init() {
         let grouping = { (_ todo: Task) -> String? in 
-            return todo.key(by: .status) == nil ? "uncompleted" : "completed"
+            return todo.key(by: .type) == nil ? "uncompleted" : "completed"
         }
         
         super.init(grouping: grouping)
@@ -46,7 +46,7 @@ class StatusAggregator: Aggregator {
 /// Class group determinate key by Element
 class ElementAggregator: Aggregator {
     
-    init(element: Element) {
+    init(element: Token) {
         
         let grouping = { (_ todo: Task) -> String? in 
             return todo.key(by: element)
@@ -75,7 +75,7 @@ class DateAggregator: Aggregator {
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
             
-            guard let date = todo.dueDate as Date? else { return nil }
+            guard let date = todo.dueDate?.date as Date? else { return nil }
             //let date = formatter.date(from: str)!
             
             let calendar = NSCalendar.current
@@ -119,4 +119,4 @@ class DateAggregator: Aggregator {
     
     
 }
-
+*/

@@ -70,7 +70,7 @@ class TaskRulerView: NSRulerView {
     
     override func drawHashMarksAndLabels(in rect: NSRect) {
         
-        
+        /*
         
         backgroundColor.setFill()
         rect.fill()
@@ -154,6 +154,6 @@ class TaskRulerView: NSRulerView {
                     drawLineNumber("\(lineNumber)", layoutManager.extraLineFragmentRect.minY)
                 }*/
             }
-        }
+        }*/
     }
 }

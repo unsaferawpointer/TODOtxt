@@ -24,7 +24,6 @@ class TextOperation: Operation {
     
     override func main() {
         //sleep(1)
-        let badgeFilter = Preferences.shared.badgeFilter
         
         let array = storage.compactMap { (element) -> Task? in
             return element as? Task
@@ -32,7 +31,6 @@ class TextOperation: Operation {
         
         let dictionary = Dictionary(grouping: array) { (element) -> Group in
             if element.isCompleted { return .completion(value: true) }
-            if let filter = badgeFilter, filter.evaluate(with: element) { return .pinned }
             return grouping.group(for: element)
         }
         
@@ -69,53 +67,13 @@ class ParserOperation: Operation {
         let array = parser.parse(string: string)
         self.taskStorage = TaskStorage(tasks: array)
     }
-}
-
-class MentionStorage {
-    
-    private(set) var autocompletions: Set<Element> = [.tag]
-    private(set) var storage: [Element: Bag<String>] = [:]
-    
-    init() {
-        for element in autocompletions {
-            storage[element] = Bag<String>.init()
-        }
-    }
-    
-    func mentions(for element: Element) -> [String] {
-        return storage[element]?.sorted ?? []
-    }
-    
-    /// FIX ME inout
-    func insert(from todos: [Task]) {
-        for element in autocompletions {
-            let array = todos.compactMap { (todo) -> String? in
-                return todo.key(by: element)
-            }
-            storage[element]?.insert(array)
-        }
-    }
-    
-    /// FIX ME inout
-    func remove(from todos: [Task]) {
-        for element in autocompletions {
-            let array = todos.compactMap { (todo) -> String? in
-                return todo.key(by: element)
-            }
-            storage[element]?.remove(array)
-        }
-    }
     
 }
-
-
-
 
 class TaskStorage {
     
-    private var comparator: Comparator = Comparator()
     private (set) var storage: NSMutableArray   
-    private var mentionStorage: MentionStorage = MentionStorage()
+    private(set) var mentionStorage: Bag<String> = Bag<String>()
     
     init() {
         self.storage = NSMutableArray(array: [Task]())
@@ -134,12 +92,18 @@ class TaskStorage {
     }
     
     func insert(_ tasks: [Task]) {
-        mentionStorage.insert(from: tasks)
+        let mentions = tasks.compactMap { (task) -> String? in
+            return task.hashtag
+        }
+        mentionStorage.insert(mentions)
         storage.addObjects(from: tasks)
     }
     
     func remove(_ tasks: [Task]) {
-        mentionStorage.remove(from: tasks)
+        let mentions = tasks.compactMap { (task) -> String? in
+            return task.hashtag
+        }
+        mentionStorage.remove(mentions)
         for task in tasks {
             let index = storage.index(of: task)
             storage.removeObject(at: index)
@@ -149,14 +113,6 @@ class TaskStorage {
 }
 
 extension TaskStorage {
-    
-    func remove(by filter: NSPredicate) {
-        let removed = storage.filtered(using: filter)
-        for task in removed as! [Task] {
-            mentionStorage.remove(from: [task])
-            storage.remove(task)
-        }
-    }
     
     func string(by grouping: Grouping) -> String {
         
@@ -190,34 +146,8 @@ extension TaskStorage {
         return newStr
     }
     
-    var string: String {
-        let empty = NSMutableString()
-        // WARNING
-        let sorted = storage
-        let mutStr = sorted.reduce(into: empty) { (result, todo) in
-            return result.append("\((todo as! Task).string)\n")
-        }
-        return mutStr.string
-    }
-    
-    func string(by filter: NSPredicate) -> String {
-        // WARNING
-        //let filtered = storage.filter(filter.contains(_:))
-        let filtered = storage.filtered(using: filter) as! [Task]
-        let sorted = filtered.sorted(by: comparator.compare(_:_:))
-        let empty = NSMutableString()
-        let mutStr = sorted.reduce(into: empty) { (result, todo) in
-            return result.append("\(todo.string)\n")
-        }
-        return mutStr.string
-    }
-    
-    var data: Data {
-        return string.data(using: .utf8) ?? Data()
-    }
-    
-    func mentions(for element: Element) -> [String] {
-        return mentionStorage.mentions(for: element)
+    func mentions(for element: Token) -> [String] {
+        return mentionStorage.storage
     }
     
 }
