@@ -26,6 +26,10 @@ class Document: NSDocument {
         return tabViewController?.tabViewItems[0].viewController as? TextViewController
     }
     
+    var sourceViewController: SourceViewController? {
+        return tabViewController?.tabViewItems[1].viewController as? SourceViewController
+    }
+    
     override init() {
         super.init()
         // Add your subclass-specific initialization here.
@@ -36,14 +40,14 @@ class Document: NSDocument {
     }
     
     override func makeWindowControllers() {
-        Swift.print(#function)
         // Returns the Storyboard that contains your Document window.
         let storyboard = NSStoryboard(name: NSStoryboard.Name("Main"), bundle: nil)
         let windowController = storyboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("Document Window Controller")) as! NSWindowController
         self.addWindowController(windowController)
+        
         if let contentView = textViewController {
-            contentView.objectValue = str
-            contentView.taskDocumentView.delegate = self
+            contentView.reload(str)
+            contentView.delegate = self
         }
         
     }
@@ -52,18 +56,17 @@ class Document: NSDocument {
         // Insert code here to write your document to data of the specified type, throwing an error in case of failure.
         // Alternatively, you could remove this method and override fileWrapper(ofType:), write(to:ofType:), or write(to:ofType:for:originalContentsURL:) instead.
         //throw NSError(domain: NSOSStatusErrorDomain, code: unimpErr, userInfo: nil)
-        if let data = textViewController?.taskDocumentView.data {
+        
+        if let text = textViewController?.textView.string, let data = text.data(using: .utf8) {
             return data
         } else {
             return Data()
         }
         
-        
-        
     }
     
     override func read(from data: Data, ofType typeName: String) throws {
-        Swift.print(#function)
+        
         // Insert code here to read your document from the given data of the specified type, throwing an error in case of failure.
         // Alternatively, you could remove this method and override read(from:ofType:) instead.
         // If you do, you should also override isEntireFileLoaded to return false if the contents are lazily loaded.
@@ -71,12 +74,12 @@ class Document: NSDocument {
         guard let str = String(data: data, encoding: .utf8) else { throw DataError.invalidFormat }
         guard str.count <= 4000 else { throw DataError.overflow}
         self.str = str
-        textViewController?.objectValue = str
+        textViewController?.reload(str)
     }
     
 }
 
-extension Document: TaskDocumentViewDelegate {
+extension Document: TaskTextViewControllerDelegate {
     func dataDidChange() {
         updateChangeCount(.changeDone)
     }

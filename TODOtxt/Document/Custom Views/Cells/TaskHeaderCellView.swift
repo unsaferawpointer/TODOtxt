@@ -12,7 +12,9 @@ class TaskHeaderCellView: NSTableCellView {
     
     @IBOutlet weak var view: NSView!
     
-    //var defaultImage: NSImage?
+    @IBOutlet weak var dateLabel: NSTextField!
+    @IBOutlet weak var monthLabel: NSTextField!
+    @IBOutlet weak var weekDayLabel: NSTextField!
     
     var nibName = "TaskHeaderCellView"
     

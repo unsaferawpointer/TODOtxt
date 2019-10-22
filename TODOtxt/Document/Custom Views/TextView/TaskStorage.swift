@@ -12,45 +12,7 @@ enum DataError: Error {
     case overflow, invalidFormat
 }
 
-class TextOperation: Operation {
-    
-    var storage: NSMutableArray = NSMutableArray(array: [Task]())
-    var string: String = ""
-    var grouping: Grouping = Grouping()
-    
-    init(storage: NSMutableArray) {
-        self.storage = storage
-    }
-    
-    override func main() {
-        //sleep(1)
-        
-        let array = storage.compactMap { (element) -> Task? in
-            return element as? Task
-        }
-        
-        let dictionary = Dictionary(grouping: array) { (element) -> Group in
-            if element.isCompleted { return .completion(value: true) }
-            return grouping.group(for: element)
-        }
-        
-        let data = dictionary.sorted { (lhs, rhs) -> Bool in
-            return lhs.key.priority < rhs.key.priority
-        }
-        
-        let mutableStr = NSMutableString()
-        
-        for (section, tasks) in data {
-            mutableStr.append("#\(section.title):\n")
-            for task in tasks {
-                mutableStr.append("\(task.string)\n")
-            }
-            mutableStr.append("\n")
-        }
-        
-        self.string = mutableStr.string
-    }
-}
+
 
 class ParserOperation: Operation {
     
@@ -72,101 +34,63 @@ class ParserOperation: Operation {
 
 class TaskStorage {
     
-    private (set) var storage: NSMutableArray   
-    private(set) var mentionStorage: Bag<String> = Bag<String>()
+    private (set) var storage: [Task] 
+    private(set) var hashtagsStorage: Bag<String> = Bag<String>()
     
     init() {
-        self.storage = NSMutableArray(array: [Task]())
+        self.storage = [Task]()
     }
     
     init(tasks: [Task]) {
-        self.storage = NSMutableArray(array: [Task]())
+        self.storage = tasks
         insert(tasks)
     }
     
     func reload(_ str: String) {
         let parser = Parser()
         let tasks = parser.parse(string: str)
-        self.storage = NSMutableArray(array: [Task]())
+        self.storage = []
+        self.hashtagsStorage = Bag<String>()
         insert(tasks)
     }
+    
+    // ******** basic operation ********
     
     func insert(_ tasks: [Task]) {
         let mentions = tasks.compactMap { (task) -> String? in
             return task.hashtag
         }
-        mentionStorage.insert(mentions)
-        storage.addObjects(from: tasks)
+        hashtagsStorage.insert(mentions)
+        storage.append(contentsOf: tasks)
     }
     
     func remove(_ tasks: [Task]) {
         let mentions = tasks.compactMap { (task) -> String? in
             return task.hashtag
         }
-        mentionStorage.remove(mentions)
+        hashtagsStorage.remove(mentions)
         for task in tasks {
-            let index = storage.index(of: task)
-            storage.removeObject(at: index)
-        }
-    }
-    
-}
-
-extension TaskStorage {
-    
-    func string(by grouping: Grouping) -> String {
-        
-        let badgeFilter = Preferences.shared.badgeFilter
-        
-        
-        let array = storage.compactMap { (element) -> Task? in
-            return element as? Task
-        }
-        
-        let dictionary = Dictionary(grouping: array) { (element) -> Group in
-            if element.isCompleted { return .completion(value: true) }
-            if let filter = badgeFilter, filter.evaluate(with: element) { return .pinned }
-            return grouping.group(for: element)
-        }
-        
-        let data = dictionary.sorted { (lhs, rhs) -> Bool in
-            return lhs.key.priority < rhs.key.priority
-        }
-        
-        let mutableStr = NSMutableString()
-        
-        for (section, tasks) in data {
-            mutableStr.append("******** \(section.title) ********\n")
-            for task in tasks {
-                mutableStr.append("\(task.string)\n")
+            if let index = storage.firstIndex(of: task) {
+                storage.remove(at: index)
+            } else {
+                fatalError("TaskStorage don`t contains task = \(task)")
             }
         }
-        
-        let newStr = mutableStr.string
-        return newStr
     }
     
-    func mentions(for element: Token) -> [String] {
-        return mentionStorage.storage
-    }
+    
     
 }
 
-// Data validation
 extension TaskStorage {
-    
-    var badgeCount: Int {
-        if let filter = Preferences.shared.badgeFilter {
-            let result = storage.filtered(using: filter).count
-            print("result = \(result)")
-            return result
-        } else {
-            return 0
-        }
-    }
     
     var count: Int {
         return storage.count
     }
     
+    func mentions(for element: Token) -> [String] {
+        return hashtagsStorage.storage
+    }
+    
 }
+

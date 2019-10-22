@@ -36,17 +36,17 @@
                     <rect key="frame" x="28" y="4" width="541" height="31"/>
                     <subviews>
                         <textField horizontalHuggingPriority="253" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pIv-1u-klF">
-                            <rect key="frame" x="-2" y="8" width="38" height="15"/>
+                            <rect key="frame" x="-2" y="8" width="40" height="16"/>
                             <textFieldCell key="cell" lineBreakMode="truncatingTail" truncatesLastVisibleLine="YES" title="12:30" usesSingleLineMode="YES" id="EPL-yZ-wES">
-                                <font key="font" metaFont="systemSemibold" size="12"/>
+                                <font key="font" metaFont="systemSemibold" size="13"/>
                                 <color key="textColor" name="linkColor" catalog="System" colorSpace="catalog"/>
                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                             </textFieldCell>
                         </textField>
                         <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bfd-FT-lzv">
-                            <rect key="frame" x="40" y="8" width="503" height="16"/>
+                            <rect key="frame" x="42" y="8" width="501" height="16"/>
                             <textFieldCell key="cell" lineBreakMode="truncatingTail" truncatesLastVisibleLine="YES" title="Открытыие конференции DevCon" usesSingleLineMode="YES" id="hiM-pH-19Z">
-                                <font key="font" usesAppearanceFont="YES"/>
+                                <font key="font" metaFont="systemLight" size="13"/>
                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                             </textFieldCell>

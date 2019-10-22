@@ -93,7 +93,7 @@ class TaskTextView: NSTextView {
         
         var shouldComplete = true
         
-        print("keyCode pressed = \(event.keyCode)")
+        //print("keyCode pressed = \(event.keyCode)")
         switch event.keyCode {
         case 51:
             // delete
@@ -165,12 +165,12 @@ class TaskTextView: NSTextView {
         let startRange = NSRange(location: location, length: 0)
         
         let lineRange = mutString.lineRange(for: startRange)
-        print("selRange = \(selRange)")
-        print("lineRange = \(lineRange)")
+        //print("selRange = \(selRange)")
+        //print("lineRange = \(lineRange)")
         let pattern = #"^\t*(\[(x|\s|\-|[A-Z])\]\s).*"#
         let regex = try! NSRegularExpression(pattern: pattern, options: .anchorsMatchLines)
         let lineStr = string.substring(from: lineRange)
-        print("firstTask = \(lineStr)")
+        //print("firstTask = \(lineStr)")
         if let result = regex.firstMatch(in: string, options: [], range: lineRange), result.range(at: 1).upperBound == selRange.location && selRange.length == 0 {
             replaceText(in: result.range(at: 1), with: "")
         } else {
@@ -185,17 +185,17 @@ class TaskTextView: NSTextView {
         let startRange = NSRange(location: location, length: 0)
         
         let lineRange = mutString.lineRange(for: startRange)
-        print("selRange = \(selRange)")
-        print("lineRange = \(lineRange)")
+        //print("selRange = \(selRange)")
+        //print("lineRange = \(lineRange)")
         if selRange.length == 0 {
             
             let pattern = #"^\t*(\[(x|\s|\-|[A-Z])\]\s).*"#
             let regex = try! NSRegularExpression(pattern: pattern, options: .anchorsMatchLines)
             let lineStr = string.substring(from: lineRange)
-            print("firstTask = \(lineStr)")
+            //print("firstTask = \(lineStr)")
             if let result = regex.firstMatch(in: string, options: [], range: lineRange), result.range(at: 1).upperBound <= location {
-                print("location = \(location)")
-                print("upperRange = \(result.range(at:1).upperBound)")
+                //print("location = \(location)")
+                //print("upperRange = \(result.range(at:1).upperBound)")
                 if result.range(at: 1).upperBound == location {
                     replaceCharacters(in: result.range(at:1), with: "")
                     
@@ -217,17 +217,17 @@ class TaskTextView: NSTextView {
         let startRange = NSRange(location: location, length: 0)
         
         let lineRange = mutString.lineRange(for: startRange)
-        print("selRange = \(selRange)")
-        print("lineRange = \(lineRange)")
+        //print("selRange = \(selRange)")
+        //print("lineRange = \(lineRange)")
         if selRange.length == 0 {
             
             let pattern = #"^\t*(\[(x|\s|\-|[A-Z])\]\s).*"#
             let regex = try! NSRegularExpression(pattern: pattern, options: .anchorsMatchLines)
             let lineStr = string.substring(from: lineRange)
-            print("firstTask = \(lineStr)")
+            //print("firstTask = \(lineStr)")
             if let result = regex.firstMatch(in: string, options: [], range: lineRange), result.range(at: 1).upperBound <= location {
-                print("location = \(location)")
-                print("upperRange = \(result.range(at:1).upperBound)")
+                //print("location = \(location)")
+                //print("upperRange = \(result.range(at:1).upperBound)")
                 if result.range(at: 1).upperBound == location {
                     replaceCharacters(in: result.range(at:1), with: "")
                     
@@ -312,12 +312,12 @@ class TaskTextView: NSTextView {
     // ---------- common ----------
     @IBAction func toggleCompletion(_ sender: Any?) {
         
-        guard let lineString = selectedLineString else { return }
+        guard let lineRange = selectedLine, let lineString = selectedLineString else { return }
         
-        guard let (oldPriority, priorityRange, enclosingRange) = parser.parsePriority(in: lineString) else { return }
+        guard let (oldPriority, priorityRange, enclosingRange) = parser.parseStatus(in: lineString) else { return }
         
         let newPriority = (oldPriority == .completed) ? " " : "x"
-        replaceText(in: enclosingRange, with: "[\(newPriority)]")
+        replaceText(in: enclosingRange.shifted(by: lineRange.location), with: "[\(newPriority)]")
         
     }
     
@@ -332,7 +332,7 @@ class TaskTextView: NSTextView {
         guard let lineString = selectedLineString else { return }
         
         let priorityArray = PriorityArray()
-        if let (priority, range, enclosingRange) = parser.parsePriority(in: lineString) {
+        if let (priority, range, enclosingRange) = parser.parseStatus(in: lineString) {
             let oldPriority = mutString.substring(with: range)
             let newPriority = priorityArray.element(before: oldPriority, alternative: "Z")
             replaceText(in: enclosingRange, with: "[\(newPriority)]")
@@ -344,7 +344,7 @@ class TaskTextView: NSTextView {
         guard let lineString = selectedLineString else { return }
         
         let priorityArray = PriorityArray()
-        if let (priority, range, enclosingRange) = parser.parsePriority(in: lineString) {
+        if let (priority, range, enclosingRange) = parser.parseStatus(in: lineString) {
             let oldPriority = mutString.substring(with: range)
             let newPriority = priorityArray.element(after: oldPriority, alternative: "A")
             replaceText(in: enclosingRange, with: "[\(newPriority)]")
@@ -356,7 +356,7 @@ class TaskTextView: NSTextView {
         
         guard let lineString = selectedLineString else { return }
         
-        if let (_, _ , enclosingRange) = parser.parsePriority(in: lineString) {
+        if let (_, _ , enclosingRange) = parser.parseStatus(in: lineString) {
             replaceText(in: enclosingRange, with: "[ ]")
         }
         
@@ -462,12 +462,12 @@ extension TaskTextView {
     }
     
     @objc func replaceText(in range: NSRange, with string: String) {
-        print(#function)
+        //print(#function)
         guard shouldChangeText(in: range, replacementString: string) else { return }
-        print("oldRange = \(range) newString = \(string)")
+        //print("oldRange = \(range) newString = \(string)")
         let newRange = NSRange(location: range.location, length: string.count)
         let oldString = textStorage!.mutableString.substring(with: range)
-        print("newRange = \(newRange) oldString = \(oldString)")
+        //print("newRange = \(newRange) oldString = \(oldString)")
         if let u = undoManager {
           u.registerUndo(withTarget: self) { this in
             this.unreplaceText(in: newRange, with: oldString)
@@ -483,13 +483,12 @@ extension TaskTextView {
     }
     
     @objc func unreplaceText(in range: NSRange, with string: String) {
-        print("\n")
-        print(#function)
+        
         guard shouldChangeText(in: range, replacementString: string) else { return }
-        print("oldRange = \(range) newString = \(string)")
+        
         let newRange = NSRange(location: range.location, length: string.count)
         let oldString = textStorage!.mutableString.substring(with: range)
-        print("newRange = \(newRange) oldString = \(oldString)")
+        
         if let u = undoManager {
           u.registerUndo(withTarget: self) { this in
             this.replaceText(in: newRange, with: oldString)
@@ -536,8 +535,7 @@ extension TaskTextView: AutocompletionPopoverDelegate {
         guard sRange.length == 0 else { return }
         
         if let (element, range, enclosingRange) = findCompletion(in: sRange) {
-            print("range = \(range)")
-            print("enclosingRange = \(enclosingRange)")
+            
             let mention = textStorage!.mutableString.substring(with: range)
             self.editedRange = enclosingRange
             switch element {
@@ -607,7 +605,7 @@ extension TaskTextView {
     
     override func updateRuler() {
         super.updateRuler()
-        print(#function)
+        //print(#function)
         rulerView?.needsDisplay = true
     }
     

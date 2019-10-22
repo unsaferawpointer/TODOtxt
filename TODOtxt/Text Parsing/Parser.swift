@@ -7,55 +7,6 @@
 //
 
 import Cocoa
-/*
- #"(@due\((19[0-9]{2}|2[0-9]{3}))\)\b"#
- case .month:
-     return #"(@due\(((19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])))\)\b"#
- case .day:
-     return #"(\B@due\(((19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31))\s\)\B)"#
- case .time:
-     return #"(\B@due\(((19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31))\s((0[0-9]|1[0-9]|2[0-4]):([0-5][0-9]))\)\B)"#
- */
-
-
-   
-   
-   /*
-   func parse(_ pattern: String, in body: String, with shift: Int = 0) -> NSRange? {
-       let range = NSString(string: body).range(of: body)
-       guard let regex = try? NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines]) else { return nil }
-       if let match = regex.firstMatch(in: body, options: [], range: range) {
-           var range = match.range
-           range.location += shift
-           return range
-       }
-       
-       return nil
-   }
-   
-   func parse(_ element: Token, inLine line: String, with shift: Int = 0) -> (range: NSRange, enclosingRange: NSRange)? {
-       let pattern = element.pattern
-       let range = NSString(string: line).range(of: line)
-       guard let regex = try? NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines]) else { return nil }
-       if let match = regex.firstMatch(in: line, options: [], range: range) {
-           
-           var range = match.range(at: 2)
-           // Element validation
-           let str = line.substring(from: range)
-           guard element.isValid(string: str) else { return nil }
-           
-           range.location += shift
-           
-           var enclosingRange = match.range(at: 1)
-           enclosingRange.location += shift
-           
-           return (range, enclosingRange)
-       }
-       
-       return nil
-   }
-*/
-
 
 enum DateGranulity: Int {
     
@@ -145,13 +96,32 @@ class Parser {
     var font: NSFont
     var boldFont: NSFont
     
-    var elements: Set<Token> = [.tag, .startDate, .dueDate]
-    var commonAttr:[NSAttributedString.Key: Any?]!
+    var textParagraphStyle: NSMutableParagraphStyle
+    var taskParagraphStyle: NSMutableParagraphStyle
+    var headerParagraphStyle: NSMutableParagraphStyle
+    
+    
     
     // ********** Init block **********
     init() {
         self.font = NSFont(name: "IBM Plex Mono", size: 14.0)!
         self.boldFont = NSFont(name: "IBM Plex Mono Medium", size: 14.0)!
+        
+        self.textParagraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
+        self.textParagraphStyle.firstLineHeadIndent = 14.0
+        self.textParagraphStyle.headIndent = 14.0
+        self.textParagraphStyle.paragraphSpacing = 4.0
+        
+        self.headerParagraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
+        self.headerParagraphStyle.alignment = .left
+        self.headerParagraphStyle.paragraphSpacing = 8.0
+        
+        self.taskParagraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
+        self.taskParagraphStyle.firstLineHeadIndent = 14.0
+        self.taskParagraphStyle.headIndent = 14.0
+        self.taskParagraphStyle.paragraphSpacing = 4.0
+        
+        
     }
     
 }
@@ -168,78 +138,59 @@ extension Parser {
     private func hightlight(theme: Theme, backingStorage: NSMutableAttributedString, _ body: String, in globalBodyRange: NSRange) {
         
         let shifting = globalBodyRange.location
-        
         let lineType = self.lineType(of: body)
+        
+        // setup
+        backingStorage.removeAttribute(.strikethroughStyle, range: globalBodyRange)
         
         switch lineType {
         case .empty:
-            //backingStorage.addAttribute(NSAttributedString.Key("isHeader"), value: 0, range: globalBodyRange)
             backingStorage.addAttribute(.font, value: font, range: globalBodyRange)
+            backingStorage.addAttribute(.paragraphStyle, value: textParagraphStyle, range: globalBodyRange)
             return
         case .header:
-            
-            let paragraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
-            paragraphStyle.alignment = .left
-            paragraphStyle.paragraphSpacing = 8.0
-            backingStorage.addAttribute(.paragraphStyle, value: paragraphStyle, range: globalBodyRange)
-           
             backingStorage.addAttribute(.font, value: boldFont, range: globalBodyRange)
-            backingStorage.addAttribute(.kern, value: 1.0, range: globalBodyRange)
-            backingStorage.addAttribute(.strikethroughStyle, value: 0, range: globalBodyRange)
             backingStorage.addAttribute(.foregroundColor, value: NSColor.headerTextColor, range: globalBodyRange)
+            backingStorage.addAttribute(.paragraphStyle, value: headerParagraphStyle, range: globalBodyRange)
             return
         case .task:
-            
             backingStorage.addAttribute(.font, value: font, range: globalBodyRange)
+            backingStorage.addAttribute(.paragraphStyle, value: taskParagraphStyle, range: globalBodyRange)
             break
         case .text:
-            let paragraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
-            paragraphStyle.firstLineHeadIndent = 14.0
-            paragraphStyle.headIndent = 14.0
-            paragraphStyle.paragraphSpacing = 4.0
-            
-            backingStorage.addAttribute(.paragraphStyle, value: paragraphStyle, range: globalBodyRange)
             backingStorage.addAttribute(.font, value: font, range: globalBodyRange)
             backingStorage.addAttribute(.foregroundColor, value: NSColor.secondaryLabelColor, range: globalBodyRange)
+            backingStorage.addAttribute(.paragraphStyle, value: textParagraphStyle, range: globalBodyRange)
             return
         }
         
         
-        let task = parseTask(for: body)!
+        guard let (priority, _, enclosingPriorityRange) = parseStatus(in: body) else { fatalError("Task has no priority. Invalid line type")}
         
-        let paragraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
-        paragraphStyle.firstLineHeadIndent = 14.0
-        paragraphStyle.headIndent = 14.0
-        paragraphStyle.defaultTabInterval = 14.0
-        //paragraphStyle.tabStops = [NSTextTab(type: .leftTabStopType, location: 42.0),NSTextTab(type: .leftTabStopType, location: 70.0),NSTextTab(type: .leftTabStopType, location: 98.0),NSTextTab(type: .leftTabStopType, location: 136.0)]
-        
-        paragraphStyle.paragraphSpacing = 4.0
-        
-        backingStorage.addAttribute(.paragraphStyle, value: paragraphStyle, range: globalBodyRange)
-        
-        
-        if task.isCompleted {
-            
+        switch priority {
+        case .completed:
             backingStorage.addAttribute(.foregroundColor, value: NSColor.secondaryLabelColor, range: globalBodyRange)
             backingStorage.addAttribute(.strikethroughStyle, value: 1, range: globalBodyRange)
-            
-        } else {
-            let foregroundColor = NSColor(calibratedRed: 73/255, green: 67/255, blue: 73/255, alpha: 1.0)
-            backingStorage.addAttribute(.strikethroughStyle, value: 0, range: globalBodyRange)
-            backingStorage.addAttribute(.foregroundColor, value: foregroundColor, range: globalBodyRange)
+        case .uncompleted, .hasPriority( _):
+            backingStorage.addAttribute(.foregroundColor, value: NSColor.textColor, range: globalBodyRange)
+            backingStorage.addAttributes([.foregroundColor : NSColor.orange], range: enclosingPriorityRange.shifted(by: shifting))
             
             if let enclosingRange = parseHashtag(in: body)?.enclosingRange.shifted(by: shifting) {
                 backingStorage.addAttributes([.foregroundColor : NSColor.secondaryLabelColor], range: enclosingRange)
             }
             
-            if let enclosingRange = parsePriority(in: body)?.enclosingRange.shifted(by: shifting) {
-                backingStorage.addAttributes([.foregroundColor : NSColor.orange], range: enclosingRange)
+            if let enclosingRange = parseDueDate(in: body)?.enclosingRange.shifted(by: shifting) {
+                backingStorage.addAttributes([.foregroundColor : NSColor.secondaryLabelColor], range: enclosingRange)
             }
             
-            
+            if let enclosingRange = parseStartDate(in: body)?.enclosingRange.shifted(by: shifting) {
+                backingStorage.addAttributes([.foregroundColor : NSColor.secondaryLabelColor], range: enclosingRange)
+            }
         }
         
-       
+        
+        
+                   
     }
     
 }
@@ -262,9 +213,7 @@ extension Parser {
             return .header
         }
         
-        let taskPattern = #"^\t*(\[(x|\s|\-|[A-Z])\])\s.*"#
-        let taskRegex = try! NSRegularExpression(pattern: taskPattern, options: .anchorsMatchLines)
-        if taskRegex.firstMatch(in: body, options: [], range: range) != nil {
+        if parseStatus(in: body) != nil {
             return .task
         }
         
@@ -289,12 +238,41 @@ extension Parser {
         
     }
     
+    /// Parse string to [Task], where task.tasks.isEmpty == true
     func parse(_ mutString: NSMutableString, in editedRange: NSRange) -> [Task] {
         
         var array = [Task]()
         mutString.enumerateSubstrings(in: editedRange, options: .byLines) { (substring, substringRange, enclosingRange, stop) in
-            if let body = substring, let task = self.parseTask(for: body)  {
+            if let body = substring, let task = self.parseTask(for: body) {
                 array.append(task)
+            }
+        }
+        
+        return array
+    }
+    
+    func parseTasksTree(_ mutString: NSMutableString, in editedRange: NSRange) -> [Task] {
+        
+        var array = [Task]()
+        var createNew = true
+        mutString.enumerateSubstrings(in: editedRange, options: .byLines) { (substring, substringRange, enclosingRange, stop) in
+            if let body = substring, let task = self.parseTask(for: body)  {
+                let indent = task.indent
+                
+                if !array.isEmpty {
+                    
+                    if array.last!.indent < task.indent && !createNew {
+                        array.last?.tasks.append(task)
+                        createNew = false
+                    } else {
+                        array.append(task)
+                        createNew = false
+                    }
+                } else {
+                    array.append(task)
+                }
+            } else {
+                createNew = true
             }
         }
         
@@ -305,19 +283,35 @@ extension Parser {
     // parsing todo
     func parseTask(for line: String) -> Task? {
         
-        guard isTask(line) else { return nil}
+        let type = lineType(of: line)
         
-        let priority = self.parsePriority(in: line)?.priority
-        let dueDate = self.parseDueDate(in: line)?.date
-        let startDate = self.parseStartDate(in: line)?.date
-        let hashtag = self.hashtag(in: line)
+        guard type == .task else { return nil }
         
-        //let (_, enclosingRange) = parse(.type, inLine: line)!
-        //let bodyRange = NSRange(location: enclosingRange.upperBound, length: line.count - enclosingRange.length)
-        let body = line//line.substring(from: bodyRange).trimmingCharacters(in: .whitespaces)
+        let (status, _, statusEnclosingRange) = self.parseStatus(in: line)!
+        let indent = statusEnclosingRange.location
+        
+        let dueDate: TaskDate? = self.parseDueDate(in: line)?.date
+        let startDate: TaskDate? = self.parseStartDate(in: line)?.date
+        let hashtag: String? = self.parseHashtag(in: line)?.hashtag
+        
+        let mutBodyStr = NSMutableString(string: line)
+        if let enclosingRange = self.statusRange(in: mutBodyStr.string)?.enclosingRange {
+            mutBodyStr.replaceCharacters(in: enclosingRange, with: " ")
+        }
+        if let enclosingRange = self.dueDateRange(in: mutBodyStr.string)?.enclosingRange {
+            mutBodyStr.replaceCharacters(in: enclosingRange, with: " ")
+        }
+        if let enclosingRange = self.startDateRange(in: mutBodyStr.string)?.enclosingRange {
+            mutBodyStr.replaceCharacters(in: enclosingRange, with: " ")
+        }
+        if let enclosingRange = self.hashtagRange(in: mutBodyStr.string)?.enclosingRange {
+            mutBodyStr.replaceCharacters(in: enclosingRange, with: " ")
+        }
+       
+        let body = mutBodyStr.string.trimmingCharacters(in: .whitespaces)
    
-        let task = Task(string: line, body: body, priority: priority!, hashtag: hashtag, dueDate: dueDate, startDate: startDate)
-        
+        let task = Task(string: line, body: body, priority: status, hashtag: hashtag, dueDate: dueDate, startDate: startDate, indent: indent)
+        print("status = \(status)")
         return task
     }
     
@@ -330,22 +324,22 @@ extension Parser {
     // -------- common function --------
     
     func textCheckingResult(for pattern: String, in line: String) -> NSTextCheckingResult? {
-        let range = NSString(string: line).range(of: line)
         guard let regex = try? NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines]) else { return nil }
-        return regex.firstMatch(in: line, options: [], range: range)
+        return regex.firstMatch(in: line, options: [], range: line.fullRange)
     }
     
     // -------- hashtag --------
     
-    func hashtag(in line: String) -> String? {
-        if let ( _, wordRange, _) = parseHashtag(in: line) {
-            return line.substring(from: wordRange)
+    func parseHashtag(in line: String) -> (hashtag: String, prefixRange: NSRange, wordRange: NSRange, enclosingRange: NSRange)? {
+        if let (prefixRange, wordRange, enclosingRange) = hashtagRange(in: line) {
+            let value = line.substring(from: wordRange)
+            return (value, prefixRange, wordRange, enclosingRange)
         }
         return nil
     }
     
-    func parseHashtag(in line: String) -> (prefixRange: NSRange, wordRange: NSRange, enclosingRange: NSRange)? {
-        let pattern = #"\B((#)(\w+))\B"#
+    func hashtagRange(in line: String) -> (prefixRange: NSRange, wordRange: NSRange, enclosingRange: NSRange)? {
+        let pattern = #"(\s?(#)(\w+)\s?)"#
         if let match = textCheckingResult(for: pattern, in: line) {
             let prefixRange = match.range(at: 2)
             let wordRange = match.range(at: 3)
@@ -357,7 +351,7 @@ extension Parser {
     
     func detectHashtag(in line: String, beginAt stringLocation: Int, forSelectionAt selectionLocation: Int) -> (element: Token, range: NSRange, enclosingRange: NSRange)? {
         let nSelLocation = selectionLocation - stringLocation
-        if let (prefixRange, wordRange, enclosingRange) = parseHashtag(in: line) {
+        if let (prefixRange, wordRange, enclosingRange) = hashtagRange(in: line) {
             if prefixRange.upperBound >= nSelLocation && wordRange.upperBound <= nSelLocation { 
                 return (.tag, wordRange, enclosingRange)
             }
@@ -367,8 +361,8 @@ extension Parser {
     
     // -------- task priority --------
     
-    func parsePriority(in line: String) -> (priority: TaskPriority, priorityRange: NSRange, enclosingRange: NSRange)? {
-        if let (priorityRange, enclosingRange) = priorityRange(in: line) {
+    func parseStatus(in line: String) -> (priority: TaskPriority, priorityRange: NSRange, enclosingRange: NSRange)? {
+        if let (priorityRange, enclosingRange) = statusRange(in: line) {
             let value = line.substring(from: priorityRange)
             switch value {
             case "x":
@@ -382,7 +376,7 @@ extension Parser {
         return nil
     }
     
-    func priorityRange(in line: String) -> (priorityRange: NSRange, enclosingRange: NSRange)? {
+    func statusRange(in line: String) -> (priorityRange: NSRange, enclosingRange: NSRange)? {
         let pattern = #"^\t*(\[(x|\s|\-|[A-Z])\])\s"#
         if let match = textCheckingResult(for: pattern, in: line) {
             let priorityRange = match.range(at: 2)
@@ -395,9 +389,11 @@ extension Parser {
     // -------- due date --------
     
     func parseDueDate(in line: String) -> (date: TaskDate, dateTimeRange: NSRange, enclosingRange: NSRange)? {
+        
         let array: [DateGranulity] = [.day, .month, .year, .time]
         if let (dateTimeRange, enclosingRange) = dueDateRange(in: line) {
             let str = line.substring(from: dateTimeRange)
+            print("dueDte = \(str)")
             let dateFormatter = DateFormatter()
             for granulity in array {
                 dateFormatter.dateFormat = granulity.format
@@ -406,11 +402,12 @@ extension Parser {
                 }
             }
         }
+        
         return nil
     }
     
     func dueDateRange(in line: String) -> (dateTimeRange: NSRange, enclosingRange: NSRange)? {
-        let pattern = #"\B(@due\((.+?)\))\B"#
+        let pattern = #"(\s?@due\((.+?)\)\s?)"#
         if let match = textCheckingResult(for: pattern, in: line) {
             let dateTimeRange = match.range(at: 2)
             let enclosingRange = match.range(at: 1)
@@ -432,13 +429,12 @@ extension Parser {
                     return (TaskDate(date: date, granulity: granulity), dateTimeRange, enclosingRange)
                 }
             }
-            return nil
         }
         return nil
     }
     
     func startDateRange(in line: String) -> (dateTimeRange: NSRange, enclosingRange: NSRange)? {
-        let pattern = #"\B(@start\((.+?)\))\B"#
+        let pattern = #"\b(@start\((.+?)\))\b"#
         if let match = textCheckingResult(for: pattern, in: line) {
             let dateTimeRange = match.range(at: 2)
             let enclosingRange = match.range(at: 1)

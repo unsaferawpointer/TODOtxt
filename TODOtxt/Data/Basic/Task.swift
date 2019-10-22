@@ -6,10 +6,7 @@
 //  Copyright © 2019 antoncherkasov. All rights reserved.
 //
 
-import Foundation
-import CoreData
-
-
+import Cocoa
 
 enum TaskPriority: Equatable {
     
@@ -32,17 +29,28 @@ struct TaskDate {
     
 }
 
+class SubTask {
+    
+}
 
-class Task: Equatable {
+class RootTask {
+    
+}
+
+class CustomOutLineView: NSOutlineView {
+    
+}
+
+class Task: Equatable, CustomStringConvertible {
     
     static func == (lhs: Task, rhs: Task) -> Bool {
         return lhs.string == rhs.string
     }
     
-    
+    let indent: Int
     let string: String
     let body: String
-    let tasks: [Task] = []
+    var tasks: [Task] = []
     
     let hashtag: String?
     let priority: TaskPriority
@@ -54,13 +62,28 @@ class Task: Equatable {
         return priority == .completed
     }
     
-    init(string: String, body: String, priority: TaskPriority = .uncompleted, hashtag: String? = nil, dueDate: TaskDate? = nil, startDate: TaskDate? = nil) {
+    init(string: String, body: String, priority: TaskPriority = .uncompleted, hashtag: String? = nil, dueDate: TaskDate? = nil, startDate: TaskDate? = nil, indent: Int) {
         self.string = string
         self.body = body
         self.priority = priority
         self.hashtag = hashtag
         self.dueDate = dueDate
         self.startDate = startDate
+        self.indent = indent
+    }
+    
+    var description: String {
+        var desc = "\(string)\n"
+        if tasks.isEmpty {
+            desc = "\(string)\n"
+        } else {
+            desc = "root: \(string)\n"
+        }
+        
+        for task in tasks {
+            desc.append(task.description)
+        }
+        return desc
     }
     
 }

@@ -63,7 +63,6 @@ public struct Bag<Element: Hashable & Comparable > {
     
     ///If anObject is present in the set, decrements the count associated with it and return nil. If the count is decremented to 0, anObject is removed from the set and return anObject.
     public mutating func remove(_ object: Element, occurrences: Int = 1) {
-        
         guard let currentCount = contents[object], currentCount >= occurrences else {
             preconditionFailure("Removed non-existent elements")
         }

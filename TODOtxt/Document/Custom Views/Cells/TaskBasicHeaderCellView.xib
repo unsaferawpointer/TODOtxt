@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="15400" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15400"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="TaskBasicHeaderCellView" customModule="TODOtxt" customModuleProvider="target">
+            <connections>
+                <outlet property="textField" destination="xPj-Qt-JHY" id="fgU-59-8qB"/>
+                <outlet property="view" destination="dSZ-oU-yRv" id="Kxz-X3-0ri"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView misplaced="YES" id="dSZ-oU-yRv">
+            <rect key="frame" x="0.0" y="0.0" width="460" height="36"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xPj-Qt-JHY">
+                    <rect key="frame" x="6" y="8" width="448" height="15"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" title="COMPLETED" id="Zd0-La-8w4">
+                        <font key="font" metaFont="systemMedium" size="12"/>
+                        <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="xPj-Qt-JHY" secondAttribute="trailing" constant="8" id="Os5-C1-8Tn"/>
+                <constraint firstAttribute="bottom" secondItem="xPj-Qt-JHY" secondAttribute="bottom" constant="8" id="Z5u-h0-uJq"/>
+                <constraint firstItem="xPj-Qt-JHY" firstAttribute="leading" secondItem="dSZ-oU-yRv" secondAttribute="leading" constant="8" id="lou-M8-jqz"/>
+                <constraint firstItem="xPj-Qt-JHY" firstAttribute="top" secondItem="dSZ-oU-yRv" secondAttribute="top" constant="8" id="yoK-P5-z7a"/>
+            </constraints>
+            <point key="canvasLocation" x="-16" y="108"/>
+        </customView>
+    </objects>
+</document>

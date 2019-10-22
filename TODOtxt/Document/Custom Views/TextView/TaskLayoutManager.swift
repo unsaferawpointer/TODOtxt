@@ -10,61 +10,26 @@ import Cocoa
 
 class TaskLayoutManager: NSLayoutManager {
     
-    /*
-    override init() {
-        super.init()
-        //self.typesetter = NSTypesetter()
-        self.glyphGenerator = NSGlyphGenerator()
-        self.backgroundLayoutEnabled = false
-    }
+
     
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        //self.typesetter = NSTypesetter()
-        self.glyphGenerator = NSGlyphGenerator()
-        self.backgroundLayoutEnabled = false
-    }*/
+    override func drawGlyphs(forGlyphRange glyphsToShow: NSRange, at origin: NSPoint) {
     
-    var selectionColor: NSColor {
-        return Preferences.shared.theme.selection
+        for index in glyphsToShow.location..<(glyphsToShow.location + glyphsToShow.length)  {
+            let characterIndex = characterIndexForGlyph(at: index)
+            //let char = textStorage?.mutableString.substring(with: NSRange(location: characterIndex, length: 1))
+            let char = textStorage?.mutableString.character(at: characterIndex)
+            if char == 0x0009 {
+                replaceGlyph(at: index, withGlyph: (NSFont(name: "IBM Plex Mono", size: 15.0)?.glyph(withName: "ntilde"))!)
+            }
+        }
+        
+        
+        
+        super.drawGlyphs(forGlyphRange: glyphsToShow, at: origin)
     }
     
   
     override func drawBackground(forGlyphRange glyphsToShow: NSRange, at origin: NSPoint) {
-        
-        /*
-        let characterRange = self.characterRange(forGlyphRange: glyphsToShow, actualGlyphRange: nil)
-        textStorage?.enumerateAttribute(NSAttributedString.Key("isHeader"), in: characterRange, options:[], using: { (value, range, stop) in
-            if let pinned = value as? Int, pinned == 1 {
-                let chRange = self.glyphRange(forCharacterRange: range, actualCharacterRange: nil)
-                let lineUsedRect = lineFragmentUsedRect(forGlyphAt: chRange.location, effectiveRange: nil)//lineFragmentRect(forGlyphAt: chRange.location, effectiveRange: nil)
-                let lineRect = lineFragmentRect(forGlyphAt: chRange.location, effectiveRange: nil)
-                let totalRect = NSRect(x: Int(lineRect.minX), y: Int(lineUsedRect.minY)-3, width: Int(lineRect.width), height: Int(lineUsedRect.height)+6)
-                
-                let path = NSBezierPath(roundedRect: totalRect, xRadius: 2.0, yRadius: 2.0)
-                
-                NSColor.systemOrange.setFill()
-                
-                //NSColor.separatorColor.setFill()
-                path.fill()
-                
-            } else if let pinned = value as? Int, pinned == 2 {
-                
-                
-                let chRange = self.glyphRange(forCharacterRange: range, actualCharacterRange: nil)
-                let lineUsedRect = lineFragmentUsedRect(forGlyphAt: chRange.location, effectiveRange: nil)//lineFragmentRect(forGlyphAt: chRange.location, effectiveRange: nil)
-                let lineRect = lineFragmentRect(forGlyphAt: chRange.location, effectiveRange: nil)
-                let totalRect = NSRect(x: Int(lineRect.minX), y: Int(lineUsedRect.minY)-3, width: 14, height: Int(lineUsedRect.height)+6)
-                
-                let path = NSBezierPath(roundedRect: totalRect, xRadius: 2.0, yRadius: 2.0)
-                
-                NSColor.systemOrange.setFill()
-                
-                //NSColor.separatorColor.setFill()
-                path.fill()
-            }
-        })*/
-        
         super.drawBackground(forGlyphRange: glyphsToShow, at: origin)
         
     }

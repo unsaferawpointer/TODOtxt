@@ -25,7 +25,7 @@ class FilterViewController: NSViewController {
     }
     
     @IBAction func buttonClicked(_ sender: Any) {
-        print(#function)
+        
         Preferences.shared.badgeFilter = predicateEditor.predicate
         print(predicateEditor.predicate?.predicateFormat)
     }

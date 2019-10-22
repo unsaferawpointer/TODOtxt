@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F900C45A23335ABB007C9FC0 /* FiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F900C45923335ABB007C9FC0 /* FiltersViewController.swift */; };
-		F91CC2CD23598F5A00C2825E /* TaskTimeDataCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F91CC2CC23598F5A00C2825E /* TaskTimeDataCellView.xib */; };
+		F91CC2CD23598F5A00C2825E /* TaskBasicHeaderCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F91CC2CC23598F5A00C2825E /* TaskBasicHeaderCellView.xib */; };
 		F91CC2CF2359FF5100C2825E /* NSRange Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F91CC2CE2359FF5100C2825E /* NSRange Extension.swift */; };
 		F93E5947231F526700266D92 /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93E5946231F526700266D92 /* FilterViewController.swift */; };
 		F940B0A72351D34200664043 /* IBMPlexMono-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F940B0A62351D34200664043 /* IBMPlexMono-SemiBold.ttf */; };
@@ -26,7 +26,6 @@
 		F95F8C742337E51600B86C15 /* DocumentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F95F8C732337E51600B86C15 /* DocumentController.swift */; };
 		F9721028234F304900608CAB /* LineFoldingTypesetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9721027234F304900608CAB /* LineFoldingTypesetter.swift */; };
 		F9755A65231DB87900A2FCBA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A64231DB87900A2FCBA /* AppDelegate.swift */; };
-		F9755A67231DB87900A2FCBA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A66231DB87900A2FCBA /* ViewController.swift */; };
 		F9755A69231DB87900A2FCBA /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A68231DB87900A2FCBA /* Document.swift */; };
 		F9755A6B231DB87A00A2FCBA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F9755A6A231DB87A00A2FCBA /* Assets.xcassets */; };
 		F9755A6E231DB87A00A2FCBA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F9755A6C231DB87A00A2FCBA /* Main.storyboard */; };
@@ -55,6 +54,7 @@
 		F9755AB5231DBEA500A2FCBA /* ItemCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9755AB3231DBEA500A2FCBA /* ItemCellView.xib */; };
 		F9755AB7231DBF0400A2FCBA /* TaskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755AB6231DBF0400A2FCBA /* TaskStorage.swift */; };
 		F9755AB9231DD6AB00A2FCBA /* Themes.plist in Resources */ = {isa = PBXBuildFile; fileRef = F9755AB8231DD6AB00A2FCBA /* Themes.plist */; };
+		F97E963D235C79A2009EB8F3 /* TaskBasicHeaderCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F97E963C235C79A2009EB8F3 /* TaskBasicHeaderCellView.swift */; };
 		F997D1F8233D42C700AE86BD /* RefreshableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F997D1F7233D42C700AE86BD /* RefreshableScrollView.swift */; };
 		F99CF91B234CCC0A00526612 /* IBMPlexMono-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F99CF91A234CCC0A00526612 /* IBMPlexMono-Light.ttf */; };
 		F99CF91D234CCE7F00526612 /* IBMPlexMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F99CF91C234CCE7F00526612 /* IBMPlexMono-Regular.ttf */; };
@@ -94,7 +94,7 @@
 
 /* Begin PBXFileReference section */
 		F900C45923335ABB007C9FC0 /* FiltersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersViewController.swift; sourceTree = "<group>"; };
-		F91CC2CC23598F5A00C2825E /* TaskTimeDataCellView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskTimeDataCellView.xib; sourceTree = "<group>"; };
+		F91CC2CC23598F5A00C2825E /* TaskBasicHeaderCellView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskBasicHeaderCellView.xib; sourceTree = "<group>"; };
 		F91CC2CE2359FF5100C2825E /* NSRange Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSRange Extension.swift"; sourceTree = "<group>"; };
 		F93E5946231F526700266D92 /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
 		F940B0A62351D34200664043 /* IBMPlexMono-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexMono-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -115,7 +115,6 @@
 		F9721027234F304900608CAB /* LineFoldingTypesetter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineFoldingTypesetter.swift; sourceTree = "<group>"; };
 		F9755A61231DB87900A2FCBA /* TODOtxt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TODOtxt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9755A64231DB87900A2FCBA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		F9755A66231DB87900A2FCBA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		F9755A68231DB87900A2FCBA /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
 		F9755A6A231DB87A00A2FCBA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F9755A6D231DB87A00A2FCBA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -146,6 +145,7 @@
 		F9755AB3231DBEA500A2FCBA /* ItemCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ItemCellView.xib; sourceTree = "<group>"; };
 		F9755AB6231DBF0400A2FCBA /* TaskStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskStorage.swift; sourceTree = "<group>"; };
 		F9755AB8231DD6AB00A2FCBA /* Themes.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Themes.plist; sourceTree = "<group>"; };
+		F97E963C235C79A2009EB8F3 /* TaskBasicHeaderCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskBasicHeaderCellView.swift; sourceTree = "<group>"; };
 		F997D1F7233D42C700AE86BD /* RefreshableScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshableScrollView.swift; sourceTree = "<group>"; };
 		F99CF91A234CCC0A00526612 /* IBMPlexMono-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexMono-Light.ttf"; sourceTree = "<group>"; };
 		F99CF91C234CCE7F00526612 /* IBMPlexMono-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexMono-Regular.ttf"; sourceTree = "<group>"; };
@@ -203,9 +203,10 @@
 			children = (
 				F940B0E523572CED00664043 /* TaskHeaderCellView.swift */,
 				F940B0E723572CFF00664043 /* TaskHeaderCellView.xib */,
+				F97E963C235C79A2009EB8F3 /* TaskBasicHeaderCellView.swift */,
+				F91CC2CC23598F5A00C2825E /* TaskBasicHeaderCellView.xib */,
 				F940B0E9235732EE00664043 /* TaskDataCellView.swift */,
 				F940B0EB235732FD00664043 /* TaskDataCellView.xib */,
-				F91CC2CC23598F5A00C2825E /* TaskTimeDataCellView.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -238,7 +239,6 @@
 				F9755A98231DBCE300A2FCBA /* Util */,
 				F9755A84231DBC6C00A2FCBA /* Extensions */,
 				F9755A78231DBB4800A2FCBA /* Document */,
-				F9755A66231DB87900A2FCBA /* ViewController.swift */,
 				F9755A6A231DB87A00A2FCBA /* Assets.xcassets */,
 				F9755A6C231DB87A00A2FCBA /* Main.storyboard */,
 				F9755A6F231DB87A00A2FCBA /* Info.plist */,
@@ -257,8 +257,8 @@
 				F9755A64231DB87900A2FCBA /* AppDelegate.swift */,
 				F9755A68231DB87900A2FCBA /* Document.swift */,
 				F95F8C732337E51600B86C15 /* DocumentController.swift */,
-				F9755A81231DBC3900A2FCBA /* Custom Views */,
 				F9755A79231DBB5A00A2FCBA /* View Controllers */,
+				F9755A81231DBC3900A2FCBA /* Custom Views */,
 			);
 			path = Document;
 			sourceTree = "<group>";
@@ -287,7 +287,6 @@
 			isa = PBXGroup;
 			children = (
 				F940B0E223572C7F00664043 /* Cells */,
-				F9865CC52343E2CC00EB846D /* TaskDocumentView */,
 				F9755A8B231DBCC000A2FCBA /* TextView */,
 			);
 			path = "Custom Views";
@@ -315,7 +314,6 @@
 				F9755A8F231DBCC000A2FCBA /* DatePopover.swift */,
 				F9755A90231DBCC000A2FCBA /* TaskRulerView.swift */,
 				F99FEB68233A177300336790 /* InfoTextField.swift */,
-				F997D1F7233D42C700AE86BD /* RefreshableScrollView.swift */,
 				F99CF91E234DEE5F00526612 /* TaskTextAttachmentCell.swift */,
 			);
 			path = TextView;
@@ -385,9 +383,11 @@
 				F9755A96231DBCD500A2FCBA /* BadgeView.swift */,
 				F9755A82231DBC5D00A2FCBA /* BackgroundView.swift */,
 				F9755A9B231DBCF700A2FCBA /* SortedArray.swift */,
+				F997D1F7233D42C700AE86BD /* RefreshableScrollView.swift */,
 				F9755AB1231DBE7300A2FCBA /* cells */,
 				F99CF920234E1BC700526612 /* LineFoldingGlyphGenerator.swift */,
 				F9721027234F304900608CAB /* LineFoldingTypesetter.swift */,
+				F9865CC52343E2CC00EB846D /* TaskDocumentView */,
 			);
 			path = Temp;
 			sourceTree = "<group>";
@@ -487,7 +487,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F91CC2CD23598F5A00C2825E /* TaskTimeDataCellView.xib in Resources */,
+				F91CC2CD23598F5A00C2825E /* TaskBasicHeaderCellView.xib in Resources */,
 				F9C323CD2343CECB001CB6FF /* TaskDocumentView.xib in Resources */,
 				F9755AB9231DD6AB00A2FCBA /* Themes.plist in Resources */,
 				F940B0EC235732FD00664043 /* TaskDataCellView.xib in Resources */,
@@ -533,7 +533,7 @@
 				F9755A7B231DBBD400A2FCBA /* TextViewController.swift in Sources */,
 				F95F8C742337E51600B86C15 /* DocumentController.swift in Sources */,
 				F9755AA5231DBD2700A2FCBA /* Comparator.swift in Sources */,
-				F9755A67231DB87900A2FCBA /* ViewController.swift in Sources */,
+				F97E963D235C79A2009EB8F3 /* TaskBasicHeaderCellView.swift in Sources */,
 				F99CF921234E1BC700526612 /* LineFoldingGlyphGenerator.swift in Sources */,
 				F9755A9C231DBCF700A2FCBA /* Bag.swift in Sources */,
 				F99CF91F234DEE5F00526612 /* TaskTextAttachmentCell.swift in Sources */,

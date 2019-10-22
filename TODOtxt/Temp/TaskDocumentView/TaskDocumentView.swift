@@ -8,16 +8,12 @@
 
 import Cocoa
 
-protocol TaskDocumentViewDelegate: class {
-    func dataDidChange()
-}
-
 class TaskDocumentView: NSView {
     
     let nibName = "TaskDocumentView"
     // ********** Updating **********
     
-    weak var delegate: TaskDocumentViewDelegate?
+    weak var delegate: TaskTextViewControllerDelegate?
 
     @IBOutlet weak var view: NSView!
     @IBOutlet weak var textView: TaskTextView!
@@ -28,7 +24,6 @@ class TaskDocumentView: NSView {
     var taskStorage: TaskStorage = TaskStorage()
     var loadQueue = OperationQueue()
     var sortQueue = OperationQueue()
-    var grouping: Grouping = Grouping()
     var isRefreshing = false {
         didSet {
             if isRefreshing {
@@ -65,9 +60,6 @@ class TaskDocumentView: NSView {
         
         self.view?.frame = contentFrame
         self.addSubview(self.view!)
-        
-        // ---------- refreshable scrollview ----------
-        scrollView.delegate = self
         
         // ---------- textview ----------
         textView.delegate = self
@@ -115,7 +107,7 @@ class TaskDocumentView: NSView {
         
         textView.set(text: str)
         
-        
+        /*
         loadQueue.cancelAllOperations()
         isRefreshing = true
         let operation = ParserOperation(string: str)
@@ -136,80 +128,12 @@ class TaskDocumentView: NSView {
         }
         
         loadQueue.addOperation(operation)
-        
+        */
         
     }
     
-    /*
-    // ---------- sorting ----------
-    @IBAction func sort(_ sender: NSMenuItem) {
-        
-        
-        guard !isRefreshing else { return }
-        
-        self.isRefreshing = true
-        
-        switch sender.identifier!.rawValue {
-        case "project":
-            grouping = .project
-        case "context":
-            grouping = .context
-        case "priority":
-            grouping = .priority
-        case "due_date":
-            grouping = .date
-        case "status":
-            grouping = .status
-        case "due_date_state":
-            grouping = .commonDateStyle
-        default:
-            break
-        }
-        
-        
-        
-        let operation2 = TextOperation(storage: taskStorage.storage)
-        operation2.grouping = grouping
-        //operation2.addDependency(operation)
-        operation2.completionBlock = { [weak self] in
-            DispatchQueue.main.async {
-                self?.isRefreshing = false
-                let text = operation2.string
-                self?.textView.set(text: text)
-            }
-            
-        }
-        
-        DispatchQueue.global(qos: .userInteractive).async {
-            operation2.start()
-        }
- 
-        
-    }*/
-    
     @IBAction func removeCompleted(_ sender: Any?) {
-        guard !isRefreshing else { return }
 
-        /*
-        self.isRefreshing = true
-        
-        let operation2 = TextOperation(storage: taskStorage.storage)
-        operation2.grouping = grouping
-        //operation2.addDependency(operation)
-        operation2.completionBlock = { [weak self] in
-            DispatchQueue.main.async {
-                self?.isRefreshing = false
-                let text = operation2.string
-                self?.textView.set(text: text)
-            }
-            
-        }
-        
-        DispatchQueue.global(qos: .userInteractive).async { [weak self] in
-            self?.taskStorage.remove(by: NSPredicate(format: "status != nil", argumentArray: nil))
-            operation2.start()
-        }
- */
     }
     
     
@@ -250,6 +174,7 @@ extension TaskDocumentView: NSLayoutManagerDelegate {
         //properties[0] = .null
         //properties[1] = .null
         //properties[2] = .null
+        
         
         layoutManager.setGlyphs(newGlyphs, properties: props, characterIndexes: charIndexes, font: aFont, forGlyphRange: glyphRange)
         return glyphRange.length
@@ -320,27 +245,3 @@ extension TaskDocumentView: TaskTextViewDelegate {
     
 }
 
-extension TaskDocumentView: RefreshableScrollViewDelegate {
-    
-    func willStartUpdate() {
-        /*
-        self.isRefreshing = true
-        let operation2 = TextOperation(storage: taskStorage.storage)
-        operation2.grouping = grouping
-        //operation2.addDependency(operation)
-        operation2.completionBlock = { [weak self] in
-            DispatchQueue.main.async {
-                self?.isRefreshing = false
-                let text = operation2.string
-                self?.textView.set(text: text)
-            }
-            
-        }
-        
-        DispatchQueue.global(qos: .userInteractive).async {
-            operation2.start()
-        }
- */
-    }
-    
-}

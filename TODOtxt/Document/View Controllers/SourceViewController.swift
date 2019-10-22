@@ -8,153 +8,156 @@
 
 import Cocoa
 
-enum Group: Hashable {
+enum Group: Hashable, Comparable {
     
-    case date(value: String)
-    case completion(value: Bool)
-    case pinned
+    static func < (lhs: Group, rhs: Group) -> Bool {
+        if lhs.priority.0 == rhs.priority.0 {
+            return lhs.priority.1 < lhs.priority.1
+        } else {
+            return lhs.priority.0 < rhs.priority.0
+        }
+    }
+    
+    case overdue
+    case today
+    case tomorrow
+    case date(year: Int, month: Int, day: Int)
+    case completed
     case none
     
-    var title: String {
+    var priority: (typePriority: Int, valuePriority: Int) {
         switch self {
-        case .completion(let value):
-            return value ? "completed" : "uncompleted"
-        case .date(let value):
-            return String(value.dropFirst(4))
-        case .pinned:
-            return "pinned"
+        case .overdue:
+            return (1,0)
+        case .today:
+            return (2,0)
+        case .tomorrow:
+            return (3,0)
+        case .date(let year, let month, let day):
+            let value = year*10000+month*100+day
+            return (4,value)
         case .none:
-            return "w/o"
-        }
-    }
-    
-    var priority: String {
-        switch self {
-        case .pinned:
-            return "0"
-        case .date(let value):
-            return value
-        case .none:
-            return "2"
-        case .completion(let value):
-            return value ? "3" : "1"
+            return (5,0)
+        case .completed:
+            return (6,0)
         }
     }
     
 }
 
-
-class Grouping {
+class TableGroup {
     
-    func group(for task: Task) -> Group {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        
-        guard let date = task.dueDate?.date as Date? else { return .none }
-        
-        let calendar = NSCalendar.current
-        let today = Date()
-        let tomorrow = NSCalendar.current.date(byAdding: .day, value: 1, to: today)!
-        
-        if calendar.compare(today, to: date, toGranularity: .day) == .orderedDescending {
-            return .date(value: "1_0_overdue")
-        } else if calendar.compare(today, to: date, toGranularity: .day) == .orderedSame {
-            return .date(value: "1_1_today")
-        } else if calendar.compare(tomorrow, to: date, toGranularity: .day) == .orderedSame {
-            return .date(value: "1_2_tomorrow")
-        } else if calendar.compare(today, to: date, toGranularity: .weekOfYear) == .orderedSame {
-            return .date(value: "1_3_current week")
-        } else if calendar.compare(today, to: date, toGranularity: .month) == .orderedSame {
-            return .date(value: "1_4_current month")
-        } else if calendar.compare(today, to: date, toGranularity: .year) == .orderedSame {
-            return .date(value: "1_5_current year")
-        } else {
-            return .date(value: "1_6_later")
-        }
-        
-        return .none
-    }
-}
-
-class TasksGroup {
-    
-    var title: String
+    var value: Group
     var tasks: [Task]
     
-    init(_ title: String, tasks: [Task]) {
-        self.title = title
+    init(value: Group, tasks: [Task]) {
+        self.value = value
         self.tasks = tasks
     }
-    
 }
 
 class SourceViewController: NSViewController {
     
-    var groups: [TasksGroup] = []
-    var filter: NSPredicate = NSPredicate.init(value: true)
-    var grouping: Grouping = Grouping()
+    var document: Document {
+        return NSDocumentController.shared.document(for: view.window!) as! Document
+    }
+    
+    var taskStorage: TaskStorage?
+    
+    var data: [TableGroup] = []
     
     @IBOutlet weak var outlineView: NSOutlineView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(#function)
+        
         // Do view setup here.
         // -------- Setup Outline View --------
         outlineView.dataSource = self
         outlineView.delegate = self
         
-        let text = 
-        """
-        Задания, которые не требуют срочности.
-
-        Книги:
-        [x] Одноэтажная америка @everywhere
-        [ ] Игроку приготовиться @everywhere
-
-        Путешествия:
-        [x] Аквапарк в тайланде
-        [ ] Поездка на шри - ланку в ноябре @due(2019-11-07)
-
-        Заведения:
-        [ ] Бар «на связи» @moscow
-        [ ] Ресторан «в темноте» @moscow
-
-        Остальное:
-        [C] Водительские права @due(2020-06-01)
-        [B] Посещение стоматолога @due(2020-01-10)
-        """
-        let parser = Parser()
-        
-        let tasks = parser.parse(string: text)
-        reload(tasks)
-        outlineView.reloadData()
-        for group in groups {
-            outlineView.expandItem(group, expandChildren: true)
-        }
+        outlineView.autoresizesOutlineColumn = true
+        outlineView.sizeLastColumnToFit()
         
     }
     
     func reload(_ tasks: [Task]) {
-        let array = NSArray(array: tasks)
-        let filtered = array.filtered(using: filter) as! [Task]
         
-        let dictionary = Dictionary(grouping: filtered) { (element) -> Group in
-            
-            return grouping.group(for: element)
+        
+        let dictionary = Dictionary(grouping: tasks) { (element) -> Group in
+            return group(for: element)
         }
         
-        let data = dictionary.sorted { (lhs, rhs) -> Bool in
+        var tempData = dictionary.sorted { (lhs, rhs) -> Bool in
             return lhs.key.priority < rhs.key.priority
         }
         
-        var newGroups = [TasksGroup]()
-        for (key, value) in data {
-            let taskGroup = TasksGroup(key.title, tasks: value)
-            newGroups.append(taskGroup)
-        }
-        groups = newGroups
+        data = tempData.compactMap({ ( group, tasks) -> TableGroup? in
+            return TableGroup(value: group, tasks: tasks)
+        })
         
+    }
+    
+    func group(for task: Task) -> Group {
+           
+           guard task.isCompleted == false else { return .completed }
+           
+           guard let date = task.dueDate?.date else { return .none }
+           
+           let calendar = NSCalendar.current
+           
+           let today = Date()
+           let tomorrow = NSCalendar.current.date(byAdding: .day, value: 1, to: today)!
+           
+           if calendar.compare(today, to: date, toGranularity: .day) == .orderedDescending {
+               return .overdue
+           } else if calendar.compare(today, to: date, toGranularity: .day) == .orderedSame {
+               return .today
+           } else if calendar.compare(tomorrow, to: date, toGranularity: .day) == .orderedSame {
+               return .tomorrow
+           } 
+           
+           let year = calendar.component(.year, from: date)
+           let month = calendar.component(.month, from: date)
+           let day = calendar.component(.day, from: date)
+           
+           return .date(year: year, month: month, day: day)
+    
+       }
+    
+    override func viewWillLayout() {
+        print(#function)
+        
+        
+        let text = """
+#Путешествия:
+[ ] Rushguard @due(2019-09-08)
+[ ] Surf-Zink WaterDuck @due(2020-11-23) в магазине «Траектория» #москва
+
+#Быт:
+[ ] Краска для ткани (бирюзовая)
+
+#Техника:
+[ ] Купить батарейную ручку BG-E6 #везде
+[ ] Заказать подставку под MacBook @due(2020-01-05 11:35)
+[ ] Заказать подставку2 под MacBook @due(2020-02-05 16:00)
+
+#Здоровье:
+[ ] Миноксидил  @due(2019-12-05) #москва
+
+#Парфюмерия:
+[ ] Lalique Lion 100ml @due(2019-10-20)
+[x] Lalique Lion 100ml @due(2019-10-20)
+[ ] Lalique Encre Noire Sport 100ml
+"""
+        let parser = Parser()
+        let tasks = parser.parse(string: text)
+        reload(tasks)
+        outlineView.reloadData()
+        
+        for group in data {
+            outlineView.expandItem(group, expandChildren: true)
+        }
     }
     
 }
@@ -162,22 +165,23 @@ class SourceViewController: NSViewController {
 extension SourceViewController: NSOutlineViewDataSource {
     
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
-        if let group = item as? TasksGroup {
+        if let group = item as? TableGroup {
             return group.tasks.count
         }
-        return groups.count
+        
+        return data.count
     }
     
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
-        if let group = item as? TasksGroup {
+        if let group = item as? TableGroup {
             return group.tasks[index]
         }
-        return groups[index]
+        return data[index]
     }
     
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
         
-        if let _ = item as? TasksGroup {
+        if let _ = item as? TableGroup {
             return true
         }
         
@@ -187,21 +191,57 @@ extension SourceViewController: NSOutlineViewDataSource {
 
 extension SourceViewController: NSOutlineViewDelegate {
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
-        let headerID = NSUserInterfaceItemIdentifier(rawValue: "HeaderCell")
+        let basicHeaderID = NSUserInterfaceItemIdentifier(rawValue: "BasicHeaderCell")
+        let dateHeaderID = NSUserInterfaceItemIdentifier(rawValue: "DateHeaderCell")
         let dataCellID = NSUserInterfaceItemIdentifier(rawValue: "DataCell")
-        print("item = \(item)")
-        if let group = item as? TasksGroup {
-            if let cell = outlineView.makeView(withIdentifier: headerID, owner: nil) as? TaskHeaderCellView {
-                //cell.textField?.stringValue = group.title
-                return cell
-            }
+        
+        if let tableGroup = item as? TableGroup {
+            
+                switch tableGroup.value {
+                case .overdue:
+                    let cell = outlineView.makeView(withIdentifier: basicHeaderID, owner: nil) as! TaskBasicHeaderCellView
+                    cell.textField?.stringValue = "Overdue".uppercased()
+                    return cell
+                case .today:
+                    let cell = outlineView.makeView(withIdentifier: basicHeaderID, owner: nil) as! TaskBasicHeaderCellView
+                    cell.textField?.stringValue = "Today".uppercased()
+                    return cell
+                case .tomorrow:
+                    let cell = outlineView.makeView(withIdentifier: basicHeaderID, owner: nil) as! TaskBasicHeaderCellView
+                    cell.textField?.stringValue = "Tomorrow".uppercased()
+                    return cell
+                case .date(let year, let month, let day):
+                    
+                    let cell = outlineView.makeView(withIdentifier: dateHeaderID, owner: nil) as! TaskHeaderCellView
+                    cell.dateLabel.stringValue = (day - 10 > 0) ? "\(day)" : "0\(day)"
+                    cell.monthLabel.stringValue = Calendar.current.monthSymbols[month-1].uppercased()
+                    return cell
+                case .none:
+                    let cell = outlineView.makeView(withIdentifier: basicHeaderID, owner: nil) as! TaskBasicHeaderCellView
+                    cell.textField?.stringValue = "Without date".uppercased()
+                    return cell
+                case .completed:
+                    let cell = outlineView.makeView(withIdentifier: basicHeaderID, owner: nil) as! TaskBasicHeaderCellView
+                    cell.textField?.stringValue = "Completed".uppercased()
+                    return cell
+                }
+            
         } else if let task = item as? Task {
             if let cell = outlineView.makeView(withIdentifier: dataCellID, owner: nil) as? TaskDataCellView {
+                
                 cell.textField?.stringValue = task.body
                 cell.statusCheckbox.state = task.isCompleted ? .on : .off
-                if let context = task.hashtag {
-                    cell.secondaryLabel.stringValue = context
-                    cell.secondaryLabel.isHidden = false
+                cell.textField?.textColor = task.isCompleted ? .secondaryLabelColor : .textColor
+                
+                let formatter = DateFormatter()
+                formatter.dateFormat = "hh:mm"
+                if let taskDate = task.dueDate {
+                    if taskDate.granulity == .time {
+                        cell.secondaryLabel.stringValue = formatter.string(from: taskDate.date)
+                        cell.secondaryLabel.isHidden = false
+                    } else {
+                        cell.secondaryLabel.isHidden = true
+                    }
                 } else {
                     cell.secondaryLabel.isHidden = true
                 }
@@ -212,5 +252,26 @@ extension SourceViewController: NSOutlineViewDelegate {
         
         return nil
         
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, isGroupItem item: Any) -> Bool {
+        if let _ = item as? TableGroup {
+            return false
+        }
+        
+        return false    
+        
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, shouldSelectItem item: Any) -> Bool {
+        return true
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, shouldCollapseItem item: Any) -> Bool {
+        return false
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, shouldShowOutlineCellForItem item: Any) -> Bool {
+        return false
     }
 }
