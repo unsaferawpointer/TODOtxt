@@ -20,6 +20,8 @@ class TaskTextStorage: NSTextStorage {
     weak var taskDelegate: TaskTextStorageDelegate?
     var parser: Parser = Parser()
     
+    var hasChanged = false
+    
     var observeChanging = true
     
     override var string: String {
@@ -38,7 +40,7 @@ class TaskTextStorage: NSTextStorage {
         
         let nsstring = NSString(string: str)
         let delta = nsstring.length - range.length
-        
+        hasChanged = true
         beginEditing()
         if observeChanging { toRemove(editedRange: range, with: delta) }
         backingStore.replaceCharacters(in: range, with: str)
@@ -55,7 +57,13 @@ class TaskTextStorage: NSTextStorage {
     }
     
     override func processEditing() {
-        highlight(in: editedRange)
+        print(#function)
+        
+        
+        if hasChanged {
+            highlight(in: editedRange)
+        }
+        hasChanged = false
         super.processEditing()
     }
     
@@ -101,8 +109,8 @@ extension TaskTextStorage {
         let lastLineRange = backingStore.mutableString.lineRange(for: extendedRange)
         let fullRange = NSUnionRange(firstLineRange, lastLineRange)
         
-        parser.highlight(theme: theme, backingStorage: backingStore, in: fullRange)
-        
+        //parser.highlight(theme: theme, backingStorage: backingStore, in: fullRange)
+        parser.parseGroups(backingStorage: backingStore, extendedRange: fullRange)
     }
     
 }

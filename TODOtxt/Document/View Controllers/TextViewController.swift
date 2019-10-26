@@ -36,12 +36,17 @@ class TextViewController: NSViewController {
         // ---------- textview ----------
         textView.delegate = self
         textView.autocompletionDelegate = self
-        textView.font = NSFont(name: "IBM Plex Mono", size: 15.0)
+        textView.font = NSFont(name: "IBM Plex Mono", size: 17.0)
         textView.insertionPointColor = NSColor.alert
-        //textView.textContainer?.replaceLayoutManager(TaskLayoutManager())
-        textView.layoutManager?.allowsNonContiguousLayout = false
+        let layoutManager = TaskLayoutManager()
+        layoutManager.delegate = self
+        textView.textContainer?.replaceLayoutManager(layoutManager)
+        textView.layoutManager?.allowsNonContiguousLayout = true
         //textView.layoutManager?.showsControlCharacters = true
         //textView.layoutManager?.showsInvisibleCharacters = true
+        textView.linkTextAttributes = [NSAttributedString.Key.foregroundColor : NSColor.systemOrange, .cursor : NSCursor.pointingHand]
+        
+        
         
         // ---------- text storage ----------
         let textStorage = TaskTextStorage()
@@ -97,6 +102,36 @@ extension TextViewController: TaskTextStorageDelegate {
     }
 }
 
+extension TextViewController: NSLayoutManagerDelegate {
+    
+    func layoutManager(_ layoutManager: NSLayoutManager, shouldUse action: NSLayoutManager.ControlCharacterAction, forControlCharacterAt charIndex: Int) -> NSLayoutManager.ControlCharacterAction {
+        if let value = layoutManager.textStorage!.attribute(.isCollapsed, at: charIndex, effectiveRange: nil) as? Int, value == 1 {
+            return .zeroAdvancement
+        }
+        return action
+    }
+    
+    func layoutManager(_ layoutManager: NSLayoutManager, shouldGenerateGlyphs glyphs: UnsafePointer<CGGlyph>, properties props: UnsafePointer<NSLayoutManager.GlyphProperty>, characterIndexes charIndexes: UnsafePointer<Int>, font aFont: NSFont, forGlyphRange glyphRange: NSRange) -> Int {
+        
+        let properties = UnsafeMutablePointer<NSLayoutManager.GlyphProperty>(mutating: props)
+        
+        for i in 0..<glyphRange.length {
+            let characterIndex = charIndexes[i]
+            if let value = layoutManager.textStorage!.attribute(.isCollapsed, at: characterIndex, effectiveRange: nil) as? Int, value == 1 {
+                print("charIndex = \(characterIndex) is collapsed")
+                properties[characterIndex] = .null
+            }
+        }
+        //properties[0] = .null
+        //properties[1] = .null
+        //properties[2] = .null
+        layoutManager.setGlyphs(glyphs, properties: properties, characterIndexes: charIndexes, font: aFont, forGlyphRange: glyphRange)
+        
+        return glyphRange.length
+    }
+    
+}
+
 extension TextViewController: NSTextStorageDelegate, NSTextViewDelegate {
     
     // ******** Text Storage Delegate ********
@@ -118,6 +153,41 @@ extension TextViewController: NSTextStorageDelegate, NSTextViewDelegate {
     func textView(_ textView: NSTextView, shouldChangeTextIn affectedCharRange: NSRange, replacementString: String?) -> Bool {
         
         return true
+    }
+    
+    func textView(_ textView: NSTextView, clickedOnLink link: Any, at charIndex: Int) -> Bool {
+        print("clicked link at \(charIndex)")
+        let parser = Parser()
+        if let lineRange = textView.textStorage?.mutableString.lineRange(for: NSRange(location: charIndex, length: 0)) {
+            
+            let lineString = textView.string.substring(from: lineRange)
+            print(lineString)
+            let lineIndent = parser.parseTask(for: lineString)!.indent
+            print("lineIndent = \(lineIndent)")
+            let length = textView.string.count - lineRange.upperBound
+            let endRange = NSRange(location: lineRange.upperBound, length: length)
+            print("other part = \(textView.string.substring(from: endRange))")
+            var upperBoundOfLastTask: Int?
+            textView.textStorage?.mutableString.enumerateSubstrings(in: endRange, options: .byLines, using: { (substring, range, enclosingRange, stop) in
+                print("substring = \(substring!)")
+                if let task = parser.parseTask(for: substring!), lineIndent < task.indent {
+                    upperBoundOfLastTask = enclosingRange.upperBound
+                    print("subtask = \(task.string)")
+                    print("indent = \(task.indent)")
+                } else {
+                    stop.pointee = ObjCBool(true)
+                }
+            })
+            
+            if let end = upperBoundOfLastTask {
+                let foldingRange = NSRange(location: lineRange.upperBound, length: end - lineRange.upperBound)
+                print("foldingRAnge = \(foldingRange)")
+                //textView.textStorage!.addAttribute(.isCollapsed, value: 1, range: foldingRange)
+                //textView.textStorage!.addAttribute(.foregroundColor, value: NSColor.red, range: foldingRange)
+            }
+            
+        }
+        return false
     }
     
 }

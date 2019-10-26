@@ -308,7 +308,6 @@
 			children = (
 				F99FEB6A233CB41F00336790 /* TaskLayoutManager.swift */,
 				F9755A8D231DBCC000A2FCBA /* TaskTextView.swift */,
-				F9755AB6231DBF0400A2FCBA /* TaskStorage.swift */,
 				F9755AAF231DBE0800A2FCBA /* TaskTextStorage.swift */,
 				F9755A8E231DBCC000A2FCBA /* TablePopover.swift */,
 				F9755A8F231DBCC000A2FCBA /* DatePopover.swift */,
@@ -384,6 +383,7 @@
 				F9755A82231DBC5D00A2FCBA /* BackgroundView.swift */,
 				F9755A9B231DBCF700A2FCBA /* SortedArray.swift */,
 				F997D1F7233D42C700AE86BD /* RefreshableScrollView.swift */,
+				F9755AB6231DBF0400A2FCBA /* TaskStorage.swift */,
 				F9755AB1231DBE7300A2FCBA /* cells */,
 				F99CF920234E1BC700526612 /* LineFoldingGlyphGenerator.swift */,
 				F9721027234F304900608CAB /* LineFoldingTypesetter.swift */,

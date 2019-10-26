@@ -8,14 +8,10 @@
 
 import Cocoa
 
-enum TaskPriority: Equatable {
-    
+enum TaskStatus: Equatable {
     case uncompleted
     case completed
-    case hasPriority(value: String)
-    
 }
-
 
 struct TaskDate {
     
@@ -37,10 +33,6 @@ class RootTask {
     
 }
 
-class CustomOutLineView: NSOutlineView {
-    
-}
-
 class Task: Equatable, CustomStringConvertible {
     
     static func == (lhs: Task, rhs: Task) -> Bool {
@@ -53,7 +45,7 @@ class Task: Equatable, CustomStringConvertible {
     var tasks: [Task] = []
     
     let hashtag: String?
-    let priority: TaskPriority
+    let priority: TaskStatus
     
     let dueDate: TaskDate?
     let startDate: TaskDate?
@@ -62,7 +54,7 @@ class Task: Equatable, CustomStringConvertible {
         return priority == .completed
     }
     
-    init(string: String, body: String, priority: TaskPriority = .uncompleted, hashtag: String? = nil, dueDate: TaskDate? = nil, startDate: TaskDate? = nil, indent: Int) {
+    init(string: String, body: String, priority: TaskStatus = .uncompleted, hashtag: String? = nil, dueDate: TaskDate? = nil, startDate: TaskDate? = nil, indent: Int) {
         self.string = string
         self.body = body
         self.priority = priority

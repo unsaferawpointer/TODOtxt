@@ -8,32 +8,6 @@
 
 import Cocoa
 
-struct PriorityArray {
-    let array: [String] = ["A","B","C","D","E","F","G","H","I","K","L","M","N","O","P","Q","R","S","T","V","X", "Y","Z"]
-    
-    func element(before otherElement: String, alternative: String) -> String {
-        if let index = array.firstIndex(of: otherElement), index > 0 {
-            return array[index - 1]
-        }
-        return alternative
-    }
-    
-    func element(after otherElement: String, alternative: String) -> String {
-        if let index = array.firstIndex(of: otherElement), index < array.count - 1 {
-            return array[index + 1]
-        }
-        return alternative
-    }
-    
-    var first: String {
-        return array.first!
-    }
-    
-    var last: String {
-        return array.last!
-    }
-}
-
 protocol TaskTextViewDelegate: class {
     func taskTextView(for element: Token) -> [String]
 }
@@ -84,8 +58,6 @@ class TaskTextView: NSTextView {
     // ********** Popovers **********
     
     var currentPopover: AutocompletionPopover?
-    
-    
     
     // ******** Key event handling ********
     
@@ -189,18 +161,19 @@ class TaskTextView: NSTextView {
         //print("lineRange = \(lineRange)")
         if selRange.length == 0 {
             
-            let pattern = #"^\t*(\[(x|\s|\-|[A-Z])\]\s).*"#
+            let pattern = #"^(\t*((x|\*|-)\s)).*"#
             let regex = try! NSRegularExpression(pattern: pattern, options: .anchorsMatchLines)
-            let lineStr = string.substring(from: lineRange)
             //print("firstTask = \(lineStr)")
-            if let result = regex.firstMatch(in: string, options: [], range: lineRange), result.range(at: 1).upperBound <= location {
+            if let result = regex.firstMatch(in: string, options: [], range: lineRange), result.range(at: 2).upperBound <= location {
                 //print("location = \(location)")
+                let indent = result.range(at: 2).location - lineRange.location
                 //print("upperRange = \(result.range(at:1).upperBound)")
-                if result.range(at: 1).upperBound == location {
+                if result.range(at: 2).upperBound == location {
                     replaceCharacters(in: result.range(at:1), with: "")
                     
                 } else {
-                    replaceCharacters(in: NSRange(location: selRange.upperBound, length: 0), with: "\n[ ] ")
+                    let array = Array<String>.init(repeating: "\t", count: indent)
+                    replaceCharacters(in: NSRange(location: selRange.upperBound, length: 0), with: "\n\(array.joined())- ")
                 }
             } else {
                 super.insertNewline(sender)
@@ -221,15 +194,15 @@ class TaskTextView: NSTextView {
         //print("lineRange = \(lineRange)")
         if selRange.length == 0 {
             
-            let pattern = #"^\t*(\[(x|\s|\-|[A-Z])\]\s).*"#
+            let pattern = #"^(\t*((x|\*|-)\s)).*"#
             let regex = try! NSRegularExpression(pattern: pattern, options: .anchorsMatchLines)
             let lineStr = string.substring(from: lineRange)
             //print("firstTask = \(lineStr)")
-            if let result = regex.firstMatch(in: string, options: [], range: lineRange), result.range(at: 1).upperBound <= location {
+            if let result = regex.firstMatch(in: string, options: [], range: lineRange), result.range(at: 2).upperBound <= location {
                 //print("location = \(location)")
                 //print("upperRange = \(result.range(at:1).upperBound)")
-                if result.range(at: 1).upperBound == location {
-                    replaceCharacters(in: result.range(at:1), with: "")
+                if result.range(at: 2).upperBound == location {
+                    replaceCharacters(in: NSRange(location: result.range(at: 1).location, length: 0), with: "\t")
                     
                 } else {
                     let range = NSRange(location: lineRange.location, length: 0)
@@ -264,10 +237,6 @@ class TaskTextView: NSTextView {
         if menuItem.action == #selector(toggleCompletion(_:)) {
             return isSingleTaskSelection()
         } else if menuItem.action == #selector(removeLines(_:)) {
-            return isSingleTaskSelection()
-        } else if menuItem.action == #selector(encreasePriority(_:)) {
-            return isSingleTaskSelection()
-        } else if menuItem.action == #selector(decreasePriority(_:)) {
             return isSingleTaskSelection()
         } else if menuItem.action == #selector(removePriority(_:)) {
             return isSingleTaskSelection()
@@ -314,10 +283,10 @@ class TaskTextView: NSTextView {
         
         guard let lineRange = selectedLine, let lineString = selectedLineString else { return }
         
-        guard let (oldPriority, priorityRange, enclosingRange) = parser.parseStatus(in: lineString) else { return }
+        guard let (oldPriority, _, priorityRange, enclosingRange) = parser.parseStatus(in: lineString) else { return }
         
-        let newPriority = (oldPriority == .completed) ? " " : "x"
-        replaceText(in: enclosingRange.shifted(by: lineRange.location), with: "[\(newPriority)]")
+        let newPriority = (oldPriority == .completed) ? "-" : "x"
+        replaceText(in: enclosingRange.shifted(by: lineRange.location), with: "\(newPriority)")
         
     }
     
@@ -325,38 +294,12 @@ class TaskTextView: NSTextView {
         replaceText(in: selectedLines, with: "")
     }
     
-    // ---------- priority ----------
-    
-    @IBAction func encreasePriority(_ sender: Any?) {
-        
-        guard let lineString = selectedLineString else { return }
-        
-        let priorityArray = PriorityArray()
-        if let (priority, range, enclosingRange) = parser.parseStatus(in: lineString) {
-            let oldPriority = mutString.substring(with: range)
-            let newPriority = priorityArray.element(before: oldPriority, alternative: "Z")
-            replaceText(in: enclosingRange, with: "[\(newPriority)]")
-        }
-    }
-    
-    @IBAction func decreasePriority(_ sender: Any?) {
-        
-        guard let lineString = selectedLineString else { return }
-        
-        let priorityArray = PriorityArray()
-        if let (priority, range, enclosingRange) = parser.parseStatus(in: lineString) {
-            let oldPriority = mutString.substring(with: range)
-            let newPriority = priorityArray.element(after: oldPriority, alternative: "A")
-            replaceText(in: enclosingRange, with: "[\(newPriority)]")
-        }
-        
-    }
     
     @IBAction func removePriority(_ sender: Any?) {
         
         guard let lineString = selectedLineString else { return }
         
-        if let (_, _ , enclosingRange) = parser.parseStatus(in: lineString) {
+        if let (_, _, _ , enclosingRange) = parser.parseStatus(in: lineString) {
             replaceText(in: enclosingRange, with: "[ ]")
         }
         
