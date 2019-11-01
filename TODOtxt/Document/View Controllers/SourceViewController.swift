@@ -58,8 +58,10 @@ class TableGroup {
 
 class SourceViewController: NSViewController {
     
+    
+    
     var document: Document {
-        return NSDocumentController.shared.document(for: view.window!) as! Document
+        return NSDocumentController.shared.document(for: (parent?.view.window!)!) as! Document
     }
     
     var taskStorage: TaskStorage?
@@ -79,6 +81,43 @@ class SourceViewController: NSViewController {
         outlineView.autoresizesOutlineColumn = true
         outlineView.sizeLastColumnToFit()
         
+    }
+    
+    override func viewWillAppear() {
+        print(#function)
+                
+                
+                let text = """
+        #Путешествия:
+        - Rushguard @due(2019-09-08)
+        - Surf-Zink WaterDuck @due(2020-11-23) в магазине «Траектория» #москва
+
+        #Быт:
+        - Краска для ткани (бирюзовая)
+
+        #Техника:
+        - Купить батарейную ручку BG-E6 #везде
+        - Заказать подставку под MacBook @due(2020-01-05 11:35)
+        - Заказать подставку2 под MacBook @due(2020-02-05 16:00)
+
+        #Здоровье:
+        - Миноксидил  @due(2019-12-05) #москва
+
+        #Парфюмерия:
+        - Lalique Lion 100ml @due(2019-10-20)
+        - Lalique Lion 100ml @due(2019-10-20) @done
+        - Lalique Encre Noire Sport 100ml
+        """
+        let parser = Parser()
+        let tasks = parser.parse(string: text)
+        print(tasks)
+        reload(tasks)
+        outlineView.reloadData()
+                
+        for group in data {
+            outlineView.expandItem(group, expandChildren: true)
+        }
+            
     }
     
     func reload(_ tasks: [Task]) {
@@ -125,40 +164,8 @@ class SourceViewController: NSViewController {
     
        }
     
-    override func viewWillLayout() {
-        print(#function)
+    
         
-        
-        let text = """
-#Путешествия:
-[ ] Rushguard @due(2019-09-08)
-[ ] Surf-Zink WaterDuck @due(2020-11-23) в магазине «Траектория» #москва
-
-#Быт:
-[ ] Краска для ткани (бирюзовая)
-
-#Техника:
-[ ] Купить батарейную ручку BG-E6 #везде
-[ ] Заказать подставку под MacBook @due(2020-01-05 11:35)
-[ ] Заказать подставку2 под MacBook @due(2020-02-05 16:00)
-
-#Здоровье:
-[ ] Миноксидил  @due(2019-12-05) #москва
-
-#Парфюмерия:
-[ ] Lalique Lion 100ml @due(2019-10-20)
-[x] Lalique Lion 100ml @due(2019-10-20)
-[ ] Lalique Encre Noire Sport 100ml
-"""
-        let parser = Parser()
-        let tasks = parser.parse(string: text)
-        reload(tasks)
-        outlineView.reloadData()
-        
-        for group in data {
-            outlineView.expandItem(group, expandChildren: true)
-        }
-    }
     
 }
 

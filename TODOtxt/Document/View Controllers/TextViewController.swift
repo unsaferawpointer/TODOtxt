@@ -46,6 +46,7 @@ class TextViewController: NSViewController {
         
         //textView.textContainer?.maximumNumberOfLines = 100
         
+        
         // ---------- text storage ----------
         let textStorage = TaskTextStorage()
         textStorage.delegate = self
@@ -191,7 +192,7 @@ extension TextViewController: NSTextStorageDelegate, NSTextViewDelegate {
             
             let lineString = textView.string.substring(from: lineRange)
             print(lineString)
-            let lineIndent = parser.parseTask(for: lineString)!.indent
+            let lineIndent = parser.parseTask(in: lineString, validateType: true)!.indent
             print("lineIndent = \(lineIndent)")
             let length = textView.string.count - lineRange.upperBound
             let endRange = NSRange(location: lineRange.upperBound, length: length)
@@ -199,7 +200,7 @@ extension TextViewController: NSTextStorageDelegate, NSTextViewDelegate {
             var upperBoundOfLastTask: Int?
             textView.textStorage?.mutableString.enumerateSubstrings(in: endRange, options: .byLines, using: { (substring, range, enclosingRange, stop) in
                 print("substring = \(substring!)")
-                if let task = parser.parseTask(for: substring!), lineIndent < task.indent {
+                if let task = parser.parseTask(in: substring!, validateType: true), lineIndent < task.indent {
                     upperBoundOfLastTask = enclosingRange.upperBound
                     print("subtask = \(task.string)")
                     print("indent = \(task.indent)")

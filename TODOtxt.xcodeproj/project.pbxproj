@@ -215,6 +215,29 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		F94184BE236C4284007D5BF3 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F94184BF236C42A4007D5BF3 /* Fonts */,
+				F9755A6C231DB87A00A2FCBA /* Main.storyboard */,
+				F9755A6A231DB87A00A2FCBA /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		F94184BF236C42A4007D5BF3 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				F99CF91C234CCE7F00526612 /* IBMPlexMono-Regular.ttf */,
+				F940B0A823532D2100664043 /* IBMPlexMono-Medium.ttf */,
+				F940B0A62351D34200664043 /* IBMPlexMono-SemiBold.ttf */,
+				F99CF91A234CCC0A00526612 /* IBMPlexMono-Light.ttf */,
+				F9C158462365C0F3001B4D6A /* Andale Mono.ttf */,
+				F9C158482365C4CE001B4D6A /* Wingdings 2.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		F9755A58231DB87900A2FCBA = {
 			isa = PBXGroup;
 			children = (
@@ -243,15 +266,8 @@
 				F9755A98231DBCE300A2FCBA /* Util */,
 				F9755A84231DBC6C00A2FCBA /* Extensions */,
 				F9755A78231DBB4800A2FCBA /* Document */,
-				F9755A6A231DB87A00A2FCBA /* Assets.xcassets */,
-				F9755A6C231DB87A00A2FCBA /* Main.storyboard */,
+				F94184BE236C4284007D5BF3 /* Resources */,
 				F9755A6F231DB87A00A2FCBA /* Info.plist */,
-				F99CF91C234CCE7F00526612 /* IBMPlexMono-Regular.ttf */,
-				F940B0A823532D2100664043 /* IBMPlexMono-Medium.ttf */,
-				F940B0A62351D34200664043 /* IBMPlexMono-SemiBold.ttf */,
-				F99CF91A234CCC0A00526612 /* IBMPlexMono-Light.ttf */,
-				F9C158462365C0F3001B4D6A /* Andale Mono.ttf */,
-				F9C158482365C4CE001B4D6A /* Wingdings 2.ttf */,
 				F9755A70231DB87A00A2FCBA /* TODOtxt.entitlements */,
 			);
 			path = TODOtxt;

@@ -110,8 +110,9 @@ extension TaskTextStorage {
         let firstLineRange = backingStore.mutableString.lineRange(for: range)
         let extendedRange = NSRange(location: range.location + range.length, length: 0)
         let lastLineRange = backingStore.mutableString.lineRange(for: extendedRange)
-        var fullRange = NSUnionRange(firstLineRange, lastLineRange)
+        var finalRange = NSUnionRange(firstLineRange, lastLineRange)
         
+        /*
         var start: NSRange = firstLineRange
         
         // TEST
@@ -138,7 +139,7 @@ extension TaskTextStorage {
         let finalRange = NSRange(location: start.location, length: end.upperBound - start.location)
         // TEST
         let str = backingStore.mutableString.substring(with: finalRange)
-        
+        */
         parser.highlight(theme: theme, backingStorage: backingStore, in: finalRange)
         
     }

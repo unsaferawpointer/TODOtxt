@@ -50,50 +50,6 @@ enum DateGranulity: Int {
     
 }
 
-/*
-enum Token: Hashable {
-    
-    case type
-    case priority
-    case dueDate
-    case startDate
-    case tag
-    
-    var pattern: String {
-        switch self {
-        case .type:
-            return #"^\t*(\[(x|\s|\-|[A-Z])\])\s.*"# //#"^((x)\s).+"#
-        case .priority:
-            return #"^^\t*(\[([A-Z]|\s)\])\s"#
-        case .dueDate:
-            return #"\B(@due\((.+?)\))\B"#
-        case .startDate:
-            return #"\B(@start\((.+?)\))\B"#
-        case .tag:
-            return #"(\s#(\w+))\b"#
-        }
-    }
-    
-    func prefixString(for value: String) -> String {
-        guard value.isEmpty == false else { return "" }
-        switch self {
-        case .type:
-            return "[\(value)]"
-        case .priority:
-            return "[\(value)] "
-        case .tag:
-            return " #\(value)"
-        case .dueDate:
-            return " @due(\(value))"
-        case .startDate:
-            return " @start(\(value))"
-        }
-    }
-    
-}
-*/
-
-
 class Parser {
     
     var font: NSFont
@@ -159,9 +115,9 @@ extension Parser {
         }
     }
 
-    private func hightlight(theme: Theme, backingStorage: NSMutableAttributedString, _ body: String, in globalBodyRange: NSRange) -> (TaskStatus, NSRange)? {
+    private func hightlight(theme: Theme, backingStorage: NSMutableAttributedString, _ line: String, in globalBodyRange: NSRange) -> (TaskStatus, NSRange)? {
         
-        let lineType = self.lineType(of: body)
+        let lineType = self.lineType(of: line)
         
         // -------- removing attributes --------
         backingStorage.removeAttribute(.strikethroughStyle, range: globalBodyRange)
@@ -179,10 +135,10 @@ extension Parser {
             backingStorage.addAttribute(.paragraphStyle, value: headerParagraphStyle, range: globalBodyRange)
             return nil
         case .event:
-            hightlightEvent(theme: theme, backingStorage: backingStorage, body, in: globalBodyRange)
+            hightlightEvent(theme: theme, backingStorage: backingStorage, line, in: globalBodyRange)
             return nil
         case .task:
-            hightlightTask(theme: theme, backingStorage: backingStorage, body, in: globalBodyRange)
+            hightlightTask(theme: theme, backingStorage: backingStorage, line, in: globalBodyRange)
             return nil
         }
         
@@ -345,7 +301,7 @@ extension Parser {
     func parse(string: String) -> [Task] {
         var array = [Task]()
         string.enumerateLines { (substring, stop) in
-            if let task = self.parseTask(for: substring) {
+            if let task = self.parseTask(in: substring, validateType: true) {
                 array.append(task)
             }
         }
@@ -365,7 +321,7 @@ extension Parser {
         
         var array = [Task]()
         mutString.enumerateSubstrings(in: editedRange, options: .byLines) { (substring, substringRange, enclosingRange, stop) in
-            if let body = substring, let task = self.parseTask(for: body) {
+            if let body = substring, let task = self.parseTask(in: body, validateType: true) {
                 array.append(task)
             }
         }
@@ -374,10 +330,11 @@ extension Parser {
     }
     
     /// Parsing task. 
-    private func parseTask(in line: String, validateType: Bool) -> Task? {
+    func parseTask(in line: String, validateType: Bool) -> Task? {
         
         if validateType {
             let lineType = self.lineType(of: line)
+            print(lineType)
             guard lineType == .task else {
                 return nil 
             }
@@ -404,7 +361,7 @@ extension Parser {
     
     
     /// Parsing event.
-    private func parseEvent(in line: String, validateType: Bool) -> Event? {
+    func parseEvent(in line: String, validateType: Bool) -> Event? {
         
         if validateType {
             let lineType = self.lineType(of: line)
@@ -446,44 +403,6 @@ extension Parser {
     }
     
     
-    // parsing todo
-    func parseTask(for line: String) -> Task? {
-        /*
-        let type = lineType(of: line)
-        
-        guard type == .task else { return nil }
-        
-        let (status, _, _, statusEnclosingRange) = self.parseStatus(in: line)!
-        let indent = statusEnclosingRange.location
-        
-        
-        let dueDate: ObjectDate? = self.parseDueDate(in: line)?.date
-        let startDate: ObjectDate? = self.parseStartDate(in: line)?.date
-        let hashtag: String? = self.parseHashtag(in: line)?.hashtag
-        
-        let mutBodyStr = NSMutableString(string: line)
-        if let enclosingRange = self.statusRanges(in: mutBodyStr.string)?.enclosingRange {
-            mutBodyStr.replaceCharacters(in: enclosingRange, with: " ")
-        }
-        if let enclosingRange = self.dueDateRange(in: mutBodyStr.string)?.enclosingRange {
-            mutBodyStr.replaceCharacters(in: enclosingRange, with: " ")
-        }
-        if let enclosingRange = self.startDateRange(in: mutBodyStr.string)?.enclosingRange {
-            mutBodyStr.replaceCharacters(in: enclosingRange, with: " ")
-        }
-        if let enclosingRange = self.hashtagRange(in: mutBodyStr.string)?.enclosingRange {
-            mutBodyStr.replaceCharacters(in: enclosingRange, with: " ")
-        }
-       
-        let body = mutBodyStr.string.trimmingCharacters(in: .whitespaces)
-   
-        let task = Task(string: line, body: body, priority: status, hashtag: hashtag, dueDate: dueDate, startDate: startDate, indent: indent)
-        
-        return task
- */
-        return nil
-    }
-    
     func isTask(_ body: String) -> Bool {
         return lineType(of: body) == .task
     }
@@ -493,8 +412,9 @@ extension Parser {
     // -------- common function --------
     
     func textCheckingResult(for pattern: String, in line: String) -> NSTextCheckingResult? {
+        let range = (line as NSString).range(of: line)
         guard let regex = try? NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines]) else { return nil }
-        return regex.firstMatch(in: line, options: [], range: line.fullRange)
+        return regex.firstMatch(in: line, options: [], range: range)
     }
     
     // -------- hashtag --------
