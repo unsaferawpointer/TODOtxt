@@ -24,7 +24,7 @@ protocol AutocompletionPopover: class {
 }
 
 protocol AutocompletionPopoverDelegate : class {
-    func autocompletionDidChange(_ sender: AutocompletionPopover, str: String, element: Token)
+    func autocompletionDidChange(_ sender: AutocompletionPopover, str: String)
 }
 
 class DatePopover: NSPopover, AutocompletionPopover {
@@ -125,7 +125,7 @@ class DatePopover: NSPopover, AutocompletionPopover {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let stringDate = dateFormatter.string(from: date)
-        autocompletionDelegate?.autocompletionDidChange(self, str: stringDate, element: .dueDate)
+        autocompletionDelegate?.autocompletionDidChange(self, str: stringDate)
     }
     
 }

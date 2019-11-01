@@ -59,6 +59,7 @@
 	<string>NSApplication</string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>Wingdings 2.ttf</string>
 		<string>IBMPlexMono-Medium.ttf</string>
 		<string>IBMPlexMono-SemiBold.ttf</string>
 		<string>IBMPlexMono-Regular.ttf</string>

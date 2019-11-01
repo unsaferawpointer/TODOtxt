@@ -10,8 +10,6 @@ import Cocoa
 
 class TablePopover: NSPopover, AutocompletionPopover {
     
-    var element: Token!
-    
     var tableView: NSTableView!
     
     let POPOVER_PADDING = CGFloat(8.0)
@@ -121,7 +119,7 @@ class TablePopover: NSPopover, AutocompletionPopover {
         guard selectedRow >= 0 else { return }
         let word = data[selectedRow]
         
-        autocompletionDelegate?.autocompletionDidChange(self, str: word, element: element)
+        autocompletionDelegate?.autocompletionDidChange(self, str: word)
     }
     
     func complete() {

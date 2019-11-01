@@ -36,17 +36,15 @@ class TextViewController: NSViewController {
         // ---------- textview ----------
         textView.delegate = self
         textView.autocompletionDelegate = self
-        textView.font = NSFont(name: "IBM Plex Mono", size: 17.0)
+        //textView.font = NSFont(name: "IBM Plex Mono", size: 17.0)
+        //textView.typingAttributes = [.font: NSFont(name: "IBM Plex Mono", size: 17.0), .foregroundColor: NSColor.textColor]
         textView.insertionPointColor = NSColor.alert
         let layoutManager = TaskLayoutManager()
         layoutManager.delegate = self
         textView.textContainer?.replaceLayoutManager(layoutManager)
         textView.layoutManager?.allowsNonContiguousLayout = true
-        //textView.layoutManager?.showsControlCharacters = true
-        //textView.layoutManager?.showsInvisibleCharacters = true
-        textView.linkTextAttributes = [NSAttributedString.Key.foregroundColor : NSColor.systemOrange, .cursor : NSCursor.pointingHand]
         
-        
+        //textView.textContainer?.maximumNumberOfLines = 100
         
         // ---------- text storage ----------
         let textStorage = TaskTextStorage()
@@ -104,6 +102,7 @@ extension TextViewController: TaskTextStorageDelegate {
 
 extension TextViewController: NSLayoutManagerDelegate {
     
+    /*
     func layoutManager(_ layoutManager: NSLayoutManager, shouldUse action: NSLayoutManager.ControlCharacterAction, forControlCharacterAt charIndex: Int) -> NSLayoutManager.ControlCharacterAction {
         if let value = layoutManager.textStorage!.attribute(.isCollapsed, at: charIndex, effectiveRange: nil) as? Int, value == 1 {
             return .zeroAdvancement
@@ -123,13 +122,13 @@ extension TextViewController: NSLayoutManagerDelegate {
             }
         }
         //properties[0] = .null
-        //properties[1] = .null
-        //properties[2] = .null
+       // properties[1] = .null
+       // properties[2] = .null
         layoutManager.setGlyphs(glyphs, properties: properties, characterIndexes: charIndexes, font: aFont, forGlyphRange: glyphRange)
         
         return glyphRange.length
     }
-    
+    */
 }
 
 extension TextViewController: NSTextStorageDelegate, NSTextViewDelegate {
@@ -148,6 +147,36 @@ extension TextViewController: NSTextStorageDelegate, NSTextViewDelegate {
         if textStorage.observeChanging {
             delegate?.dataDidChange()
         }
+        //parseGroups(backingStorage: textStorage)
+    }
+    
+    func parseGroups(backingStorage: NSMutableAttributedString) {
+        /*
+        var indent: Int?
+        let fullRange = backingStorage.mutableString.fullRange
+        print(#function)
+        let parser = Parser()
+        
+        backingStorage.mutableString.enumerateSubstrings(in: fullRange, options: [.reverse, .byLines]) { (substring, range, enclosingRange, stop) in
+            let shifting = range.location
+            if let (status, newIndent, statusRange) = parser.statusPrefix(in: substring!) {
+                
+                if status == .completed {
+                    backingStorage.addAttribute(.prefix, value: Prefix.completed, range: statusRange.shifted(by: shifting))
+                } else {
+                    if indent != nil && newIndent < indent! {
+                        print("isRoot")
+                        backingStorage.addAttribute(.prefix, value: Prefix.root, range: statusRange.shifted(by: shifting))
+                    } else {
+                        backingStorage.addAttribute(.prefix, value: Prefix.task, range: statusRange.shifted(by: shifting))
+                    }
+                }
+                
+                indent = newIndent
+            } else {
+                indent = nil
+            }
+        }*/
     }
     
     func textView(_ textView: NSTextView, shouldChangeTextIn affectedCharRange: NSRange, replacementString: String?) -> Bool {
@@ -194,7 +223,7 @@ extension TextViewController: NSTextStorageDelegate, NSTextViewDelegate {
 
 extension TextViewController: TaskTextViewDelegate {
     
-    func taskTextView(for element: Token) -> [String] {
+    func taskTextView() -> [String] {
         return []
     }
     

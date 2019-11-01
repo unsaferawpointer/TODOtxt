@@ -62,6 +62,8 @@
 		F99CF921234E1BC700526612 /* LineFoldingGlyphGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99CF920234E1BC700526612 /* LineFoldingGlyphGenerator.swift */; };
 		F99FEB69233A177300336790 /* InfoTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99FEB68233A177300336790 /* InfoTextField.swift */; };
 		F99FEB6B233CB41F00336790 /* TaskLayoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99FEB6A233CB41F00336790 /* TaskLayoutManager.swift */; };
+		F9C158472365C0F4001B4D6A /* Andale Mono.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F9C158462365C0F3001B4D6A /* Andale Mono.ttf */; };
+		F9C158492365C4CE001B4D6A /* Wingdings 2.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F9C158482365C4CE001B4D6A /* Wingdings 2.ttf */; };
 		F9C323CD2343CECB001CB6FF /* TaskDocumentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9C323CC2343CECB001CB6FF /* TaskDocumentView.xib */; };
 		F9C323CF2343D02C001CB6FF /* TaskDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C323CE2343D02C001CB6FF /* TaskDocumentView.swift */; };
 		F9C6CCC223259051008026FD /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C6CCC123259051008026FD /* Item.swift */; };
@@ -153,6 +155,8 @@
 		F99CF920234E1BC700526612 /* LineFoldingGlyphGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineFoldingGlyphGenerator.swift; sourceTree = "<group>"; };
 		F99FEB68233A177300336790 /* InfoTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTextField.swift; sourceTree = "<group>"; };
 		F99FEB6A233CB41F00336790 /* TaskLayoutManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskLayoutManager.swift; sourceTree = "<group>"; };
+		F9C158462365C0F3001B4D6A /* Andale Mono.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Andale Mono.ttf"; sourceTree = "<group>"; };
+		F9C158482365C4CE001B4D6A /* Wingdings 2.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Wingdings 2.ttf"; sourceTree = "<group>"; };
 		F9C323CC2343CECB001CB6FF /* TaskDocumentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskDocumentView.xib; sourceTree = "<group>"; };
 		F9C323CE2343D02C001CB6FF /* TaskDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDocumentView.swift; sourceTree = "<group>"; };
 		F9C6CCC123259051008026FD /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
@@ -246,6 +250,8 @@
 				F940B0A823532D2100664043 /* IBMPlexMono-Medium.ttf */,
 				F940B0A62351D34200664043 /* IBMPlexMono-SemiBold.ttf */,
 				F99CF91A234CCC0A00526612 /* IBMPlexMono-Light.ttf */,
+				F9C158462365C0F3001B4D6A /* Andale Mono.ttf */,
+				F9C158482365C4CE001B4D6A /* Wingdings 2.ttf */,
 				F9755A70231DB87A00A2FCBA /* TODOtxt.entitlements */,
 			);
 			path = TODOtxt;
@@ -487,6 +493,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9C158472365C0F4001B4D6A /* Andale Mono.ttf in Resources */,
 				F91CC2CD23598F5A00C2825E /* TaskBasicHeaderCellView.xib in Resources */,
 				F9C323CD2343CECB001CB6FF /* TaskDocumentView.xib in Resources */,
 				F9755AB9231DD6AB00A2FCBA /* Themes.plist in Resources */,
@@ -499,6 +506,7 @@
 				F9755A6B231DB87A00A2FCBA /* Assets.xcassets in Resources */,
 				F9755AB5231DBEA500A2FCBA /* ItemCellView.xib in Resources */,
 				F9755A6E231DB87A00A2FCBA /* Main.storyboard in Resources */,
+				F9C158492365C4CE001B4D6A /* Wingdings 2.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,56 +8,58 @@
 
 import Cocoa
 
-enum TaskStatus: Equatable {
-    case uncompleted
-    case completed
+
+
+protocol LineObject {
+    var string: String { get }
+    var body: String { get }
 }
 
-struct TaskDate {
+class Event: LineObject {
     
-    let date: Date
-    let granulity: DateGranulity
+    var body: String {
+        return string
+    }
     
-    init(date: Date, granulity: DateGranulity) {
+    
+    let string: String
+    let hashtag: String?
+    let isCancelled: Bool
+    
+    let date: ObjectDate?
+    
+    init(_ string: String, isCancelled: Bool, at date: ObjectDate?, hashtag: String?) {
+        self.string = string
+        self.isCancelled = isCancelled
         self.date = date
-        self.granulity = granulity
+        self.hashtag = hashtag
     }
     
 }
 
-class SubTask {
-    
-}
-
-class RootTask {
-    
-}
-
-class Task: Equatable, CustomStringConvertible {
+class Task: LineObject, Equatable, CustomStringConvertible {
     
     static func == (lhs: Task, rhs: Task) -> Bool {
         return lhs.string == rhs.string
     }
     
     let indent: Int
+    
     let string: String
     let body: String
-    var tasks: [Task] = []
+    let tasks: [Task] = []
     
     let hashtag: String?
-    let priority: TaskStatus
     
-    let dueDate: TaskDate?
-    let startDate: TaskDate?
+    let dueDate: ObjectDate?
+    let startDate: ObjectDate?
     
-    var isCompleted: Bool {
-        return priority == .completed
-    }
+    let isCompleted: Bool
     
-    init(string: String, body: String, priority: TaskStatus = .uncompleted, hashtag: String? = nil, dueDate: TaskDate? = nil, startDate: TaskDate? = nil, indent: Int) {
+    init(string: String, body: String, isCompleted: Bool, hashtag: String? = nil, dueDate: ObjectDate? = nil, startDate: ObjectDate? = nil, indent: Int) {
         self.string = string
         self.body = body
-        self.priority = priority
+        self.isCompleted = isCompleted
         self.hashtag = hashtag
         self.dueDate = dueDate
         self.startDate = startDate

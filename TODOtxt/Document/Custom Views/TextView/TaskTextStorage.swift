@@ -58,14 +58,16 @@ class TaskTextStorage: NSTextStorage {
     
     override func processEditing() {
         print(#function)
-        
-        
-        if hasChanged {
-            highlight(in: editedRange)
-        }
-        hasChanged = false
+        highlight(in: editedRange)
         super.processEditing()
+        
+        
+        //hasChanged = false
+        //parseGroups()
+        
     }
+    
+ 
     
 }
 
@@ -104,14 +106,43 @@ extension TaskTextStorage {
     
     func highlight(in range: NSRange) {
         
+        
         let firstLineRange = backingStore.mutableString.lineRange(for: range)
         let extendedRange = NSRange(location: range.location + range.length, length: 0)
         let lastLineRange = backingStore.mutableString.lineRange(for: extendedRange)
-        let fullRange = NSUnionRange(firstLineRange, lastLineRange)
+        var fullRange = NSUnionRange(firstLineRange, lastLineRange)
         
-        //parser.highlight(theme: theme, backingStorage: backingStore, in: fullRange)
-        parser.parseGroups(backingStorage: backingStore, extendedRange: fullRange)
+        var start: NSRange = firstLineRange
+        
+        // TEST
+        if firstLineRange.location > 0 {
+            let lookUpLineRange = backingStore.mutableString.lineRange(for: NSRange(location: firstLineRange.location - 1, length: 0))
+            print("lookUpLineRange = \(lookUpLineRange)")
+            let lookUpStr = backingStore.mutableString.substring(with: lookUpLineRange)
+            print("lookUpStr = \(lookUpStr)")
+            start = lookUpLineRange
+        } else {
+            
+        }
+        
+        
+        var end: NSRange = lastLineRange
+        if lastLineRange.upperBound < backingStore.mutableString.length {
+            let lookDownLineRange = backingStore.mutableString.lineRange(for: NSRange(location: firstLineRange.upperBound + 1, length: 0))
+            print("lookDownLineRange = \(lookDownLineRange)")
+            let lookUpStr = backingStore.mutableString.substring(with: lookDownLineRange)
+            print("lookDownStr = \(lookUpStr)")
+            end = lookDownLineRange
+        }
+        
+        let finalRange = NSRange(location: start.location, length: end.upperBound - start.location)
+        // TEST
+        let str = backingStore.mutableString.substring(with: finalRange)
+        
+        parser.highlight(theme: theme, backingStorage: backingStore, in: finalRange)
+        
     }
+    
     
 }
 

@@ -88,7 +88,7 @@ extension TaskStorage {
         return storage.count
     }
     
-    func mentions(for element: Token) -> [String] {
+    var mentions: [String] {
         return hashtagsStorage.storage
     }
     

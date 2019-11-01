@@ -78,7 +78,7 @@ class TaskDocumentView: NSView {
         textStorage.taskDelegate = self
         textView.textContainer?.layoutManager?.replaceTextStorage(textStorage)
         textView.layoutManager?.allowsNonContiguousLayout = false
-        textView.layoutManager?.delegate = self
+        //textView.layoutManager?.delegate = self
         
         // ---------- rulerview ----------
         
@@ -238,8 +238,8 @@ extension TaskDocumentView: TaskTextStorageDelegate {
 }
 
 extension TaskDocumentView: TaskTextViewDelegate {
-    func taskTextView(for element: Token) -> [String] {
-        return taskStorage.mentions(for: element)
+    func taskTextView() -> [String] {
+        return taskStorage.mentions
     }
     
     
