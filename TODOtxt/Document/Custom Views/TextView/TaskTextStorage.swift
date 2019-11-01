@@ -19,6 +19,7 @@ class TaskTextStorage: NSTextStorage {
     
     weak var taskDelegate: TaskTextStorageDelegate?
     var parser: Parser = Parser()
+    var highlighter = Highlighter()
     
     var hasChanged = false
     
@@ -140,7 +141,8 @@ extension TaskTextStorage {
         // TEST
         let str = backingStore.mutableString.substring(with: finalRange)
         */
-        parser.highlight(theme: theme, backingStorage: backingStore, in: finalRange)
+        
+        highlighter.highlight(theme: theme, backingStorage: backingStore, in: finalRange)
         
     }
     

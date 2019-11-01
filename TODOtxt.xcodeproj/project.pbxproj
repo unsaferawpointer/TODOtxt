@@ -23,6 +23,7 @@
 		F940B0E823572CFF00664043 /* TaskHeaderCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F940B0E723572CFF00664043 /* TaskHeaderCellView.xib */; };
 		F940B0EA235732EE00664043 /* TaskDataCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F940B0E9235732EE00664043 /* TaskDataCellView.swift */; };
 		F940B0EC235732FD00664043 /* TaskDataCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F940B0EB235732FD00664043 /* TaskDataCellView.xib */; };
+		F94184C1236C4F12007D5BF3 /* Highlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F94184C0236C4F12007D5BF3 /* Highlighter.swift */; };
 		F95F8C742337E51600B86C15 /* DocumentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F95F8C732337E51600B86C15 /* DocumentController.swift */; };
 		F9721028234F304900608CAB /* LineFoldingTypesetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9721027234F304900608CAB /* LineFoldingTypesetter.swift */; };
 		F9755A65231DB87900A2FCBA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9755A64231DB87900A2FCBA /* AppDelegate.swift */; };
@@ -113,6 +114,7 @@
 		F940B0E723572CFF00664043 /* TaskHeaderCellView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskHeaderCellView.xib; sourceTree = "<group>"; };
 		F940B0E9235732EE00664043 /* TaskDataCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDataCellView.swift; sourceTree = "<group>"; };
 		F940B0EB235732FD00664043 /* TaskDataCellView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskDataCellView.xib; sourceTree = "<group>"; };
+		F94184C0236C4F12007D5BF3 /* Highlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Highlighter.swift; sourceTree = "<group>"; };
 		F95F8C732337E51600B86C15 /* DocumentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentController.swift; sourceTree = "<group>"; };
 		F9721027234F304900608CAB /* LineFoldingTypesetter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineFoldingTypesetter.swift; sourceTree = "<group>"; };
 		F9755A61231DB87900A2FCBA /* TODOtxt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TODOtxt.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -300,6 +302,7 @@
 			children = (
 				F9755A7F231DBC2600A2FCBA /* Theme.swift */,
 				F9755AA2231DBD1700A2FCBA /* Parser.swift */,
+				F94184C0236C4F12007D5BF3 /* Highlighter.swift */,
 				F9755AB8231DD6AB00A2FCBA /* Themes.plist */,
 			);
 			path = "Text Parsing";
@@ -574,6 +577,7 @@
 				F9755AB0231DBE0800A2FCBA /* TaskTextStorage.swift in Sources */,
 				F9755AB4231DBEA500A2FCBA /* ItemCellView.swift in Sources */,
 				F9755A65231DB87900A2FCBA /* AppDelegate.swift in Sources */,
+				F94184C1236C4F12007D5BF3 /* Highlighter.swift in Sources */,
 				F940B0AB2353631200664043 /* SourceViewController.swift in Sources */,
 				F9755AB7231DBF0400A2FCBA /* TaskStorage.swift in Sources */,
 				F940B0E623572CED00664043 /* TaskHeaderCellView.swift in Sources */,
