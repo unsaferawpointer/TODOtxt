@@ -20,6 +20,7 @@ class TextViewController: NSViewController {
     
     @IBOutlet weak var textView: TaskTextView!
     
+    
     weak var delegate: TaskTextViewControllerDelegate?
     
     var storage: [Task] = []
@@ -43,6 +44,7 @@ class TextViewController: NSViewController {
         layoutManager.delegate = self
         textView.textContainer?.replaceLayoutManager(layoutManager)
         textView.layoutManager?.allowsNonContiguousLayout = true
+        textView.textContainer?.lineFragmentPadding = 48.0
         
         //textView.textContainer?.maximumNumberOfLines = 100
         
@@ -59,17 +61,18 @@ class TextViewController: NSViewController {
         
         textView.set(text: str)
         
+        /*
         self.storage = []
         self.hashtags = Bag<String>()
         
         let parser = Parser()
         let tasks = parser.parse(string: str)
-        self.insert(tasks)
+        self.insert(tasks)*/
     }
     
     func insert(_ tasks: [Task]) {
         let mentions = tasks.compactMap { (task) -> String? in
-            return task.hashtag
+            return task.hashtag?.value
         }
         hashtags.insert(mentions)
         storage.append(contentsOf: tasks)
@@ -77,7 +80,7 @@ class TextViewController: NSViewController {
     
     func remove(_ tasks: [Task]) {
         let mentions = tasks.compactMap { (task) -> String? in
-            return task.hashtag
+            return task.hashtag?.value
         }
         hashtags.remove(mentions)
         for task in tasks {
@@ -103,9 +106,9 @@ extension TextViewController: TaskTextStorageDelegate {
 
 extension TextViewController: NSLayoutManagerDelegate {
     
-    /*
+    
     func layoutManager(_ layoutManager: NSLayoutManager, shouldUse action: NSLayoutManager.ControlCharacterAction, forControlCharacterAt charIndex: Int) -> NSLayoutManager.ControlCharacterAction {
-        if let value = layoutManager.textStorage!.attribute(.isCollapsed, at: charIndex, effectiveRange: nil) as? Int, value == 1 {
+        if let value = layoutManager.textStorage!.attribute(.isCollapsed, at: charIndex, effectiveRange: nil) as? Bool, value == true {
             return .zeroAdvancement
         }
         return action
@@ -117,26 +120,28 @@ extension TextViewController: NSLayoutManagerDelegate {
         
         for i in 0..<glyphRange.length {
             let characterIndex = charIndexes[i]
-            if let value = layoutManager.textStorage!.attribute(.isCollapsed, at: characterIndex, effectiveRange: nil) as? Int, value == 1 {
+            if let value = layoutManager.textStorage!.attribute(.isCollapsed, at: characterIndex, effectiveRange: nil) as? Bool, value == true {
                 print("charIndex = \(characterIndex) is collapsed")
-                properties[characterIndex] = .null
+                properties[i] = .null
             }
         }
         //properties[0] = .null
-       // properties[1] = .null
-       // properties[2] = .null
+       //properties[1] = .null
+       //properties[2] = .null
         layoutManager.setGlyphs(glyphs, properties: properties, characterIndexes: charIndexes, font: aFont, forGlyphRange: glyphRange)
         
         return glyphRange.length
     }
-    */
+    
 }
 
 extension TextViewController: NSTextStorageDelegate, NSTextViewDelegate {
     
     // ******** Text Storage Delegate ********
     func textStorage(_ textStorage: NSTextStorage, didProcessEditing editedMask: NSTextStorageEditActions, range editedRange: NSRange, changeInLength delta: Int) {
-        
+        let highlighter = Highlighter()
+        highlighter.highlightRoots(in: textStorage, inRange: editedRange)
+        highlighter.replace(textStorage, in: editedRange)
     }
     
     func textStorage(_ textStorage: NSTextStorage, willProcessEditing editedMask: NSTextStorageEditActions, range editedRange: NSRange, changeInLength delta: Int) {
@@ -144,40 +149,12 @@ extension TextViewController: NSTextStorageDelegate, NSTextViewDelegate {
     }
     
     override func textStorageDidProcessEditing(_ notification: Notification) {
+        
         guard let textStorage = textView.textStorage as? TaskTextStorage else { return }
         if textStorage.observeChanging {
             delegate?.dataDidChange()
         }
-        //parseGroups(backingStorage: textStorage)
-    }
-    
-    func parseGroups(backingStorage: NSMutableAttributedString) {
-        /*
-        var indent: Int?
-        let fullRange = backingStorage.mutableString.fullRange
-        print(#function)
-        let parser = Parser()
         
-        backingStorage.mutableString.enumerateSubstrings(in: fullRange, options: [.reverse, .byLines]) { (substring, range, enclosingRange, stop) in
-            let shifting = range.location
-            if let (status, newIndent, statusRange) = parser.statusPrefix(in: substring!) {
-                
-                if status == .completed {
-                    backingStorage.addAttribute(.prefix, value: Prefix.completed, range: statusRange.shifted(by: shifting))
-                } else {
-                    if indent != nil && newIndent < indent! {
-                        print("isRoot")
-                        backingStorage.addAttribute(.prefix, value: Prefix.root, range: statusRange.shifted(by: shifting))
-                    } else {
-                        backingStorage.addAttribute(.prefix, value: Prefix.task, range: statusRange.shifted(by: shifting))
-                    }
-                }
-                
-                indent = newIndent
-            } else {
-                indent = nil
-            }
-        }*/
     }
     
     func textView(_ textView: NSTextView, shouldChangeTextIn affectedCharRange: NSRange, replacementString: String?) -> Bool {
@@ -187,36 +164,8 @@ extension TextViewController: NSTextStorageDelegate, NSTextViewDelegate {
     
     func textView(_ textView: NSTextView, clickedOnLink link: Any, at charIndex: Int) -> Bool {
         print("clicked link at \(charIndex)")
-        let parser = Parser()
-        if let lineRange = textView.textStorage?.mutableString.lineRange(for: NSRange(location: charIndex, length: 0)) {
-            
-            let lineString = textView.string.substring(from: lineRange)
-            print(lineString)
-            let lineIndent = parser.parseTask(in: lineString, validateType: true)!.indent
-            print("lineIndent = \(lineIndent)")
-            let length = textView.string.count - lineRange.upperBound
-            let endRange = NSRange(location: lineRange.upperBound, length: length)
-            print("other part = \(textView.string.substring(from: endRange))")
-            var upperBoundOfLastTask: Int?
-            textView.textStorage?.mutableString.enumerateSubstrings(in: endRange, options: .byLines, using: { (substring, range, enclosingRange, stop) in
-                print("substring = \(substring!)")
-                if let task = parser.parseTask(in: substring!, validateType: true), lineIndent < task.indent {
-                    upperBoundOfLastTask = enclosingRange.upperBound
-                    print("subtask = \(task.string)")
-                    print("indent = \(task.indent)")
-                } else {
-                    stop.pointee = ObjCBool(true)
-                }
-            })
-            
-            if let end = upperBoundOfLastTask {
-                let foldingRange = NSRange(location: lineRange.upperBound, length: end - lineRange.upperBound)
-                print("foldingRAnge = \(foldingRange)")
-                //textView.textStorage!.addAttribute(.isCollapsed, value: 1, range: foldingRange)
-                //textView.textStorage!.addAttribute(.foregroundColor, value: NSColor.red, range: foldingRange)
-            }
-            
-        }
+        print("link = \(link)")
+        textView.textStorage?.addAttribute(.isCollapsed, value: 1, range: link as! NSRange)
         return false
     }
     

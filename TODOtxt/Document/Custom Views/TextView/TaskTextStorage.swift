@@ -79,24 +79,24 @@ extension TaskTextStorage {
     private func toRemove(editedRange: NSRange, with delta: Int) {
         
         let firstLineRange = backingStore.mutableString.lineRange(for: editedRange)
-        let maxRange = NSRange(location: editedRange.location + editedRange.length, length: 0)
-        let lastLineRange = backingStore.mutableString.lineRange(for: maxRange)
+        let extendedRange = NSRange(location: editedRange.upperBound, length: 0)
+        let lastLineRange = backingStore.mutableString.lineRange(for: extendedRange)
         let fullRange = NSUnionRange(firstLineRange, lastLineRange)
         
-        let tasks = parser.parse(backingStore.mutableString, in: fullRange)
-        self.taskDelegate?.taskTextStorage(remove: tasks)
+        //let tasks = parser.parse(backingStore.mutableString, in: fullRange)
+        //self.taskDelegate?.taskTextStorage(remove: tasks)
     }
     
     private func toInsert(editedRange: NSRange, with delta: Int) {
         
         let newEditedRange = NSRange(location: editedRange.location, length: editedRange.length + delta)
         let firstLineRange = backingStore.mutableString.lineRange(for: newEditedRange)
-        let extendedRange = NSRange(location: editedRange.location + editedRange.length + delta, length: 0)
+        let extendedRange = NSRange(location: editedRange.upperBound + delta, length: 0)
         let lastLineRange = backingStore.mutableString.lineRange(for: extendedRange)
         let fullRange = NSUnionRange(firstLineRange, lastLineRange)
         
-        let tasks = parser.parse(backingStore.mutableString, in: fullRange)
-        self.taskDelegate?.taskTextStorage(insert: tasks)
+        //let tasks = parser.parse(backingStore.mutableString, in: fullRange)
+        //self.taskDelegate?.taskTextStorage(insert: tasks)
     }
     
 }
@@ -109,40 +109,11 @@ extension TaskTextStorage {
         
         
         let firstLineRange = backingStore.mutableString.lineRange(for: range)
-        let extendedRange = NSRange(location: range.location + range.length, length: 0)
+        let extendedRange = NSRange(location: range.upperBound, length: 0)
         let lastLineRange = backingStore.mutableString.lineRange(for: extendedRange)
-        var finalRange = NSUnionRange(firstLineRange, lastLineRange)
+        let finalRange = NSUnionRange(firstLineRange, lastLineRange)
         
-        /*
-        var start: NSRange = firstLineRange
-        
-        // TEST
-        if firstLineRange.location > 0 {
-            let lookUpLineRange = backingStore.mutableString.lineRange(for: NSRange(location: firstLineRange.location - 1, length: 0))
-            print("lookUpLineRange = \(lookUpLineRange)")
-            let lookUpStr = backingStore.mutableString.substring(with: lookUpLineRange)
-            print("lookUpStr = \(lookUpStr)")
-            start = lookUpLineRange
-        } else {
-            
-        }
-        
-        
-        var end: NSRange = lastLineRange
-        if lastLineRange.upperBound < backingStore.mutableString.length {
-            let lookDownLineRange = backingStore.mutableString.lineRange(for: NSRange(location: firstLineRange.upperBound + 1, length: 0))
-            print("lookDownLineRange = \(lookDownLineRange)")
-            let lookUpStr = backingStore.mutableString.substring(with: lookDownLineRange)
-            print("lookDownStr = \(lookUpStr)")
-            end = lookDownLineRange
-        }
-        
-        let finalRange = NSRange(location: start.location, length: end.upperBound - start.location)
-        // TEST
-        let str = backingStore.mutableString.substring(with: finalRange)
-        */
-        
-        highlighter.highlight(theme: theme, backingStorage: backingStore, in: finalRange)
+        highlighter.hightlight(backingStore, in: finalRange)
         
     }
     

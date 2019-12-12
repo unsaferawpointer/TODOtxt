@@ -10,10 +10,7 @@ import Cocoa
 
 class TaskBasicHeaderCellView: NSTableCellView {
 
-   
-        
         @IBOutlet weak var view: NSView!
-        
         
         var nibName = "TaskBasicHeaderCellView"
         
@@ -38,7 +35,6 @@ class TaskBasicHeaderCellView: NSTableCellView {
         
         override func draw(_ dirtyRect: NSRect) {
             super.draw(dirtyRect)
-            
             // Drawing code here.
         }
         

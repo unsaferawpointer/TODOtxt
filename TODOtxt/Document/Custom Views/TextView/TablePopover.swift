@@ -16,7 +16,6 @@ class TablePopover: NSPopover, AutocompletionPopover {
     let POPOVER_WIDTH = CGFloat(240.0)
     let INTERCELL_SPACING = CGSize(width: 0, height: 4)
     
-    private var mention: String = ""
     private var data: [String] = []
     
     weak var autocompletionDelegate: AutocompletionPopoverDelegate?
@@ -78,20 +77,6 @@ class TablePopover: NSPopover, AutocompletionPopover {
         let height = min(CGFloat(integerLiteral: data.count) *  (tableView.rowHeight + INTERCELL_SPACING.height) + 2*POPOVER_PADDING, CGFloat(320))
         let frame = NSRect(x: 0.0, y: 0.0, width: POPOVER_WIDTH, height: height)
         //autocompleteTableView.enclosingScrollView?.setFrameSize(NSInsetRect(frame, POPOVER_PADDING, POPOVER_PADDING).size)
-        tableView.enclosingScrollView?.frame = NSInsetRect(frame, POPOVER_PADDING, POPOVER_PADDING)
-        self.contentSize = frame.size
-        tableView.reloadData()
-        tableView.selectRowIndexes(IndexSet(arrayLiteral: 0), byExtendingSelection: false)
-        
-    }
-    
-    func reload(_ data: [String], with mention: String) {
-        
-        self.mention = mention
-        self.data = data
-        
-        let height = min(CGFloat(integerLiteral: data.count) *  (tableView.rowHeight + INTERCELL_SPACING.height) + 2*POPOVER_PADDING, CGFloat(320))
-        let frame = NSRect(x: 0.0, y: 0.0, width: POPOVER_WIDTH, height: height)
         tableView.enclosingScrollView?.frame = NSInsetRect(frame, POPOVER_PADDING, POPOVER_PADDING)
         self.contentSize = frame.size
         tableView.reloadData()
@@ -165,7 +150,7 @@ extension TablePopover : NSTableViewDelegate {
         }
         
         let mutAttrStr = NSMutableAttributedString(string: data[row], attributes: [.font : font])
-        mutAttrStr.addAttribute(.font, value: boldFont, range: mention.fullRange)
+        //mutAttrStr.addAttribute(.font, value: boldFont, range: mention.fullRange)
         
         cellView?.textField?.attributedStringValue = mutAttrStr
         

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F900C45A23335ABB007C9FC0 /* FiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F900C45923335ABB007C9FC0 /* FiltersViewController.swift */; };
+		F902E83C23A1D81800B37DC1 /* DateTextAttachmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F902E83B23A1D81800B37DC1 /* DateTextAttachmentCell.swift */; };
 		F91CC2CD23598F5A00C2825E /* TaskBasicHeaderCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F91CC2CC23598F5A00C2825E /* TaskBasicHeaderCellView.xib */; };
 		F91CC2CF2359FF5100C2825E /* NSRange Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F91CC2CE2359FF5100C2825E /* NSRange Extension.swift */; };
 		F93E5947231F526700266D92 /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93E5946231F526700266D92 /* FilterViewController.swift */; };
@@ -69,6 +70,7 @@
 		F9C323CF2343D02C001CB6FF /* TaskDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C323CE2343D02C001CB6FF /* TaskDocumentView.swift */; };
 		F9C6CCC223259051008026FD /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C6CCC123259051008026FD /* Item.swift */; };
 		F9D93B572334B71E00AC0D2E /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D93B562334B71E00AC0D2E /* TableViewController.swift */; };
+		F9DCD70C2386D3CF00A528D3 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9DCD70B2386D3CF00A528D3 /* Token.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +99,7 @@
 
 /* Begin PBXFileReference section */
 		F900C45923335ABB007C9FC0 /* FiltersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersViewController.swift; sourceTree = "<group>"; };
+		F902E83B23A1D81800B37DC1 /* DateTextAttachmentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateTextAttachmentCell.swift; sourceTree = "<group>"; };
 		F91CC2CC23598F5A00C2825E /* TaskBasicHeaderCellView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskBasicHeaderCellView.xib; sourceTree = "<group>"; };
 		F91CC2CE2359FF5100C2825E /* NSRange Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSRange Extension.swift"; sourceTree = "<group>"; };
 		F93E5946231F526700266D92 /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
@@ -163,6 +166,7 @@
 		F9C323CE2343D02C001CB6FF /* TaskDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDocumentView.swift; sourceTree = "<group>"; };
 		F9C6CCC123259051008026FD /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		F9D93B562334B71E00AC0D2E /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
+		F9DCD70B2386D3CF00A528D3 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,7 +218,8 @@
 				F940B0E9235732EE00664043 /* TaskDataCellView.swift */,
 				F940B0EB235732FD00664043 /* TaskDataCellView.xib */,
 			);
-			path = Cells;
+			name = Cells;
+			path = "../Document/Custom Views/Cells";
 			sourceTree = "<group>";
 		};
 		F94184BE236C4284007D5BF3 /* Resources */ = {
@@ -290,9 +295,7 @@
 		F9755A79231DBB5A00A2FCBA /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				F93E5946231F526700266D92 /* FilterViewController.swift */,
 				F9755A7A231DBBD300A2FCBA /* TextViewController.swift */,
-				F940B0AA2353631200664043 /* SourceViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -311,7 +314,6 @@
 		F9755A81231DBC3900A2FCBA /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
-				F940B0E223572C7F00664043 /* Cells */,
 				F9755A8B231DBCC000A2FCBA /* TextView */,
 			);
 			path = "Custom Views";
@@ -339,6 +341,7 @@
 				F9755A90231DBCC000A2FCBA /* TaskRulerView.swift */,
 				F99FEB68233A177300336790 /* InfoTextField.swift */,
 				F99CF91E234DEE5F00526612 /* TaskTextAttachmentCell.swift */,
+				F902E83B23A1D81800B37DC1 /* DateTextAttachmentCell.swift */,
 			);
 			path = TextView;
 			sourceTree = "<group>";
@@ -374,6 +377,7 @@
 			isa = PBXGroup;
 			children = (
 				F9755AAA231DBD4900A2FCBA /* Task.swift */,
+				F9DCD70B2386D3CF00A528D3 /* Token.swift */,
 			);
 			path = Basic;
 			sourceTree = "<group>";
@@ -399,6 +403,9 @@
 		F9F4E0942333680400D0A125 /* Temp */ = {
 			isa = PBXGroup;
 			children = (
+				F93E5946231F526700266D92 /* FilterViewController.swift */,
+				F940B0AA2353631200664043 /* SourceViewController.swift */,
+				F940B0E223572C7F00664043 /* Cells */,
 				F9755A9E231DBD0600A2FCBA /* Filter.swift */,
 				F900C45923335ABB007C9FC0 /* FiltersViewController.swift */,
 				F9755A7C231DBBE300A2FCBA /* SidebarViewController.swift */,
@@ -551,8 +558,10 @@
 				F9755A7D231DBBE300A2FCBA /* SidebarViewController.swift in Sources */,
 				F9C323CF2343D02C001CB6FF /* TaskDocumentView.swift in Sources */,
 				F99FEB6B233CB41F00336790 /* TaskLayoutManager.swift in Sources */,
+				F9DCD70C2386D3CF00A528D3 /* Token.swift in Sources */,
 				F91CC2CF2359FF5100C2825E /* NSRange Extension.swift in Sources */,
 				F9C6CCC223259051008026FD /* Item.swift in Sources */,
+				F902E83C23A1D81800B37DC1 /* DateTextAttachmentCell.swift in Sources */,
 				F900C45A23335ABB007C9FC0 /* FiltersViewController.swift in Sources */,
 				F9755A88231DBC8E00A2FCBA /* NSColor Extention.swift in Sources */,
 				F9721028234F304900608CAB /* LineFoldingTypesetter.swift in Sources */,

@@ -15,19 +15,11 @@ class Document: NSDocument {
     }
     
     var str: String = ""
-    
+   
     // Document has only one NSWindowController
-    var tabViewController: NSTabViewController? {
-        guard windowControllers.count > 0 else { return nil }
-        return windowControllers[0].contentViewController as? NSTabViewController
-    }
-    
     var textViewController: TextViewController? {
-        return tabViewController?.tabViewItems[0].viewController as? TextViewController
-    }
-    
-    var sourceViewController: SourceViewController? {
-        return tabViewController?.tabViewItems[1].viewController as? SourceViewController
+        guard windowControllers.count > 0 else { return nil }
+        return windowControllers[0].contentViewController as? TextViewController
     }
     
     override init() {
@@ -44,6 +36,7 @@ class Document: NSDocument {
         let storyboard = NSStoryboard(name: NSStoryboard.Name("Main"), bundle: nil)
         let windowController = storyboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("Document Window Controller")) as! NSWindowController
         self.addWindowController(windowController)
+        
         
         if let contentView = textViewController {
             contentView.reload(str)

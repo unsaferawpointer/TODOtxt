@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15400"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15702"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -813,39 +813,12 @@ DQ
                         </connections>
                     </window>
                     <connections>
-                        <segue destination="cIe-Gi-zq9" kind="relationship" relationship="window.shadowedContentViewController" id="3QK-Ai-abA"/>
+                        <segue destination="fQN-R5-u1D" kind="relationship" relationship="window.shadowedContentViewController" id="y4k-KY-Ulq"/>
                     </connections>
                 </windowController>
                 <customObject id="6f7-a7-6o1" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="75" y="250"/>
-        </scene>
-        <!--Tab View Controller-->
-        <scene sceneID="nkm-oq-tKV">
-            <objects>
-                <tabViewController selectedTabViewItemIndex="0" id="cIe-Gi-zq9" sceneMemberID="viewController">
-                    <tabViewItems>
-                        <tabViewItem label="Editor" id="6jK-aO-40K"/>
-                        <tabViewItem label="Viewer" id="TB3-5Y-Wa6"/>
-                    </tabViewItems>
-                    <viewControllerTransitionOptions key="transitionOptions" crossfade="YES" slideUp="YES" allowUserInteraction="YES"/>
-                    <tabView key="tabView" type="noTabsNoBorder" id="qyW-dl-6zE">
-                        <rect key="frame" x="896" y="-596" width="450" height="300"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <font key="font" metaFont="system"/>
-                        <connections>
-                            <outlet property="delegate" destination="cIe-Gi-zq9" id="0Dd-Ww-XgR"/>
-                        </connections>
-                    </tabView>
-                    <connections>
-                        <outlet property="tabView" destination="qyW-dl-6zE" id="sRm-zd-Ca3"/>
-                        <segue destination="fQN-R5-u1D" kind="relationship" relationship="tabItems" id="SQ8-YZ-42F"/>
-                        <segue destination="s0U-f2-39C" kind="relationship" relationship="tabItems" id="BCc-kj-hPN"/>
-                    </connections>
-                </tabViewController>
-                <customObject id="Nlf-6U-Tys" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="37" y="749"/>
         </scene>
         <!--Tab View Controller-->
         <scene sceneID="t52-QD-Efb">
@@ -945,7 +918,7 @@ DQ
                 </viewController>
                 <customObject id="559-WH-B4k" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="214.5" y="1322.5"/>
+            <point key="canvasLocation" x="98" y="1468"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="Yr2-pC-YVt">
@@ -1158,19 +1131,18 @@ DQ
                         <rect key="frame" x="0.0" y="0.0" width="558" height="487"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView fixedFrame="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PEa-9O-pYt">
-                                <rect key="frame" x="20" y="20" width="518" height="447"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="uIB-8a-ka2">
-                                    <rect key="frame" x="0.0" y="0.0" width="518" height="447"/>
+                            <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PEa-9O-pYt">
+                                <rect key="frame" x="0.0" y="0.0" width="558" height="455"/>
+                                <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="uIB-8a-ka2">
+                                    <rect key="frame" x="0.0" y="0.0" width="558" height="455"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <textView ambiguous="YES" importsGraphics="NO" richText="NO" verticallyResizable="YES" findStyle="bar" spellingCorrection="YES" smartInsertDelete="YES" id="JBw-Dy-7eV" customClass="TaskTextView" customModule="TODOtxt" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="0.0" width="518" height="447"/>
+                                        <textView importsGraphics="NO" richText="NO" verticallyResizable="YES" findStyle="bar" spellingCorrection="YES" smartInsertDelete="YES" id="JBw-Dy-7eV" customClass="TaskTextView" customModule="TODOtxt" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="0.0" width="558" height="455"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            <size key="minSize" width="518" height="447"/>
+                                            <size key="minSize" width="558" height="455"/>
                                             <size key="maxSize" width="565" height="10000000"/>
                                             <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                         </textView>
@@ -1181,12 +1153,34 @@ DQ
                                     <rect key="frame" x="-100" y="-100" width="240" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
-                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="b57-37-lKs">
-                                    <rect key="frame" x="502" y="0.0" width="16" height="447"/>
+                                <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="b57-37-lKs">
+                                    <rect key="frame" x="542" y="0.0" width="16" height="419"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
+                            <popUpButton translatesAutoresizingMaskIntoConstraints="NO" id="X4g-J9-oGX">
+                                <rect key="frame" x="247" y="461" width="64" height="20"/>
+                                <popUpButtonCell key="cell" type="bevel" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" arrowPosition="arrowAtCenter" selectedItem="XQK-dv-TKg" id="5VI-8s-skS">
+                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                    <menu key="menu" id="N8Y-QP-WwX">
+                                        <items>
+                                            <menuItem title="Item 1" state="on" id="XQK-dv-TKg"/>
+                                            <menuItem title="Item 2" id="7Zn-JR-s9Z"/>
+                                            <menuItem title="Item 3" id="Krp-ET-Fkf"/>
+                                        </items>
+                                    </menu>
+                                </popUpButtonCell>
+                            </popUpButton>
                         </subviews>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="PEa-9O-pYt" secondAttribute="trailing" id="Be1-zN-yNj"/>
+                            <constraint firstAttribute="bottom" secondItem="PEa-9O-pYt" secondAttribute="bottom" id="JS1-Wn-mHi"/>
+                            <constraint firstItem="PEa-9O-pYt" firstAttribute="top" secondItem="X4g-J9-oGX" secondAttribute="bottom" constant="6" id="MXc-tt-Jqy"/>
+                            <constraint firstItem="PEa-9O-pYt" firstAttribute="leading" secondItem="NHC-5Y-1fX" secondAttribute="leading" id="h7f-Pk-vfw"/>
+                            <constraint firstItem="X4g-J9-oGX" firstAttribute="top" secondItem="NHC-5Y-1fX" secondAttribute="top" constant="6" id="qZO-lX-WQ5"/>
+                            <constraint firstItem="X4g-J9-oGX" firstAttribute="centerX" secondItem="NHC-5Y-1fX" secondAttribute="centerX" id="zum-Iz-TJR"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="textView" destination="JBw-Dy-7eV" id="TRD-uL-sWw"/>
@@ -1194,7 +1188,7 @@ DQ
                 </viewController>
                 <customObject id="uqY-pm-DCq" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-390" y="1334.5"/>
+            <point key="canvasLocation" x="75" y="841.5"/>
         </scene>
     </scenes>
     <resources>

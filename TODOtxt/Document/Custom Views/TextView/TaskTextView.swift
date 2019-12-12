@@ -14,6 +14,8 @@ protocol TaskTextViewDelegate: class {
 
 class TaskTextView: NSTextView {
     
+    let autocompletions: [String] = ["done", "marked"]
+    
     weak var rulerView: TaskRulerView?
     weak var autocompletionDelegate: TaskTextViewDelegate?
     
@@ -166,7 +168,7 @@ class TaskTextView: NSTextView {
         //print("lineRange = \(lineRange)")
         if selRange.length == 0 {
             
-            let pattern = #"^(\t*((x|\*|-)\s)).*"#
+            let pattern = #"^(\t*((\*|-)\s)).*"#
             let regex = try! NSRegularExpression(pattern: pattern, options: .anchorsMatchLines)
             //print("firstTask = \(lineStr)")
             if let result = regex.firstMatch(in: string, options: [], range: lineRange), result.range(at: 2).upperBound <= location {
@@ -175,7 +177,6 @@ class TaskTextView: NSTextView {
                 //print("upperRange = \(result.range(at:1).upperBound)")
                 if result.range(at: 2).upperBound == location {
                     replaceCharacters(in: result.range(at:1), with: "")
-                    
                 } else {
                     let array = Array<String>.init(repeating: "\t", count: indent)
                     replaceCharacters(in: NSRange(location: selRange.upperBound, length: 0), with: "\n\(array.joined())- ")
@@ -285,14 +286,16 @@ class TaskTextView: NSTextView {
     
     // ---------- common ----------
     @IBAction func toggleCompletion(_ sender: Any?) {
-        /*
-        guard let lineRange = selectedLine, let lineString = selectedLineString else { return }
         
-        guard let (oldPriority, _, priorityRange, enclosingRange) = parser.parseStatus(in: lineString) else { return }
+        guard let lineRange = selectedLine, let line = selectedLineString else { return }
+        let offset = lineRange.location
         
-        let newPriority = (oldPriority == .completed) ? "-" : "x"
-        replaceText(in: priorityRange.shifted(by: lineRange.location), with: "\(newPriority)")
-        */
+        if let (prefix , wordRange, enclosingRange) = parser.ranges(for: "done", in: line) {
+            replaceText(in: enclosingRange.shifted(by: offset), with: "")
+        } else {
+            let end = parser.lineTail(for: line)!.shifted(by: offset)
+            replaceText(in: end, with: " @done")
+        }
     }
     
     @IBAction func removeLines(_ sender: Any?) {
@@ -366,22 +369,27 @@ class TaskTextView: NSTextView {
     private func changeDueDate(by day: Int) {
         
         guard let lineString = selectedLineString else { return }
-        
-        if let (oldDate, enclosingRange) = parser.parseDate(with: .due, inObjectLine: lineString) {
-            let newDate = Calendar.autoupdatingCurrent.date(byAdding: .day, value: day, to: oldDate.date)!
+        fatalError("Dont implemented")
+        /*
+        // WARNING
+        if let dateToken = parser.dateRange(with: .due, inObjectLine: lineString) {
+            let oldDate = dateToken.value
+            let newDate = Calendar.autoupdatingCurrent.date(byAdding: .day, value: day, to: oldDate)!
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = oldDate.granulity.format
-            let newDateStr = dateFormatter.string(from: newDate)
+            //dateFormatter.dateFormat = oldDate.granulity.format
+            //let newDateStr = dateFormatter.string(from: newDate)
             //replaceText(in: enclosingRange, with: Token.dueDate.prefixString(for: newDateStr))
         }
-        
+        */
     }
     
     @IBAction func removeDueDate(_ sender: Any?) {
         guard let lineString = selectedLineString else { return }
-        if let (_ , enclosingRange) = parser.dateRange(with: .due, inObjectLine: lineString) {
-            replaceText(in: enclosingRange, with: "")
-        } 
+        fatalError("Dont implemented")
+        /*
+        if let dateToken = parser.dateRange(with: .due, inObjectLine: lineString) {
+            replaceText(in: dateToken.enclosingRange, with: "")
+        }*/
     }
     
     func removeCompleted() {
@@ -394,10 +402,6 @@ class TaskTextView: NSTextView {
                 self.textStorage?.replaceCharacters(in: enclosing, with: "")
             }
         })*/
-    }
-    
-    func invalidateColorScheme() {
-        self.selectedTextAttributes = [.backgroundColor : theme.selection]
     }
     
 }
@@ -451,6 +455,7 @@ extension TaskTextView {
     
     
     
+    
 }
 
 // ********** Completion **********
@@ -460,42 +465,46 @@ extension TaskTextView: AutocompletionPopoverDelegate {
     func autocompletionDidChange(_ sender: AutocompletionPopover, str: String) {
         print(#function)
         guard editedRange != nil else { return }
-        replaceText(in: editedRange!, with: "#\(str)")
+        replaceText(in: editedRange!, with: "@\(str)")
         self.editedRange = nil
         sender.close()
     }
     
     private func findCompletion(in sRange: NSRange) -> (range: NSRange, enclosingRange: NSRange)? {
         
-        let lineRange = textStorage!.mutableString.lineRange(for: sRange)
-        guard lineRange.length > 0 else { return nil }
+        guard let lineRange = taskTextStorage.mutableString.singleLine(for: sRange) else { return nil }
+        guard sRange.length == 0 else { return nil }
+        let line = textStorage!.mutableString.substring(with: lineRange)
+        let offset = lineRange.location
         
-        let body = textStorage!.mutableString.substring(with: lineRange)
+        if let (prefixRange, wordRange, enclosingRange) = parser.ranges(for: nil, in: line) {
+            if wordRange.shifted(by: offset).location <= sRange.location &&
+                wordRange.shifted(by: offset).upperBound >= sRange.location {
+                return (wordRange.shifted(by: offset), enclosingRange.shifted(by: offset))
+            }
+        }
         
-        let result = parser.detectHashtag(in: body, beginAt: lineRange.location, forSelectionAt: sRange.location)
-        
-        return result
+        return nil
     }
     
     private func performAutocompletion () {
-        
+        print(#function)
         let sRange = self.selectedRange()
         guard sRange.length == 0 else { return }
+        guard let lineRange = selectedLine else { return }
         
         if let (range, enclosingRange) = findCompletion(in: sRange) {
             
-            let mention = textStorage!.mutableString.substring(with: range)
             self.editedRange = enclosingRange
-            
-            var data: [String] = autocompletionDelegate?.taskTextView() ?? []
-            
+            let mention = taskTextStorage.mutableString.substring(with: range)
+            var data: [String] = autocompletions
             data.removeAll { (value) -> Bool in
                 return value == mention || !value.hasPrefix(mention)
             }
-            guard data.count > 0 else { return }
             
             let popover = TablePopover()
-            popover.reload(data, with: mention)
+            popover.reload(data)
+            
             
             
             
@@ -578,9 +587,9 @@ extension TaskTextView {
     func set(text: String) {
         undoManager?.removeAllActions()
         currentPopover?.close()
-        taskTextStorage.observeChanging = false
+        //taskTextStorage.observeChanging = false
         self.string = text
-        taskTextStorage.observeChanging = true
+        //taskTextStorage.observeChanging = true
     }
     
 }

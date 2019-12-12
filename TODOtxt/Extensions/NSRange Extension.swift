@@ -13,4 +13,8 @@ extension NSRange {
     func shifted(by shifting: Int) -> NSRange {
         return NSRange(location: self.location + shifting, length: self.length)
     }
+    
+    func shifted(by range: NSRange) -> NSRange {
+        return NSRange(location: self.location + range.location, length: self.length)
+    }
 }

@@ -139,30 +139,30 @@ class SourceViewController: NSViewController {
     
     func group(for task: Task) -> Group {
            
-           guard task.isCompleted == false else { return .completed }
+        guard task.isCompleted == false else { return .completed }
            
-           guard let date = task.dueDate?.date else { return .none }
+        guard let date = task.dueDate?.value else { return .none }
            
-           let calendar = NSCalendar.current
-           
-           let today = Date()
-           let tomorrow = NSCalendar.current.date(byAdding: .day, value: 1, to: today)!
-           
-           if calendar.compare(today, to: date, toGranularity: .day) == .orderedDescending {
-               return .overdue
-           } else if calendar.compare(today, to: date, toGranularity: .day) == .orderedSame {
-               return .today
-           } else if calendar.compare(tomorrow, to: date, toGranularity: .day) == .orderedSame {
-               return .tomorrow
-           } 
-           
-           let year = calendar.component(.year, from: date)
-           let month = calendar.component(.month, from: date)
-           let day = calendar.component(.day, from: date)
-           
-           return .date(year: year, month: month, day: day)
+        let calendar = NSCalendar.current
+        
+        let today = Date()
+        let tomorrow = NSCalendar.current.date(byAdding: .day, value: 1, to: today)!
+        
+        if calendar.compare(today, to: date, toGranularity: .day) == .orderedDescending {
+            return .overdue
+        } else if calendar.compare(today, to: date, toGranularity: .day) == .orderedSame {
+            return .today
+        } else if calendar.compare(tomorrow, to: date, toGranularity: .day) == .orderedSame {
+            return .tomorrow
+        } 
+        
+        let year = calendar.component(.year, from: date)
+        let month = calendar.component(.month, from: date)
+        let day = calendar.component(.day, from: date)
+        
+        return .date(year: year, month: month, day: day)
     
-       }
+    }
     
     
         
@@ -240,9 +240,10 @@ extension SourceViewController: NSOutlineViewDelegate {
                 cell.statusCheckbox.state = task.isCompleted ? .on : .off
                 cell.textField?.textColor = task.isCompleted ? .secondaryLabelColor : .textColor
                 
+                /*
                 let formatter = DateFormatter()
                 formatter.dateFormat = "hh:mm"
-                if let taskDate = task.dueDate {
+                if let taskDate = task.dueDate?.value {
                     if taskDate.granulity == .time {
                         cell.secondaryLabel.stringValue = formatter.string(from: taskDate.date)
                         cell.secondaryLabel.isHidden = false
@@ -252,7 +253,7 @@ extension SourceViewController: NSOutlineViewDelegate {
                 } else {
                     cell.secondaryLabel.isHidden = true
                 }
-                
+                */
                 return cell
             }
         }

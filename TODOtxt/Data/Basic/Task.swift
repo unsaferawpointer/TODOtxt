@@ -10,25 +10,19 @@ import Cocoa
 
 
 
-protocol LineObject {
-    var string: String { get }
-    var body: String { get }
-}
-
 class Event: LineObject {
     
     var body: String {
         return string
     }
     
-    
     let string: String
-    let hashtag: String?
+    let hashtag: HashtagToken?
     let isCancelled: Bool
     
-    let date: ObjectDate?
+    let date: DateToken?
     
-    init(_ string: String, isCancelled: Bool, at date: ObjectDate?, hashtag: String?) {
+    init(_ string: String, isCancelled: Bool, at date: DateToken?, hashtag: HashtagToken?) {
         self.string = string
         self.isCancelled = isCancelled
         self.date = date
@@ -39,24 +33,24 @@ class Event: LineObject {
 
 class Task: LineObject, Equatable, CustomStringConvertible {
     
+    
+    
     static func == (lhs: Task, rhs: Task) -> Bool {
         return lhs.string == rhs.string
     }
     
     let indent: Int
-    
     let string: String
     let body: String
-    let tasks: [Task] = []
     
-    let hashtag: String?
+    let hashtag: HashtagToken?
     
-    let dueDate: ObjectDate?
-    let startDate: ObjectDate?
+    let dueDate: DateToken?
+    let startDate: DateToken?
     
     let isCompleted: Bool
     
-    init(string: String, body: String, isCompleted: Bool, hashtag: String? = nil, dueDate: ObjectDate? = nil, startDate: ObjectDate? = nil, indent: Int) {
+    init(string: String, body: String, isCompleted: Bool, hashtag: HashtagToken? = nil, dueDate: DateToken? = nil, startDate: DateToken? = nil, indent: Int) {
         self.string = string
         self.body = body
         self.isCompleted = isCompleted
@@ -68,15 +62,6 @@ class Task: LineObject, Equatable, CustomStringConvertible {
     
     var description: String {
         var desc = "\(string)\n"
-        if tasks.isEmpty {
-            desc = "\(string)\n"
-        } else {
-            desc = "root: \(string)\n"
-        }
-        
-        for task in tasks {
-            desc.append(task.description)
-        }
         return desc
     }
     

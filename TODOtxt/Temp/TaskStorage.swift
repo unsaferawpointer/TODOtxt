@@ -58,7 +58,7 @@ class TaskStorage {
     
     func insert(_ tasks: [Task]) {
         let mentions = tasks.compactMap { (task) -> String? in
-            return task.hashtag
+            return task.hashtag?.value
         }
         hashtagsStorage.insert(mentions)
         storage.append(contentsOf: tasks)
@@ -66,7 +66,7 @@ class TaskStorage {
     
     func remove(_ tasks: [Task]) {
         let mentions = tasks.compactMap { (task) -> String? in
-            return task.hashtag
+            return task.hashtag?.value
         }
         hashtagsStorage.remove(mentions)
         for task in tasks {
