@@ -1,6 +1,6 @@
 # About
 It is simple document-based markdown editor
 
-#F eatures
+# Features
 - [x] markdown highlighting
 - [x] autocomplete
